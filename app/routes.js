@@ -34,6 +34,45 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/patientMonitorMobile',
+      name: 'patientMonitorMobile',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/PatientMonitorMobile/reducer'),
+          import('containers/PatientMonitorMobile/sagas'),
+          import('containers/PatientMonitorMobile'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, sagas, component]) => {
+          injectReducer('patientMonitorMobile', reducer.default);
+          injectSagas(sagas.default);
+
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
+      path: '/settings',
+      name: 'settings',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/Settings/reducer'),
+          import('containers/Settings'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, component]) => {
+          injectReducer('settings', reducer.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

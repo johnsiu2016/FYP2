@@ -114,3 +114,23 @@ if (!window.Intl) {
 if (process.env.NODE_ENV === 'production') {
   require('offline-plugin/runtime').install(); // eslint-disable-line global-require
 }
+
+// adding place
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+// Observe loading of Open Sans (to remove open sans, remove the <link> tag in
+// the index.html file and this observer)
+import FontFaceObserver from 'fontfaceobserver';
+const openSansObserver = new FontFaceObserver('Open Sans', {});
+
+// When Open Sans is loaded, add a font-family using Open Sans to the body
+openSansObserver.load().then(() => {
+  document.body.classList.add('fontLoaded');
+}, () => {
+  document.body.classList.remove('fontLoaded');
+});
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+// end of adding place
