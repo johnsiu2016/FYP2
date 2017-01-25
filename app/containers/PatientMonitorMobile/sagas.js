@@ -14,7 +14,7 @@ export function* getSocket() {
     const items1 = yield select(selectItems1());
     const items2 = yield select(selectItems2());
 
-    let socketio = io('http://14.198.32.147:5000');
+    let socketio = io('http://localhost:5000');
     socketio.emit('initial', {
       items1: items1,
       items2: items2,

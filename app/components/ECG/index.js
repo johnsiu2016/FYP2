@@ -5,7 +5,7 @@
 */
 
 import React from 'react';
-// import styled from 'styled-components';
+
 import Dimensions from 'react-dimensions';
 import color from '../../utils/color.js';
 
@@ -32,25 +32,12 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     this.h = 0;
     this.py = 0;
     this.px = 0;
-
-    this.interval = null;
   }
 
   componentDidMount() {
     let self = this;
-
-    self.animation = self.draw();
-    self.animation.start();
-
-    self.props.socket && self.props.socket.on(self.props.i, (data) => {
-      if (self.ecgDataBuffer.length < 20) {
-        self.ecgDataBuffer.push(data);
-      }
-      if (self.props.showBuffer) {
-        console.log(`${self.props.waveform} buffer: ${self.ecgDataBuffer.length}`);
-      }
-    });
-
+    self.startAnimation();
+    self.initialSocket();
     global.dispatchEvent(new Event('resize'));
   }
 
@@ -60,19 +47,8 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   componentDidUpdate() {
     let self = this;
-
-    self.props.socket && self.props.socket.on(self.props.i, (data) => {
-      if (self.ecgDataBuffer.length < 20) {
-        self.ecgDataBuffer.push(data);
-      }
-      if (self.props.showBuffer) {
-        console.log(`${self.props.waveform} buffer: ${self.ecgDataBuffer.length}`);
-      }
-    });
-
-    self.animation && self.animation.cancel();
-    self.animation = self.draw();
-    self.animation.start();
+    self.initialSocket();
+    self.stopAnimation();
   }
 
   draw = () => {
@@ -144,6 +120,36 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
         self.ecgData = self.ecgDataBuffer.shift();
       }
       return self.h / 2
+    }
+  };
+
+  initialSocket = () => {
+    let self = this;
+
+    if (self.props.socket) {
+      self.props.socket.on(self.props.i, (data) => {
+        if (self.ecgDataBuffer.length < 20) {
+          self.ecgDataBuffer.push(data);
+        }
+        if (self.props.showBuffer) {
+          console.log(`${self.props.waveform} buffer: ${self.ecgDataBuffer.length}`);
+        }
+      });
+    }
+  };
+
+  startAnimation = () => {
+    let self = this;
+    self.animation = self.draw();
+    self.animation.start();
+  };
+
+  stopAnimation = () => {
+    let self = this;
+    if (self.animation) {
+      self.animation.cancel();
+      self.animation = self.draw();
+      self.animation.start();
     }
   };
 

@@ -68,7 +68,10 @@
         "plugins": [
           "transform-react-remove-prop-types",
           "transform-react-constant-elements",
-          "transform-react-inline-elements"
+          "transform-react-inline-elements",
+          "transform-class-properties",
+          "transform-async-to-generator",
+          "transform-object-rest-spread"
         ]
       },
       "test": {
@@ -252,7 +255,10 @@
     "babel-plugin-dynamic-import-node": "1.0.0",
     "babel-plugin-react-intl": "2.2.0",
     "babel-plugin-react-transform": "2.0.2",
+    "babel-plugin-transform-async-to-generator": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.22.0",
     "babel-plugin-transform-es2015-modules-commonjs": "6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.22.0",
     "babel-plugin-transform-react-constant-elements": "6.9.1",
     "babel-plugin-transform-react-inline-elements": "6.8.0",
     "babel-plugin-transform-react-remove-prop-types": "0.2.11",

@@ -36,12 +36,53 @@ import Drawer from 'material-ui/Drawer';
 
 import VitalSign from 'components/VitalSign';
 
-import {createStructuredSelector} from 'reselect';
-
 import IconButton from 'material-ui/IconButton';
 
 import color from '../../utils/color';
-import styles from './styles.css';
+import {createStructuredSelector} from 'reselect';
+import {
+  changeLayout1,
+  resetLayout1,
+  addItem1,
+  removeItem1,
+
+  changeLayout2,
+  resetLayout2,
+  addItem2,
+  removeItem2,
+
+  handleLeftDrawerToggle,
+  handleLeftDrawerClose,
+  handleWaveformChange,
+  handleColorChange,
+  handleScaleChange,
+  handleSpeedChange,
+
+  handleRightDrawerToggle,
+  handleRightDrawerClose,
+  handleVitalSignChange,
+  handleVitalSignColorChange,
+
+  handlePowerButtonToggle
+} from './actions';
+
+import {
+  selectLayout1,
+  selectItems1,
+  selectLayout2,
+  selectItems2,
+  selectLeftDrawer,
+  selectRightDrawer,
+  selectPowerOn,
+  selectSocket
+} from './selectors';
+
+import {
+  selectIP,
+  selectPort,
+  selectProtocol,
+  selectPatientMonitor
+} from 'containers/Settings/selectors';
 
 export class PatientMonitorMobile extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
@@ -274,7 +315,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       <Grid fluid={true}>
         <Row>
           <Col lg={9} style={{height: '95vh', background: grey900, overflow: 'auto'}}
-               className={styles.patientMonitorMobile}>
+               className="patientMonitorMobile">
             <ReactGridLayout
               cols={12}
               rowHeight={200}
@@ -309,7 +350,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
           </Col >
 
           <Col lg={3} style={{height: '95vh', background: grey800, overflow: 'auto'}}
-               className={styles.patientMonitorMobile}>
+               className="patientMonitorMobile">
             <ReactGridLayout
               cols={12}
               rowHeight={200}
@@ -483,7 +524,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       <Grid fluid={true}>
         <Row>
           <Col lg={9} style={{height: '95vh', background: grey900, overflow: 'auto'}}
-               className={styles.patientMonitorMobile}>
+               className="patientMonitorMobile">
 
             <ReactGridLayout
               cols={12}
@@ -497,7 +538,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
           </Col >
 
           <Col lg={3} style={{height: '95vh', background: grey900, overflow: 'auto'}}
-               className={styles.patientMonitorMobile}>
+               className="patientMonitorMobile">
             <ReactGridLayout
               cols={12}
               rowHeight={200}
