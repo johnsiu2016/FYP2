@@ -1,8 +1,8 @@
 /**
-*
-* Ecg
-*
-*/
+ *
+ * Ecg
+ *
+ */
 
 import React from 'react';
 
@@ -49,6 +49,16 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let self = this;
     self.initialSocket();
     self.stopAnimation();
+  }
+
+  render() {
+    let {containerWidth, containerHeight} = this.props;
+    return (
+      <canvas width={containerWidth}
+              height={containerHeight}
+              ref={(c) => this.canvas = c}>
+      </canvas>
+    );
   }
 
   draw = () => {
@@ -152,16 +162,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       self.animation.start();
     }
   };
-
-  render() {
-    let {containerWidth, containerHeight} = this.props;
-    return (
-      <canvas width={containerWidth}
-              height={containerHeight}
-              ref={(c) => this.canvas = c}>
-      </canvas>
-    );
-  }
 
   convertToGraphCoord = (num, height) => {
     return (height / 2) * -(num * this.props.scale) + height / 2;

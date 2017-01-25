@@ -12,51 +12,64 @@ import styled from 'styled-components';
 import color from '../../utils/color.js';
 import fakeDefaultVitalSignData from '../../utils/fakeDefaultVitalSignData.js';
 
-const ABPWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  color: ${(props) => props.color}
-`;
-
 const HRWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-flow: row wrap;
-  color: ${(props) => props.color}
+  color: ${(props) => props.color};
 `;
-
 const HRTextAndUpperLowerLimitWrapper = styled.div`
   flex: 0.4;
 `;
-
 const HRText = styled.div`
   font-size: 2em;
 `;
-
-const HRUpperAndLowerLimit = styled.div`
-  align-self: 'center'
+const HRUpperAndLowerLimitWrapper = styled.div`
+  align-self: 'center';
 `;
-
 const HRUpperLimit = styled.div`
-  font-size: ${(props) => props.scaleContainerHeight * 0.2}px
-  text-align: center
+  font-size: ${(props) => props.scaleContainerHeight * 0.2}px;
+  text-align: center;
 `;
-
+const HRLowerLimit = styled.div`
+  font-size: ${(props) => props.scaleContainerHeight * 0.2}px;
+  text-align: center;
+`;
 const HRDataWrapper = styled.div`
-  flex: 0.4;
+  flex: 0.6;
+  font-size: ${(props) => props.scaleContainerHeight * 0.9}px;
 `;
 
+const BPWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  color: ${(props) => props.color};
+`;
+const BPTextWrapper = styled.div`
+  flex: 0.15;
+`;
+const BPText = styled.div`
+  font-size: 2em;
+`;
+const BPSystolicAndDiastolicWrapper = styled.div`
+  flex: 0.6;
+  font-size: ${(props) => props.scaleContainerHeight * 0.4}px;
+  align-self: center;
+`;
+const BPMeanWrapper = styled.div`
+  flex: 0.25;
+  font-size: ${(props) => props.scaleContainerHeight * 0.4}px;
+  align-self: center;
+`;
 
 class VitalSign extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
     let self = this;
-
     self.initialSocket();
-
     global.dispatchEvent(new Event('resize'));
   }
 
@@ -66,9 +79,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
   componentDidUpdate() {
     let self = this;
-
     self.initialSocket();
-
     global.dispatchEvent(new Event('resize'));
   }
 
@@ -88,34 +99,24 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
               <HRText>
                 {vitalSign}
               </HRText>
-              <HRUpperAndLowerLimit>
-                <HRUpperLimit scaleContainerHeight={scaleContainerHeight} ref={(HRTop) => {this.HRTop = HRTop}}>
+              <HRUpperAndLowerLimitWrapper>
+                <HRUpperLimit scaleContainerHeight={scaleContainerHeight} innerRef={(HRTop) => {
+                  this.HRTop = HRTop
+                }}>
                   {fakeDefaultVitalSignData[vitalSign].top}
                 </HRUpperLimit>
-                <div style={{
-                  fontSize: `${scaleContainerHeight * 0.2}px`,
-                  lineHeight: `${scaleContainerHeight * 0.2}px`,
-                  textAlign: 'center'
-                }}
-                     ref={(HRBottom) => {
-                       this.HRBottom = HRBottom
-                     }}>
+                <HRLowerLimit scaleContainerHeight={scaleContainerHeight} innerRef={(HRBottom) => {
+                  this.HRBottom = HRBottom
+                }}>
                   {fakeDefaultVitalSignData[vitalSign].bottom}
-                </div>
-              </HRUpperAndLowerLimit>
+                </HRLowerLimit>
+              </HRUpperAndLowerLimitWrapper>
             </HRTextAndUpperLowerLimitWrapper>
-
-            <div style={{
-              flex: '0.6',
-              fontSize: `${scaleContainerHeight * 0.9}px`,
-              lineHeight: `${scaleContainerHeight * 0.9}px`
-            }}
-                 ref={(HRData) => {
-                   this.HRData = HRData
-                 }}
-            >
+            <HRDataWrapper scaleContainerHeight={scaleContainerHeight} innerRef={(HRData) => {
+              this.HRData = HRData
+            }}>
               {fakeDefaultVitalSignData[vitalSign].data}
-            </div>
+            </HRDataWrapper>
           </HRWrapper>
         );
         break;
@@ -123,43 +124,28 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       case "PAP":
       case "NBP":
         element = (
-          <ABPWrapper color={color[strokeStyle]}>
-            <div style={{flex: '0.15'}}>
-              <div style={{fontSize: '2em'}}>
+          <BPWrapper color={color[strokeStyle]}>
+            <BPTextWrapper>
+              <BPText>
                 {vitalSign}
-              </div>
-            </div>
-
-            <div style={{
-              flex: '0.6',
-              fontSize: `${scaleContainerHeight * 0.4}px`,
-              lineHeight: `${scaleContainerHeight * 0.4}px`,
-              alignSelf: 'center'
-            }}
-                 ref={(BPSystolicAndDiastolic) => {
-                   this.BPSystolicAndDiastolic = BPSystolicAndDiastolic
-                 }}
-            >
+              </BPText>
+            </BPTextWrapper>
+            <BPSystolicAndDiastolicWrapper scaleContainerHeight={scaleContainerHeight}
+                                           innerRef={(BPSystolicAndDiastolic) => {
+                                             this.BPSystolicAndDiastolic = BPSystolicAndDiastolic
+                                           }}>
               {fakeDefaultVitalSignData[vitalSign].systolic}
               {"/"}
               {fakeDefaultVitalSignData[vitalSign].diastolic}
-            </div>
-
-            <div style={{
-              flex: '0.25',
-              fontSize: `${scaleContainerHeight * 0.4}px`,
-              lineHeight: `${scaleContainerHeight * 0.4}px`,
-              alignSelf: 'center'
-            }}
-                 ref={(BPMean) => {
-                   this.BPMean = BPMean
-                 }}
-            >
+            </BPSystolicAndDiastolicWrapper>
+            <BPMeanWrapper scaleContainerHeight={scaleContainerHeight} innerRef={(BPMean) => {
+              this.BPMean = BPMean
+            }}>
               {"("}
               {fakeDefaultVitalSignData[vitalSign].mean}
               {")"}
-            </div>
-          </ABPWrapper>);
+            </BPMeanWrapper>
+          </BPWrapper>);
         break;
     }
 
@@ -184,7 +170,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
           case "PAP":
           case "NBP":
             this.BPSystolicAndDiastolic.innerHTML = `${data.systolic}/${data.diastolic}`;
-            this.BPMean.innerHTML = data.mean;
+            this.BPMean.innerHTML = `(${data.mean})`;
             break;
         }
       });
