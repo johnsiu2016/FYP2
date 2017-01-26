@@ -74,13 +74,14 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   }
 
   componentWillUnmount() {
-
+    let self = this;
+    self.clearUpSocket();
   }
 
   componentDidUpdate() {
     let self = this;
+    self.clearUpSocket();
     self.initialSocket();
-    global.dispatchEvent(new Event('resize'));
   }
 
   render() {
@@ -154,26 +155,35 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
   initialSocket = () => {
     let self = this;
-
     if (self.props.socket) {
-      self.props.socket.on(self.props.i, (data) => {
-        switch (this.props.vitalSign) {
-          case "HR":
-          case "SpO2":
-          case "RP":
-            this.HRTop.innerHTML = data.top;
-            this.HRBottom.innerHTML = data.bottom;
-            this.HRData.innerHTML = data.data;
-            break;
+      self.props.socket.on(self.props.i, self.socketDataCallback);
+    }
+  };
 
-          case "ABP":
-          case "PAP":
-          case "NBP":
-            this.BPSystolicAndDiastolic.innerHTML = `${data.systolic}/${data.diastolic}`;
-            this.BPMean.innerHTML = `(${data.mean})`;
-            break;
-        }
-      });
+  clearUpSocket = () => {
+    let self = this;
+    if (self.props.socket) {
+      self.props.socket.off(self.props.i, self.socketDataCallback);
+    }
+  };
+
+  socketDataCallback = (data) => {
+    // console.log(`test ${JSON.stringify(data)}}`);
+    switch (this.props.vitalSign) {
+      case "HR":
+      case "SpO2":
+      case "RP":
+        this.HRTop.innerHTML = data.top;
+        this.HRBottom.innerHTML = data.bottom;
+        this.HRData.innerHTML = data.data;
+        break;
+
+      case "ABP":
+      case "PAP":
+      case "NBP":
+        this.BPSystolicAndDiastolic.innerHTML = `${data.systolic}/${data.diastolic}`;
+        this.BPMean.innerHTML = `(${data.mean})`;
+        break;
     }
   };
 }

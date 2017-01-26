@@ -42,13 +42,15 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   }
 
   componentWillUnmount() {
-
+    let self = this;
+    self.clearUpSocket();
   }
 
   componentDidUpdate() {
     let self = this;
+    self.restartAnimation();
+    self.clearUpSocket();
     self.initialSocket();
-    self.stopAnimation();
   }
 
   render() {
@@ -135,17 +137,24 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   initialSocket = () => {
     let self = this;
-
     if (self.props.socket) {
-      self.props.socket.on(self.props.i, (data) => {
-        if (self.ecgDataBuffer.length < 20) {
-          self.ecgDataBuffer.push(data);
-        }
-        if (self.props.showBuffer) {
-          console.log(`${self.props.waveform} buffer: ${self.ecgDataBuffer.length}`);
-        }
-      });
+      self.props.socket.on(self.props.i, self.socketDataCallback);
     }
+  };
+
+  clearUpSocket = () => {
+    let self = this;
+    if (self.props.socket) {
+      self.props.socket.off(self.props.i, self.socketDataCallback);
+    }
+  };
+
+  socketDataCallback = (data) => {
+    let self = this;
+    if (self.ecgDataBuffer.length < 20) {
+      self.ecgDataBuffer.push(data);
+    }
+    // console.log(`${self.props.waveform} buffer: ${self.ecgDataBuffer.length}`);
   };
 
   startAnimation = () => {
@@ -154,7 +163,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     self.animation.start();
   };
 
-  stopAnimation = () => {
+  restartAnimation = () => {
     let self = this;
     if (self.animation) {
       self.animation.cancel();

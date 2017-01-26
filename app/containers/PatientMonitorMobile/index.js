@@ -288,8 +288,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             strokeStyle={strokeStyle}
             lineWidth={lineWidth}
             scale={scale}
-            speed={speed}
-            showBuffer={true}/>
+            speed={speed}/>
         </Card>
       </div>
     );
@@ -307,8 +306,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             strokeStyle={strokeStyle}
             lineWidth={lineWidth}
             scale={scale}
-            speed={speed}
-            showBuffer={false}/>
+            speed={speed}/>
         </ECGWrapperForPowerOnElement>
       </div>
     );
