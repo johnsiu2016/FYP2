@@ -1,23 +1,23 @@
 import {take, call, put, select, fork, cancel} from 'redux-saga/effects';
 import {LOCATION_CHANGE} from 'react-router-redux';
 import {HANDLE_POWER_BUTTON_TOGGLE} from './constants';
-import {selectItems1, selectItems2, selectPowerOn, selectSocket} from './selectors';
+import {makeSelectWaveformItems, makeSelectVitalSignItems, makeSelectPowerOn, makeSelectSocket} from './selectors';
 import {selectSettingsDomain} from 'containers/Settings/selectors';
 import {socketConnected} from './actions'
 
 export function* getSocket() {
-  const powerOn = yield select(selectPowerOn());
-  const socket = yield select(selectSocket());
+  const powerOn = yield select(makeSelectPowerOn());
+  const socket = yield select(makeSelectSocket());
 
   if (powerOn) {
     const settings = yield select(selectSettingsDomain());
-    const items1 = yield select(selectItems1());
-    const items2 = yield select(selectItems2());
+    const items1 = yield select(makeSelectWaveformItems());
+    const items2 = yield select(makeSelectVitalSignItems());
 
     let socketio = io('http://localhost:5000');
     socketio.emit('initial', {
-      items1: items1,
-      items2: items2,
+      waveformItems: items1,
+      vitalSignItems: items2,
       ip: settings.get('ip'),
       port: settings.get('port'),
       protocol: settings.get('protocol'),

@@ -6,21 +6,20 @@
 import uuid from 'node-uuid';
 
 import {
-  CHANGE_LAYOUT1,
-  RESET_LAYOUT1,
-  ADD_ITEM1,
-  REMOVE_ITEM1,
-  CHANGE_LAYOUT2,
-  RESET_LAYOUT2,
-  ADD_ITEM2,
-  REMOVE_ITEM2,
-  PLAY_MODE,
-  HANDLE_LEFT_DRAWER_TOGGLE,
-  HANDLE_LEFT_DRAWER_CLOSE,
+  CHANGE_WAVEFORM_LAYOUT,
+  RESET_WAVEFORM_LAYOUT,
+  ADD_WAVEFORM_ITEM,
+  REMOVE_WAVEFORM_ITEM,
+  CHANGE_VITAL_SIGN_LAYOUT,
+  RESET_VITAL_SIGN_LAYOUT,
+  ADD_VITAL_SIGN_ITEM,
+  REMOVE_VITAL_SIGN_ITEM,
+  HANDLE_WAVEFORM_DRAWER_TOGGLE,
+  HANDLE_WAVEFORM_DRAWER_CLOSE,
   HANDLE_WAVEFORM_CHANGE,
-  HANDLE_COLOR_CHANGE,
-  HANDLE_SCALE_CHANGE,
-  HANDLE_SPEED_CHANGE,
+  HANDLE_WAVEFORM_COLOR_CHANGE,
+  HANDLE_WAVEFORM_SCALE_CHANGE,
+  HANDLE_WAVEFORM_SPEED_CHANGE,
   HANDLE_RIGHT_DRAWER_TOGGLE,
   HANDLE_RIGHT_DRAWER_CLOSE,
   HANDLE_VITAL_SIGN_CHANGE,
@@ -29,24 +28,24 @@ import {
   SOCKET_CONNECTED
 } from './constants';
 
-export function changeLayout1(layout1) {
+export function changeWaveformLayout(layout1) {
   return {
-    type: CHANGE_LAYOUT1,
-    layout1: layout1
+    type: CHANGE_WAVEFORM_LAYOUT,
+    waveformLayout: layout1
   };
 }
 
-export function resetLayout1() {
+export function resetWaveformLayout() {
   return {
-    type: RESET_LAYOUT1
+    type: RESET_WAVEFORM_LAYOUT
   };
 }
 
-export function addItem1() {
+export function addWaveformItem() {
   let i = uuid.v4();
   return {
-    type: ADD_ITEM1,
-    layout1: [
+    type: ADD_WAVEFORM_ITEM,
+    waveformLayout: [
       {
         i: i,
         x: 0,
@@ -55,7 +54,7 @@ export function addItem1() {
         h: 1
       }
     ],
-    items1: {
+    waveformItems: {
       [i]: {
         waveform: 'ECG - II',
         strokeStyle: 'green',
@@ -67,31 +66,31 @@ export function addItem1() {
   }
 }
 
-export function removeItem1(i) {
+export function removeWaveformItem(i) {
   return {
-    type: REMOVE_ITEM1,
+    type: REMOVE_WAVEFORM_ITEM,
     i: i
   };
 }
 
-export function changeLayout2(layout2) {
+export function changeVitalSignLayout(layout2) {
   return {
-    type: CHANGE_LAYOUT2,
-    layout2: layout2
+    type: CHANGE_VITAL_SIGN_LAYOUT,
+    vitalSignLayout: layout2
   };
 }
 
-export function resetLayout2() {
+export function resetVitalSignLayout() {
   return {
-    type: RESET_LAYOUT2,
+    type: RESET_VITAL_SIGN_LAYOUT,
   };
 }
 
-export function addItem2() {
+export function addVitalSignItem() {
   let i = uuid.v4();
   return {
-    type: ADD_ITEM2,
-    layout2: [
+    type: ADD_VITAL_SIGN_ITEM,
+    vitalSignLayout: [
       {
         i: i,
         x: 9,
@@ -101,7 +100,7 @@ export function addItem2() {
         minW: 6
       }
     ],
-    items2: {
+    vitalSignItems: {
       [i]: {
         vitalSign: 'HR',
         strokeStyle: 'green'
@@ -110,23 +109,23 @@ export function addItem2() {
   }
 }
 
-export function removeItem2(i) {
+export function removeVitalSignItem(i) {
   return {
-    type: REMOVE_ITEM2,
+    type: REMOVE_VITAL_SIGN_ITEM,
     i: i
   };
 }
 
-export function handleLeftDrawerToggle(i) {
+export function handleWaveformDrawerToggle(i) {
   return {
-    type: HANDLE_LEFT_DRAWER_TOGGLE,
+    type: HANDLE_WAVEFORM_DRAWER_TOGGLE,
     i: i
   };
 }
 
-export function handleLeftDrawerClose() {
+export function handleWaveformDrawerClose() {
   return {
-    type: HANDLE_LEFT_DRAWER_CLOSE,
+    type: HANDLE_WAVEFORM_DRAWER_CLOSE,
   };
 }
 
@@ -137,35 +136,35 @@ export function handleWaveformChange(value) {
   };
 }
 
-export function handleColorChange(value) {
+export function handleWaveformColorChange(value) {
   return {
-    type: HANDLE_COLOR_CHANGE,
+    type: HANDLE_WAVEFORM_COLOR_CHANGE,
     value: value
   };
 }
 
-export function handleScaleChange(value) {
+export function handleWaveformScaleChange(value) {
   return {
-    type: HANDLE_SCALE_CHANGE,
+    type: HANDLE_WAVEFORM_SCALE_CHANGE,
     value: value
   };
 }
 
-export function handleSpeedChange(value) {
+export function handleWaveformSpeedChange(value) {
   return {
-    type: HANDLE_SPEED_CHANGE,
+    type: HANDLE_WAVEFORM_SPEED_CHANGE,
     value: value
   };
 }
 
-export function handleRightDrawerToggle(i) {
+export function handleVitalSignDrawerToggle(i) {
   return {
     type: HANDLE_RIGHT_DRAWER_TOGGLE,
     i: i
   };
 }
 
-export function handleRightDrawerClose() {
+export function handleVitalSignDrawerClose() {
   return {
     type: HANDLE_RIGHT_DRAWER_CLOSE,
   };

@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the patientMonitorMobile state domain
  */
-const selectPatientMonitorMobileDomain = () => state => state.get('patientMonitorMobile');
+const selectPatientMonitorMobile = () => state => state.get('patientMonitorMobile');
 
 /**
  * Other specific selectors
@@ -14,59 +14,54 @@ const selectPatientMonitorMobileDomain = () => state => state.get('patientMonito
  * Default selector used by PatientMonitorMobile
  */
 
-const selectLayout1 = () => createSelector(
-  selectPatientMonitorMobileDomain(),
-  (patientMonitorMobileState) => patientMonitorMobileState.get('layout1')
+const makeSelectWaveformLayout = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('waveformLayout')
 );
 
-const selectItems1 = () => createSelector(
-  selectPatientMonitorMobileDomain(),
-  (patientMonitorMobileState) => patientMonitorMobileState.get('items1')
+const makeSelectWaveformItems = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('waveformItems')
 );
 
-const selectLayout2 = () => createSelector(
-  selectPatientMonitorMobileDomain(),
-  (patientMonitorMobileState) => patientMonitorMobileState.get('layout2')
+const makeSelectVitalSignLayout = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('vitalSignLayout')
 );
 
-const selectItems2 = () => createSelector(
-  selectPatientMonitorMobileDomain(),
-  (patientMonitorMobileState) => patientMonitorMobileState.get('items2')
+const makeSelectVitalSignItems = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('vitalSignItems')
 );
 
-const selectLeftDrawer = () => createSelector(
-  selectPatientMonitorMobileDomain(),
-  (patientMonitorMobileState) => patientMonitorMobileState.get('leftDrawer')
+const makeSelectWaveformDrawer = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('waveformDrawer')
 );
 
-const selectRightDrawer = () => createSelector(
-  selectPatientMonitorMobileDomain(),
-  (patientMonitorMobileState) => patientMonitorMobileState.get('rightDrawer')
+const makeSelectVitalSignDrawer = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('vitalSignDrawer')
 );
 
-const selectPlay = () => createSelector(
-  selectPatientMonitorMobileDomain(),
-  (patientMonitorMobileState) => patientMonitorMobileState.get('play')
-);
-
-const selectPowerOn = () => createSelector(
-  selectPatientMonitorMobileDomain(),
+const makeSelectPowerOn = () => createSelector(
+  selectPatientMonitorMobile(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('powerOn')
 );
 
-const selectSocket = () => createSelector(
-  selectPatientMonitorMobileDomain(),
+const makeSelectSocket = () => createSelector(
+  selectPatientMonitorMobile(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('socket')
 );
 
 export {
-  selectPatientMonitorMobileDomain,
-  selectLayout1,
-  selectItems1,
-  selectLayout2,
-  selectItems2,
-  selectLeftDrawer,
-  selectRightDrawer,
-  selectPowerOn,
-  selectSocket
+  selectPatientMonitorMobile,
+  makeSelectWaveformLayout,
+  makeSelectWaveformItems,
+  makeSelectVitalSignLayout,
+  makeSelectVitalSignItems,
+  makeSelectWaveformDrawer,
+  makeSelectVitalSignDrawer,
+  makeSelectPowerOn,
+  makeSelectSocket
 };
