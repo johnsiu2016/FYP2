@@ -165,7 +165,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
               cols={12}
               rowHeight={200}
               onLayoutChange={changeWaveformLayout}
-              onResizeStop={() => this.forceUpdate()}
+              onResizeStop={() => global.dispatchEvent(new Event('resize'))}
             >
               {waveformLayout.map(this.createWaveformItem)}
             </ReactGridLayout>
@@ -181,7 +181,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
               cols={12}
               rowHeight={200}
               onLayoutChange={changeVitalSignLayout}
-              onResizeStop={() => this.forceUpdate()}
+              onResizeStop={() => global.dispatchEvent(new Event('resize'))}
             >
               {vitalSignLayout.map(this.createVitalSignItem)}
             </ReactGridLayout>
