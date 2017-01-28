@@ -4,6 +4,7 @@
  *
  */
 import uuid from 'node-uuid';
+import {waveformItemTemplate} from '../../utils/utililtyFunctions';
 
 import {
   CHANGE_WAVEFORM_LAYOUT,
@@ -25,7 +26,8 @@ import {
   HANDLE_VITAL_SIGN_CHANGE,
   HANDLE_VITAL_SIGN_COLOR_CHANGE,
   HANDLE_POWER_BUTTON_TOGGLE,
-  SOCKET_CONNECTED
+  SOCKET_CONNECTED,
+  HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE
 } from './constants';
 
 export function changeWaveformLayout(layout1) {
@@ -55,13 +57,7 @@ export function addWaveformItem() {
       }
     ],
     waveformItems: {
-      [i]: {
-        waveform: 'ECG - II',
-        strokeStyle: 'green',
-        scale: 0.7,
-        speed: 3,
-        lineWidth: 3
-      }
+      [i]: waveformItemTemplate()
     }
   }
 }
@@ -195,4 +191,11 @@ export function socketConnected(socket) {
     type: SOCKET_CONNECTED,
     socket: socket
   };
+}
+
+export function handleWaveformToolbarGridOnButtonToggle(waveformItemId) {
+  return {
+    type: HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE,
+    waveformItemId: waveformItemId
+  }
 }

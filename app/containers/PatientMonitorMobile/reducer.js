@@ -26,7 +26,8 @@ import {
   HANDLE_VITAL_SIGN_CHANGE,
   HANDLE_VITAL_SIGN_COLOR_CHANGE,
   HANDLE_POWER_BUTTON_TOGGLE,
-  SOCKET_CONNECTED
+  SOCKET_CONNECTED,
+  HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE
 } from './constants';
 
 import {
@@ -141,6 +142,11 @@ function patientMonitorMobileReducer(state = initialState, action) {
     case SOCKET_CONNECTED:
       console.log(`SOCKET_CONNECTED ${action.socket}`);
       return state.set('socket', action.socket);
+
+    case HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE:
+      changedState = state.setIn(['waveformItems', action.waveformItemId, "gridOn"], !state.getIn(['waveformItems', action.waveformItemId, "gridOn"]));
+      saveToLS('patientMonitorMobile', changedState);
+      return changedState;
 
     default:
       return state;

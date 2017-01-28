@@ -45,7 +45,9 @@ import {
   handleVitalSignChange,
   handleVitalSignColorChange,
 
-  handlePowerButtonToggle
+  handlePowerButtonToggle,
+
+  handleWaveformToolbarGridOnButtonToggle
 } from './actions';
 
 import {
@@ -70,6 +72,7 @@ import ECG from 'components/ECG';
 import VitalSign from 'components/VitalSign';
 import BuildFontIcon from 'components/BuildFontIcon';
 import CloseFontIcon from 'components/CloseFontIcon';
+import CustomFontIcon from 'components/CustomFontIcon';
 import RestoreFloatingButton from 'components/RestoreFloatingButton';
 import AddFloatingButton from 'components/AddFloatingButton';
 import PowerOnIconButton from 'components/PowerOnIconButton';
@@ -259,7 +262,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
 
   // waveform
   createWaveformItem = (el) => {
-    const {handleWaveformDrawerToggle, removeWaveformItem, waveformItems, powerOn} = this.props;
+    const {handleWaveformDrawerToggle, removeWaveformItem, waveformItems, powerOn, handleWaveformToolbarGridOnButtonToggle} = this.props;
 
     const waveformItemId = el.get('i');
     const waveformItem = waveformItems.get(waveformItemId);
@@ -268,6 +271,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
     const lineWidth = waveformItem.get('lineWidth');
     const scale = waveformItem.get('scale');
     const speed = waveformItem.get('speed');
+    const gridOn = waveformItem.get('gridOn');
 
     if (el.get('y') === null) {
       el = el.set('y', Infinity);
@@ -277,10 +281,11 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       <div key={waveformItemId} data-grid={el.toObject()}>
         <ECGToolbarWrapper>
           <ECGText color={color[strokeStyle]}>{waveform}</ECGText>
+          <CustomFontIcon iconString="grid_on" onClick={handleWaveformToolbarGridOnButtonToggle.bind(this, waveformItemId)}/>
           <BuildFontIcon onTouchTap={handleWaveformDrawerToggle.bind(this, waveformItemId)}/>
           <CloseFontIcon onClick={removeWaveformItem.bind(this, waveformItemId)}/>
         </ECGToolbarWrapper>
-        <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%'}}>
+        <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%', position: 'absolute', zIndex: -1}}>
           <ECG
             socket={this.props.socket}
             i={waveformItemId}
@@ -288,8 +293,9 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             strokeStyle={strokeStyle}
             lineWidth={lineWidth}
             scale={scale}
-            speed={speed}/>
-        </Card>
+            speed={speed}
+            gridOn={gridOn}/>
+          </Card>
       </div>
     );
 
@@ -306,7 +312,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             strokeStyle={strokeStyle}
             lineWidth={lineWidth}
             scale={scale}
-            speed={speed}/>
+            speed={speed}
+            gridOn={gridOn}/>
         </ECGWrapperForPowerOnElement>
       </div>
     );
@@ -401,7 +408,9 @@ function mapDispatchToProps(dispatch) {
     handleVitalSignChange: (event, index, value) => dispatch(handleVitalSignChange(value)),
     handleVitalSignColorChange: (event, index, value) => dispatch(handleVitalSignColorChange(value)),
 
-    handlePowerButtonToggle: () => dispatch(handlePowerButtonToggle())
+    handlePowerButtonToggle: () => dispatch(handlePowerButtonToggle()),
+
+    handleWaveformToolbarGridOnButtonToggle: (waveformItemId) => dispatch(handleWaveformToolbarGridOnButtonToggle(waveformItemId))
   };
 }
 

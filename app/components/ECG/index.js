@@ -8,17 +8,11 @@ import React from 'react';
 
 import Dimensions from 'react-dimensions';
 import color from '../../utils/color.js';
+import {waveformItemTemplate} from '../../utils/utililtyFunctions';
 
 class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
-  static defaultProps = {
-    waveform: 'ECG-II',
-    strokeStyle: 'green',
-    lineWidth: 3,
-    scale: 0.8,
-    speed: 3,
-    showBuffer: true
-  };
+  static defaultProps = waveformItemTemplate();
 
   constructor(props) {
     super(props);
@@ -36,6 +30,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   componentDidMount() {
     let self = this;
+    if (self.props.gridOn) self.drawGrid();
     self.startAnimation();
     self.initialSocket();
     global.dispatchEvent(new Event('resize'));
@@ -48,6 +43,8 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   componentDidUpdate() {
     let self = this;
+    if (self.props.gridOn) self.drawGrid();
+    else self.clearGrid();
     self.restartAnimation();
     self.clearUpSocket();
     self.initialSocket();
@@ -56,10 +53,18 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   render() {
     let {containerWidth, containerHeight} = this.props;
     return (
-      <canvas width={containerWidth}
-              height={containerHeight}
-              ref={(c) => this.canvas = c}>
-      </canvas>
+      <div>
+        <canvas width={containerWidth}
+                height={containerHeight}
+                style={{position: 'absolute', zIndex: 1}}
+                ref={(c) => this.backgroundCanvas = c}>
+        </canvas>
+        <canvas width={containerWidth}
+                height={containerHeight}
+                style={{position: 'absolute', zIndex: 2}}
+                ref={(c) => this.canvas = c}>
+        </canvas>
+      </div>
     );
   }
 
@@ -174,6 +179,51 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   convertToGraphCoord = (num, height) => {
     return (height / 2) * -(num * this.props.scale) + height / 2;
+  };
+
+  drawGrid = () => {
+    let self = this;
+    let ctx = self.backgroundCanvas.getContext('2d');
+
+    const majorGridPixelSize = (ctx.canvas.width / 30);
+    const minorGridPixelSize = (majorGridPixelSize / 5);
+
+    self.renderGrid(ctx, majorGridPixelSize, "#757575", 0.6, true);
+    self.renderGrid(ctx, minorGridPixelSize, "#546E7A", 0.3);
+  };
+
+  // Render Major Grid
+  renderGrid = (ctx, majorGridPixelSize, color, lineWidth, major) => {
+    const ECGWidth = ctx.canvas.width;
+    const ECGHeight = ctx.canvas.height;
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = color;
+
+    // horizontal grid lines
+    for (let i = 0; i <= ECGHeight; i = i + majorGridPixelSize) {
+      if (major && i === 0) continue;
+      ctx.beginPath();
+      ctx.moveTo(0, i);
+      ctx.lineTo(ECGWidth, i);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // vertical grid lines
+    for (let j = 0; j <= ECGWidth; j = j + majorGridPixelSize) {
+      if (major && j === 0) continue;
+      ctx.beginPath();
+      ctx.moveTo(j, 0);
+      ctx.lineTo(j, ECGHeight);
+      ctx.closePath();
+      ctx.stroke();
+    }
+  };
+
+  clearGrid = () => {
+    let self = this;
+    let ctx = self.backgroundCanvas.getContext('2d');
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 }
 
