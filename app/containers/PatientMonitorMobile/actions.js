@@ -27,7 +27,8 @@ import {
   HANDLE_VITAL_SIGN_COLOR_CHANGE,
   HANDLE_POWER_BUTTON_TOGGLE,
   SOCKET_CONNECTED,
-  HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE
+  HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE,
+  HANDLE_DISPLAY_MODE_CHANGE
 } from './constants';
 
 export function changeWaveformLayout(layout1) {
@@ -197,5 +198,12 @@ export function handleWaveformToolbarGridOnButtonToggle(waveformItemId) {
   return {
     type: HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE,
     waveformItemId: waveformItemId
+  }
+}
+
+export function handleDisplayModeChange(displayModeValue) {
+  return {
+    type: HANDLE_DISPLAY_MODE_CHANGE,
+    value: displayModeValue
   }
 }

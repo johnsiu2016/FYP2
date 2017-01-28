@@ -27,7 +27,8 @@ import {
   HANDLE_VITAL_SIGN_COLOR_CHANGE,
   HANDLE_POWER_BUTTON_TOGGLE,
   SOCKET_CONNECTED,
-  HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE
+  HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE,
+  HANDLE_DISPLAY_MODE_CHANGE
 } from './constants';
 
 import {
@@ -54,7 +55,8 @@ const initialState = fromJS(getFromLS('patientMonitorMobile')) || fromJS({
       open: false
     },
     powerOn: false,
-    socket: null
+    socket: null,
+    displayMode: "Simulation mode"
   });
 
 
@@ -147,6 +149,9 @@ function patientMonitorMobileReducer(state = initialState, action) {
       changedState = state.setIn(['waveformItems', action.waveformItemId, "gridOn"], !state.getIn(['waveformItems', action.waveformItemId, "gridOn"]));
       saveToLS('patientMonitorMobile', changedState);
       return changedState;
+
+    case HANDLE_DISPLAY_MODE_CHANGE:
+      return state.set('displayMode', action.value);
 
     default:
       return state;

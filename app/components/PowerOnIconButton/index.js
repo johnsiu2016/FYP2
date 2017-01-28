@@ -22,8 +22,7 @@ function PowerOnIconButton({onClick, powerOn}) {
       touch={true}
     >
       <FontIcon className="material-icons"
-                color={powerOn ? red500 : grey50}
-      >
+                color={powerOn ? red500 : grey50}>
         power_settings_new
       </FontIcon>
     </IconButton>
@@ -31,7 +30,8 @@ function PowerOnIconButton({onClick, powerOn}) {
 }
 
 PowerOnIconButton.propTypes = {
-  onClick: React.PropTypes.func
+  onClick: React.PropTypes.func,
+  powerOn: React.PropTypes.bool
 };
 
 export default PowerOnIconButton

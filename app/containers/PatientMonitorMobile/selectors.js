@@ -54,6 +54,11 @@ const makeSelectSocket = () => createSelector(
   (patientMonitorMobileState) => patientMonitorMobileState.get('socket')
 );
 
+const makeSelectDisplayMode = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('displayMode')
+);
+
 export {
   selectPatientMonitorMobile,
   makeSelectWaveformLayout,
@@ -63,5 +68,6 @@ export {
   makeSelectWaveformDrawer,
   makeSelectVitalSignDrawer,
   makeSelectPowerOn,
-  makeSelectSocket
+  makeSelectSocket,
+  makeSelectDisplayMode
 };

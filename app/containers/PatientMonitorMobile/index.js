@@ -9,13 +9,13 @@ import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 
 // third part import
+import {Grid, Row, Col} from 'react-bootstrap';
 import ReactGrid, {WidthProvider} from 'react-grid-layout';
 const ReactGridLayout = WidthProvider(ReactGrid);
 
 import styled from 'styled-components';
 
 import {grey900, grey800, grey700} from 'material-ui/styles/colors';
-import {Grid, Row, Col} from 'react-bootstrap';
 import {Card} from 'material-ui/Card';
 
 import {createStructuredSelector} from 'reselect';
@@ -47,7 +47,8 @@ import {
 
   handlePowerButtonToggle,
 
-  handleWaveformToolbarGridOnButtonToggle
+  handleWaveformToolbarGridOnButtonToggle,
+  handleDisplayModeChange
 } from './actions';
 
 import {
@@ -58,7 +59,8 @@ import {
   makeSelectWaveformDrawer,
   makeSelectVitalSignDrawer,
   makeSelectPowerOn,
-  makeSelectSocket
+  makeSelectSocket,
+  makeSelectDisplayMode
 } from './selectors';
 
 import {
@@ -78,6 +80,7 @@ import AddFloatingButton from 'components/AddFloatingButton';
 import PowerOnIconButton from 'components/PowerOnIconButton';
 import WaveformDrawer from 'components/WaveformDrawer';
 import VitalSignDrawer from 'components/VitalSignDrawer';
+import DisplayModeDropDownMenu from 'components/DisplayModeDropDownMenu';
 const ECGToolbarWrapper = styled.div`
   height: 15%;
   width: 100%;
@@ -131,7 +134,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       handleVitalSignDrawerClose,
       handleVitalSignChange,
       handleVitalSignColorChange,
-      handlePowerButtonToggle
+      handlePowerButtonToggle,
+      handleDisplayModeChange
     } = this.props;
 
     const {
@@ -141,7 +145,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       vitalSignItems,
       waveformDrawer,
       vitalSignDrawer,
-      powerOn
+      powerOn,
+      displayMode
     } = this.props;
 
     const waveformItemId = waveformDrawer.get('i');
@@ -197,6 +202,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
         <Row>
           <Col lg={12} style={{height: '5vh', minHeight: 48, background: grey700}}>
             <PowerOnIconButton onClick={handlePowerButtonToggle} powerOn={powerOn}/>
+            <DisplayModeDropDownMenu value={displayMode} onChange={handleDisplayModeChange}/>
           </Col>
         </Row>
         <WaveformDrawer
@@ -253,6 +259,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
         <Row>
           <Col lg={12} style={{height: '5vh', minHeight: 48, background: grey700}}>
             <PowerOnIconButton onClick={handlePowerButtonToggle} powerOn={powerOn}/>
+            <DisplayModeDropDownMenu value={displayMode} onChange={handleDisplayModeChange} powerOn={powerOn}/>
           </Col>
         </Row>
       </Grid>
@@ -375,6 +382,7 @@ const mapStateToProps = createStructuredSelector({
   vitalSignDrawer: makeSelectVitalSignDrawer(),
   powerOn: makeSelectPowerOn(),
   socket: makeSelectSocket(),
+  displayMode: makeSelectDisplayMode(),
 
   ip: selectIP(),
   port: selectPort(),
@@ -410,7 +418,8 @@ function mapDispatchToProps(dispatch) {
 
     handlePowerButtonToggle: () => dispatch(handlePowerButtonToggle()),
 
-    handleWaveformToolbarGridOnButtonToggle: (waveformItemId) => dispatch(handleWaveformToolbarGridOnButtonToggle(waveformItemId))
+    handleWaveformToolbarGridOnButtonToggle: (waveformItemId) => dispatch(handleWaveformToolbarGridOnButtonToggle(waveformItemId)),
+    handleDisplayModeChange: (event, index, value) => dispatch(handleDisplayModeChange(value))
   };
 }
 

@@ -25,3 +25,4 @@ export const HANDLE_VITAL_SIGN_COLOR_CHANGE = 'app/PatientMonitorMobile/HANDLE_V
 export const HANDLE_POWER_BUTTON_TOGGLE = 'app/PatientMonitorMobile/HANDLE_POWER_BUTTON_TOGGLE';
 export const SOCKET_CONNECTED = 'app/PatientMonitorMobile/SOCKET_CONNECTED';
 export const HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE = 'app/PatientMonitorMobile/HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE';
+export const HANDLE_DISPLAY_MODE_CHANGE = 'app/PatientMonitorMobile/HANDLE_DISPLAY_MODE_CHANGE';
