@@ -22,8 +22,6 @@ function WaveformDrawer({
   handleWaveformColorChange,
   waveformScale,
   handleWaveformScaleChange,
-  waveformSpeed,
-  handleWaveformSpeedChange,
   handleCloseWaveformDrawer
 }) {
   return (
@@ -65,7 +63,7 @@ function WaveformDrawer({
       </List>
       <Divider />
       <List>
-        <Subheader>Scale and Speed</Subheader>
+        <Subheader>Scale</Subheader>
         <div>
           <ListItem>
             <div>Scale</div>
@@ -79,20 +77,6 @@ function WaveformDrawer({
             />
             <div style={{'textAlign': 'center'}}>
               {waveformScale}
-            </div>
-          </ListItem>
-          <ListItem>
-            <div>Speed</div>
-            <Slider
-              min={0}
-              max={5}
-              step={1}
-              defaultValue={waveformSpeed}
-              value={waveformSpeed}
-              onChange={handleWaveformSpeedChange}
-            />
-            <div style={{'textAlign': 'center'}}>
-              {`${waveformSpeed}x`}
             </div>
           </ListItem>
         </div>

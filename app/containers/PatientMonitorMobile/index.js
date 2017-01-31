@@ -38,7 +38,6 @@ import {
   handleWaveformChange,
   handleWaveformColorChange,
   handleWaveformScaleChange,
-  handleWaveformSpeedChange,
 
   handleVitalSignDrawerToggle,
   handleVitalSignDrawerClose,
@@ -126,7 +125,6 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       handleWaveformChange,
       handleWaveformColorChange,
       handleWaveformScaleChange,
-      handleWaveformSpeedChange,
       handleWaveformDrawerClose,
       changeVitalSignLayout,
       resetVitalSignLayout,
@@ -155,7 +153,6 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
     const waveformType = waveformItem ? waveformItem.get('waveform') : "ECG - II";
     const waveformColor = waveformItem ? waveformItem.get('strokeStyle') : "green";
     const waveformScale = waveformItem ? waveformItem.get('scale') : 0.8;
-    const waveformSpeed = waveformItem ? waveformItem.get('speed') : 3;
 
     const vitalSignItemId = vitalSignDrawer.get('i');
     const isVitalSignDrawerOpen = vitalSignDrawer.get('open');
@@ -213,8 +210,6 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
           handleWaveformColorChange={handleWaveformColorChange}
           waveformScale={waveformScale}
           handleWaveformScaleChange={handleWaveformScaleChange}
-          waveformSpeed={waveformSpeed}
-          handleWaveformSpeedChange={handleWaveformSpeedChange}
           handleCloseWaveformDrawer={handleWaveformDrawerClose}
         />
         <VitalSignDrawer
@@ -284,7 +279,6 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
     const strokeStyle = waveformItem.get('strokeStyle');
     const lineWidth = waveformItem.get('lineWidth');
     const scale = waveformItem.get('scale');
-    const speed = waveformItem.get('speed');
     const gridOn = waveformItem.get('gridOn');
 
     if (el.get('y') === null) {
@@ -309,7 +303,6 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             strokeStyle={strokeStyle}
             lineWidth={lineWidth}
             scale={scale}
-            speed={speed}
             gridOn={gridOn}
             displayMode={displayMode}/>
         </Card>
@@ -329,7 +322,6 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             strokeStyle={strokeStyle}
             lineWidth={lineWidth}
             scale={scale}
-            speed={speed}
             gridOn={gridOn}
             displayMode={displayMode}/>
         </ECGWrapperForPowerOnElement>
@@ -428,7 +420,6 @@ function mapDispatchToProps(dispatch) {
     handleWaveformChange: (event, index, value) => dispatch(handleWaveformChange(value)),
     handleWaveformColorChange: (event, index, value) => dispatch(handleWaveformColorChange(value)),
     handleWaveformScaleChange: (event, value) => dispatch(handleWaveformScaleChange(value)),
-    handleWaveformSpeedChange: (event, value) => dispatch(handleWaveformSpeedChange(value)),
 
     handleVitalSignDrawerToggle: (i) => dispatch(handleVitalSignDrawerToggle(i)),
     handleVitalSignDrawerClose: () => dispatch(handleVitalSignDrawerClose()),

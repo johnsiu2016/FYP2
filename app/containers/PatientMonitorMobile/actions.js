@@ -20,7 +20,6 @@ import {
   HANDLE_WAVEFORM_CHANGE,
   HANDLE_WAVEFORM_COLOR_CHANGE,
   HANDLE_WAVEFORM_SCALE_CHANGE,
-  HANDLE_WAVEFORM_SPEED_CHANGE,
   HANDLE_RIGHT_DRAWER_TOGGLE,
   HANDLE_RIGHT_DRAWER_CLOSE,
   HANDLE_VITAL_SIGN_CHANGE,
@@ -143,13 +142,6 @@ export function handleWaveformColorChange(value) {
 export function handleWaveformScaleChange(value) {
   return {
     type: HANDLE_WAVEFORM_SCALE_CHANGE,
-    value: value
-  };
-}
-
-export function handleWaveformSpeedChange(value) {
-  return {
-    type: HANDLE_WAVEFORM_SPEED_CHANGE,
     value: value
   };
 }

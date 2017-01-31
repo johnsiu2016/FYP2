@@ -20,7 +20,6 @@ import {
   HANDLE_WAVEFORM_CHANGE,
   HANDLE_WAVEFORM_COLOR_CHANGE,
   HANDLE_WAVEFORM_SCALE_CHANGE,
-  HANDLE_WAVEFORM_SPEED_CHANGE,
   HANDLE_RIGHT_DRAWER_TOGGLE,
   HANDLE_RIGHT_DRAWER_CLOSE,
   HANDLE_VITAL_SIGN_CHANGE,
@@ -118,9 +117,6 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case HANDLE_WAVEFORM_SCALE_CHANGE:
       return state.setIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'scale'], action.value);
-
-    case HANDLE_WAVEFORM_SPEED_CHANGE:
-      return state.setIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'speed'], action.value);
 
 
     case HANDLE_RIGHT_DRAWER_TOGGLE:

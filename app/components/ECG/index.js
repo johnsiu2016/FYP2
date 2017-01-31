@@ -81,7 +81,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
     let ecg = this.canvas;
     let ctx = ecg.getContext('2d');
-    let speed = self.props.speed;
     let scanBarWidth = 20;
     let animationID = 0;
 
@@ -95,7 +94,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     ctx.lineWidth = self.props.lineWidth;
 
     let speedCount = self.speed || 1;
-
     function animate() {
       while (speedCount > 0) {
         self.py = self.getDataPoint();
@@ -134,9 +132,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let py;
 
     if (self.ecgData) {
-
       py = self.convertToGraphCoord(self.ecgData[self.dataIndex], self.h);
-
       self.dataIndex = self.dataIndex + 1;
       if (self.dataIndex >= self.ecgData.length) {
         self.dataIndex = 0;
@@ -152,7 +148,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     } else {
       if (self.ecgDataBuffer.length > 2) {
         self.ecgData = self.ecgDataBuffer.shift();
-        self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length;
+        self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length; // potential problem: if the data length of different waveform is not the same, the clear bar will be different
         self.speed = self.ecgData.length / 60 || 2;
       }
       return self.h / 2

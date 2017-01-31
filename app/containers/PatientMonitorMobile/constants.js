@@ -17,7 +17,6 @@ export const HANDLE_WAVEFORM_DRAWER_CLOSE = 'app/PatientMonitorMobile/HANDLE_WAV
 export const HANDLE_WAVEFORM_CHANGE = 'app/PatientMonitorMobile/HANDLE_WAVEFORM_CHANGE';
 export const HANDLE_WAVEFORM_COLOR_CHANGE = 'app/PatientMonitorMobile/HANDLE_WAVEFORM_COLOR_CHANGE';
 export const HANDLE_WAVEFORM_SCALE_CHANGE = 'app/PatientMonitorMobile/HANDLE_WAVEFORM_SCALE_CHANGE';
-export const HANDLE_WAVEFORM_SPEED_CHANGE = 'app/PatientMonitorMobile/HANDLE_WAVEFORM_SPEED_CHANGE';
 export const HANDLE_RIGHT_DRAWER_TOGGLE = 'app/PatientMonitorMobile/HANDLE_RIGHT_DRAWER_TOGGLE';
 export const HANDLE_RIGHT_DRAWER_CLOSE = 'app/PatientMonitorMobile/HANDLE_RIGHT_DRAWER_CLOSE';
 export const HANDLE_VITAL_SIGN_CHANGE = 'app/PatientMonitorMobile/HANDLE_VITAL_SIGN_CHANGE';

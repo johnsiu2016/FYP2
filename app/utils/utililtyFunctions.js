@@ -67,10 +67,10 @@ export function initialWaveformLayoutAndItems() {
     ],
     waveformItems: {
       [i1]: waveformItemTemplate(),
-      [i2]: waveformItemTemplate("PPG", "red", 0.7, 3, 3, false),
-      [i3]: waveformItemTemplate("RBBB", "yellow", 0.7, 3, 3, false),
-      [i4]: waveformItemTemplate("Bigeminy", "blue", 0.7, 3, 3, false),
-      [i5]: waveformItemTemplate("ECG - II", "white", 0.7, 3, 3, false)
+      [i2]: waveformItemTemplate("PPG", "red", 0.7, 3, false),
+      [i3]: waveformItemTemplate("RBBB", "yellow", 0.7, 3, false),
+      [i4]: waveformItemTemplate("Bigeminy", "blue", 0.7, 3, false),
+      [i5]: waveformItemTemplate("ECG - II", "white", 0.7, 3, false)
     }
   }
 }
@@ -150,12 +150,11 @@ export function initialVitalSignLayoutAndItems() {
   }
 }
 
-export function waveformItemTemplate(waveform, strokeStyle, scale, speed, lineWidth, gridOn) {
+export function waveformItemTemplate(waveform, strokeStyle, scale, lineWidth, gridOn) {
   return {
     waveform: waveform || 'ECG - II',
     strokeStyle: strokeStyle || 'green',
     scale: scale || 0.7,
-    speed: speed || 3,
     lineWidth: lineWidth || 3,
     gridOn: gridOn || false
   }
