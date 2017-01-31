@@ -85,14 +85,14 @@ function WaveformDrawer({
             <div>Speed</div>
             <Slider
               min={0}
-              max={10}
-              step={0.5}
+              max={5}
+              step={1}
               defaultValue={waveformSpeed}
               value={waveformSpeed}
               onChange={handleWaveformSpeedChange}
             />
             <div style={{'textAlign': 'center'}}>
-              {waveformSpeed}
+              {`${waveformSpeed}x`}
             </div>
           </ListItem>
         </div>

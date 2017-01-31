@@ -269,7 +269,14 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
 
   // waveform
   createWaveformItem = (el) => {
-    const {handleWaveformDrawerToggle, removeWaveformItem, waveformItems, powerOn, handleWaveformToolbarGridOnButtonToggle} = this.props;
+    const {
+      handleWaveformDrawerToggle,
+      removeWaveformItem,
+      waveformItems,
+      powerOn,
+      handleWaveformToolbarGridOnButtonToggle,
+      displayMode
+    } = this.props;
 
     const waveformItemId = el.get('i');
     const waveformItem = waveformItems.get(waveformItemId);
@@ -288,11 +295,13 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       <div key={waveformItemId} data-grid={el.toObject()}>
         <ECGToolbarWrapper>
           <ECGText color={color[strokeStyle]}>{waveform}</ECGText>
-          <CustomFontIcon iconString="grid_on" onClick={handleWaveformToolbarGridOnButtonToggle.bind(this, waveformItemId)}/>
+          <CustomFontIcon iconString="grid_on"
+                          onClick={handleWaveformToolbarGridOnButtonToggle.bind(this, waveformItemId)}/>
           <BuildFontIcon onTouchTap={handleWaveformDrawerToggle.bind(this, waveformItemId)}/>
           <CloseFontIcon onClick={removeWaveformItem.bind(this, waveformItemId)}/>
         </ECGToolbarWrapper>
-        <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%', position: 'absolute', zIndex: -1}}>
+        <Card containerStyle={{height: '100%', width: '100%'}}
+              style={{height: '85%', width: '100%', position: 'absolute', zIndex: -1}}>
           <ECG
             socket={this.props.socket}
             i={waveformItemId}
@@ -301,8 +310,9 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             lineWidth={lineWidth}
             scale={scale}
             speed={speed}
-            gridOn={gridOn}/>
-          </Card>
+            gridOn={gridOn}
+            displayMode={displayMode}/>
+        </Card>
       </div>
     );
 
@@ -320,7 +330,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             lineWidth={lineWidth}
             scale={scale}
             speed={speed}
-            gridOn={gridOn}/>
+            gridOn={gridOn}
+            displayMode={displayMode}/>
         </ECGWrapperForPowerOnElement>
       </div>
     );
@@ -330,7 +341,13 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
 
   // vital sign
   createVitalSignItem = (el) => {
-    const {removeVitalSignItem, handleVitalSignDrawerToggle, vitalSignItems, powerOn} = this.props;
+    const {
+      removeVitalSignItem,
+      handleVitalSignDrawerToggle,
+      vitalSignItems,
+      powerOn,
+      displayMode
+    } = this.props;
 
     const vitalSignItemId = el.get('i');
     const vitalSignItem = vitalSignItems.get(vitalSignItemId);
@@ -350,7 +367,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             i={vitalSignItemId}
             vitalSign={vitalSign}
             strokeStyle={strokeStyle}
-            w={w}/>
+            w={w}
+            displayMode={displayMode}/>
         </Card>
       </div>
     );
@@ -364,7 +382,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             i={vitalSignItemId}
             vitalSign={vitalSign}
             strokeStyle={strokeStyle}
-            w={w}/>
+            w={w}
+            displayMode={displayMode}/>
         </VitalSignWrapperForPowerOnElement>
       </div>
     );

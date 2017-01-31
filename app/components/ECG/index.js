@@ -8,7 +8,7 @@ import React from 'react';
 
 import Dimensions from 'react-dimensions';
 import color from '../../utils/color.js';
-import {waveformItemTemplate} from '../../utils/utililtyFunctions';
+import {waveformItemTemplate, requestDataInterval} from '../../utils/utililtyFunctions';
 
 class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -26,28 +26,36 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     this.h = 0;
     this.py = 0;
     this.px = 0;
+
+    this.intervalId = null;
   }
 
   componentDidMount() {
     let self = this;
+    self.initial();
     if (self.props.gridOn) self.drawGrid();
     self.startAnimation();
-    self.initialSocket();
+    if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
+    else self.initialSocket();
     global.dispatchEvent(new Event('resize'));
   }
 
   componentWillUnmount() {
     let self = this;
+    self.requestDataClearInterval();
     self.clearUpSocket();
   }
 
   componentDidUpdate() {
     let self = this;
+    self.initial();
     if (self.props.gridOn) self.drawGrid();
     else self.clearGrid();
     self.restartAnimation();
+    self.requestDataClearInterval();
     self.clearUpSocket();
-    self.initialSocket();
+    if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
+    else self.initialSocket();
   }
 
   render() {
@@ -86,23 +94,28 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     ctx.strokeStyle = color[self.props.strokeStyle];
     ctx.lineWidth = self.props.lineWidth;
 
+    let speedCount = self.speed || 1;
+
     function animate() {
-      self.py = self.getDataPoint();
-      self.px += speed;
+      while (speedCount > 0) {
+        self.py = self.getDataPoint();
+        self.px += self.pxSyncWithHR || 2;
 
-      ctx.clearRect(self.px, 0, scanBarWidth, self.h);
-      ctx.beginPath();
-      ctx.moveTo(opx, opy);
-      ctx.lineTo(self.px, self.py);
-      ctx.stroke();
+        ctx.clearRect(self.px, 0, scanBarWidth, self.h);
+        ctx.beginPath();
+        ctx.moveTo(opx, opy);
+        ctx.lineTo(self.px, self.py);
+        ctx.stroke();
 
-      opx = self.px;
-      opy = self.py;
+        opx = self.px;
+        opy = self.py;
 
-      if (opx > self.w) {
-        self.px = opx = -speed;
+        if (opx > self.w) {
+          self.px = opx = -(self.pxSyncWithHR || 2);
+        }
+        speedCount = speedCount - 1;
       }
-
+      speedCount = self.speed || 1;
       animationID = requestAnimationFrame(animate);
     }
 
@@ -128,13 +141,19 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       if (self.dataIndex >= self.ecgData.length) {
         self.dataIndex = 0;
         self.ecgData = self.ecgDataBuffer.shift();
+        if (self.ecgData) {
+          self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length;
+          self.speed = self.ecgData.length / 60 || 2;
+        }
       }
 
       return py;
 
     } else {
-      if (self.ecgDataBuffer.length > 0) {
+      if (self.ecgDataBuffer.length > 2) {
         self.ecgData = self.ecgDataBuffer.shift();
+        self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length;
+        self.speed = self.ecgData.length / 60 || 2;
       }
       return self.h / 2
     }
@@ -143,23 +162,23 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   initialSocket = () => {
     let self = this;
     if (self.props.socket) {
-      self.props.socket.on(self.props.i, self.socketDataCallback);
+      self.props.socket.on(self.props.i, self.waveformDataCallback);
     }
   };
 
   clearUpSocket = () => {
     let self = this;
     if (self.props.socket) {
-      self.props.socket.off(self.props.i, self.socketDataCallback);
+      self.props.socket.off(self.props.i, self.waveformDataCallback);
     }
   };
 
-  socketDataCallback = (data) => {
+  waveformDataCallback = (data) => {
     let self = this;
-    if (self.ecgDataBuffer.length < 20) {
+    if (self.ecgDataBuffer.length < 10) {
       self.ecgDataBuffer.push(data);
+      console.log(`${self.props.waveform} ${self.ecgDataBuffer.length}`)
     }
-    // console.log(`${self.props.waveform} buffer: ${self.ecgDataBuffer.length}`);
   };
 
   startAnimation = () => {
@@ -185,11 +204,8 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let self = this;
     let ctx = self.backgroundCanvas.getContext('2d');
 
-    const majorGridPixelSize = (ctx.canvas.width / 30);
-    const minorGridPixelSize = (majorGridPixelSize / 5);
-
-    self.renderGrid(ctx, majorGridPixelSize, "#757575", 0.6, true);
-    self.renderGrid(ctx, minorGridPixelSize, "#546E7A", 0.3);
+    self.renderGrid(ctx, self.majorGridPixelSize, "#757575", 0.6, true);
+    self.renderGrid(ctx, self.minorGridPixelSize, "#546E7A", 0.3);
   };
 
   // Render Major Grid
@@ -224,7 +240,25 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let self = this;
     let ctx = self.backgroundCanvas.getContext('2d');
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  }
+  };
+
+  initial = () => {
+    let self = this;
+    let ctx = self.backgroundCanvas.getContext('2d');
+
+    self.majorGridPixelSize = (ctx.canvas.width / 30);
+    self.minorGridPixelSize = (self.majorGridPixelSize / 5);
+  };
+
+  initialSimulationMode = () => {
+    let self = this;
+    self.intervalId = requestDataInterval(self.props.waveform, 1000, self.waveformDataCallback);
+  };
+
+  requestDataClearInterval = () => {
+    let self = this;
+    clearInterval(self.intervalId);
+  };
 }
 
 export default Dimensions()(ECG) // Enhanced component
