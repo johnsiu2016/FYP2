@@ -8,7 +8,7 @@ import React from 'react';
 
 import Dimensions from 'react-dimensions';
 import color from '../../utils/color.js';
-import {waveformItemTemplate, requestDataInterval} from '../../utils/utililtyFunctions';
+import {waveformItemTemplate, requestWaveformDataInterval} from '../../utils/utililtyFunctions';
 
 class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -42,7 +42,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   componentWillUnmount() {
     let self = this;
-    self.requestDataClearInterval();
+    self.requestWaveformDataClearInterval();
     self.clearUpSocket();
   }
 
@@ -52,7 +52,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     if (self.props.gridOn) self.drawGrid();
     else self.clearGrid();
     self.restartAnimation();
-    self.requestDataClearInterval();
+    self.requestWaveformDataClearInterval();
     self.clearUpSocket();
     if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
     else self.initialSocket();
@@ -173,7 +173,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let self = this;
     if (self.ecgDataBuffer.length < 10) {
       self.ecgDataBuffer.push(data);
-      console.log(`${self.props.waveform} ${self.ecgDataBuffer.length}`)
+      // console.log(`${self.props.waveform} ${self.ecgDataBuffer.length}`)
     }
   };
 
@@ -248,10 +248,10 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   initialSimulationMode = () => {
     let self = this;
-    self.intervalId = requestDataInterval(self.props.waveform, 1000, self.waveformDataCallback);
+    self.intervalId = requestWaveformDataInterval(self.props.waveform, 1000, self.waveformDataCallback);
   };
 
-  requestDataClearInterval = () => {
+  requestWaveformDataClearInterval = () => {
     let self = this;
     clearInterval(self.intervalId);
   };

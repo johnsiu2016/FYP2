@@ -12,6 +12,8 @@ import styled from 'styled-components';
 import color from '../../utils/color.js';
 import fakeDefaultVitalSignData from '../../utils/fakeDefaultVitalSignData.js';
 
+import {vitalSignItemTemplate, requestVitalSignDataInterval} from '../../utils/utililtyFunctions';
+
 const HRWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -67,21 +69,34 @@ const BPMeanWrapper = styled.div`
 `;
 
 class VitalSign extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+
+  static defaultProps = vitalSignItemTemplate();
+
+  constructor(props) {
+    super(props);
+
+    this.intervalId = null;
+  }
+
   componentDidMount() {
     let self = this;
-    self.initialSocket();
+    if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
+    else self.initialSocket();
     global.dispatchEvent(new Event('resize'));
   }
 
   componentWillUnmount() {
     let self = this;
+    self.requestVitalSignDataClearInterval();
     self.clearUpSocket();
   }
 
   componentDidUpdate() {
     let self = this;
+    self.requestVitalSignDataClearInterval();
     self.clearUpSocket();
-    self.initialSocket();
+    if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
+    else self.initialSocket();
   }
 
   render() {
@@ -156,21 +171,22 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   initialSocket = () => {
     let self = this;
     if (self.props.socket) {
-      self.props.socket.on(self.props.i, self.socketDataCallback);
+      self.props.socket.on(self.props.i, self.vitalSignDataCallback);
     }
   };
 
   clearUpSocket = () => {
     let self = this;
     if (self.props.socket) {
-      self.props.socket.off(self.props.i, self.socketDataCallback);
+      self.props.socket.off(self.props.i, self.vitalSignDataCallback);
     }
   };
 
-  socketDataCallback = (data) => {
+  vitalSignDataCallback = (data) => {
     // console.log(`test ${JSON.stringify(data)}}`);
     switch (this.props.vitalSign) {
       case "HR":
+        window._HR = data.data;
       case "SpO2":
       case "RP":
         this.HRTop.innerHTML = data.top;
@@ -185,6 +201,16 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
         this.BPMean.innerHTML = `(${data.mean})`;
         break;
     }
+  };
+
+  initialSimulationMode = () => {
+    let self = this;
+    self.intervalId = requestVitalSignDataInterval(self.props.vitalSign, 3000, self.vitalSignDataCallback);
+  };
+
+  requestVitalSignDataClearInterval = () => {
+    let self = this;
+    clearInterval(self.intervalId);
   };
 }
 

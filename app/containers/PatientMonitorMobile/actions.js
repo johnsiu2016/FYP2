@@ -4,7 +4,7 @@
  *
  */
 import uuid from 'node-uuid';
-import {waveformItemTemplate} from '../../utils/utililtyFunctions';
+import {waveformItemTemplate, vitalSignItemTemplate} from '../../utils/utililtyFunctions';
 
 import {
   CHANGE_WAVEFORM_LAYOUT,
@@ -97,10 +97,7 @@ export function addVitalSignItem() {
       }
     ],
     vitalSignItems: {
-      [i]: {
-        vitalSign: 'HR',
-        strokeStyle: 'green'
-      }
+      [i]: vitalSignItemTemplate()
     }
   }
 }

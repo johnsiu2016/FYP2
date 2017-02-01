@@ -66,7 +66,7 @@ export function initialWaveformLayoutAndItems() {
       }
     ],
     waveformItems: {
-      [i1]: waveformItemTemplate(),
+      [i1]: waveformItemTemplate("ECG - II", "green", 0.7, 3, false),
       [i2]: waveformItemTemplate("PPG", "red", 0.7, 3, false),
       [i3]: waveformItemTemplate("RBBB", "yellow", 0.7, 3, false),
       [i4]: waveformItemTemplate("Bigeminy", "blue", 0.7, 3, false),
@@ -126,41 +126,26 @@ export function initialVitalSignLayoutAndItems() {
       }
     ],
     vitalSignItems: {
-      [i1]: {
-        vitalSign: 'HR',
-        strokeStyle: 'green'
-      },
-      [i2]: {
-        vitalSign: 'ABP',
-        strokeStyle: 'red'
-      },
-      [i3]: {
-        vitalSign: 'PAP',
-        strokeStyle: 'yellow'
-      },
-      [i4]: {
-        vitalSign: 'SpO2',
-        strokeStyle: 'blue'
-      },
-      [i5]: {
-        vitalSign: 'RP',
-        strokeStyle: 'white'
-      }
+      [i1]: vitalSignItemTemplate("HR", "green"),
+      [i2]: vitalSignItemTemplate("ABP", "red"),
+      [i3]: vitalSignItemTemplate("PAP", "yellow"),
+      [i4]: vitalSignItemTemplate("SpO2", "blue"),
+      [i5]: vitalSignItemTemplate("RP", "white")
     }
   }
 }
 
 export function waveformItemTemplate(waveform, strokeStyle, scale, lineWidth, gridOn) {
   return {
-    waveform: waveform || 'ECG - II',
-    strokeStyle: strokeStyle || 'green',
+    waveform: waveform || "ECG - II",
+    strokeStyle: strokeStyle || "green",
     scale: scale || 0.7,
     lineWidth: lineWidth || 3,
     gridOn: gridOn || false
   }
 }
 
-export function requestDataInterval(type, second, cb) {
+export function requestWaveformDataInterval(type, second, cb) {
   const execCalculateECGArray = calculateECGArray(type);
   return setInterval(() => {
     requestSimulationModeWaveformData(execCalculateECGArray).then((waveformData) => {
@@ -276,10 +261,10 @@ export function calculateECGArray(type) {
     splitPoint = splitPoint + numberOfMovingPoint;
     if (splitPoint >= baseDataLength) splitPoint = splitPoint - baseDataLength;
 
-    console.log(formatRawWaveformArray.length)
-    console.log(splitPoint)
-    console.log(resultArray.length)
-    console.log(outputDataLength)
+    // console.log(formatRawWaveformArray.length)
+    // console.log(splitPoint)
+    // console.log(resultArray.length)
+    // console.log(outputDataLength)
     return interpolateArray(resultArray, outputDataLength);
   };
 }
@@ -330,3 +315,67 @@ export function calculateECGArray_BAK(baseECGArray, HR) {
 
   return execFunc;
 }
+
+export function vitalSignItemTemplate(vitalSign, strokeStyle) {
+  return {
+    vitalSign: vitalSign || "HR",
+    strokeStyle: strokeStyle || "green",
+  }
+}
+
+export function requestVitalSignDataInterval(type, second, cb) {
+  return setInterval(() => {
+    requestSimulationModeVitalSignData(type).then((vitalSignData) => {
+      cb(vitalSignData);
+    })
+  }, second);
+}
+
+import cloneDeep from 'lodash/cloneDeep';
+
+function requestSimulationModeVitalSignData(type) {
+  return new Promise((resolve) => {
+    if (type === "HR") {
+      if (cloneRawVitalSignDataLookUpTable[type]["data"] === 0) {
+        cloneRawVitalSignDataLookUpTable = cloneDeep(rawVitalSignDataLookUpTable);
+      }
+      cloneRawVitalSignDataLookUpTable[type]["data"] = cloneRawVitalSignDataLookUpTable[type]["data"] - 1;
+      return resolve(cloneRawVitalSignDataLookUpTable[type]);
+    }
+    return resolve(rawVitalSignDataLookUpTable[type]);
+  });
+}
+
+let rawVitalSignDataLookUpTable = {
+  'HR': {
+    'top': 120,
+    'bottom': 50,
+    'data': 90
+  },
+  'SpO2': {
+    'top': 100,
+    'bottom': 90,
+    'data': 99
+  },
+  'RP': {
+    'top': 45,
+    'bottom': 8,
+    'data': 36
+  },
+  'ABP': {
+    'systolic': 122,
+    'diastolic': 82,
+    'mean': 93
+  },
+  'PAP': {
+    'systolic': 32,
+    'diastolic': 18,
+    'mean': 23
+  },
+  'NBP': {
+    'systolic': 125,
+    'diastolic': 84,
+    'mean': 92
+  }
+};
+let cloneRawVitalSignDataLookUpTable  = cloneDeep(rawVitalSignDataLookUpTable);
