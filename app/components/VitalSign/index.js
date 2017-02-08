@@ -67,6 +67,17 @@ const BPMeanWrapper = styled.div`
   font-size: ${(props) => props.scaleContainerHeight * 0.4}px;
   align-self: center;
 `;
+const InputWrapper = styled.input`
+  background: none;
+  border: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  
+  &:focus {
+    outline: none;
+  }
+`;
 
 class VitalSign extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -76,6 +87,11 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     super(props);
 
     this.intervalId = null;
+
+    this.state = {
+      inputDisabled: true,
+      inputValue: 60
+    };
   }
 
   componentDidMount() {
@@ -116,22 +132,31 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
                 {vitalSign}
               </HRText>
               <HRUpperAndLowerLimitWrapper>
-                <HRUpperLimit scaleContainerHeight={scaleContainerHeight} innerRef={(HRTop) => {
-                  this.HRTop = HRTop
-                }}>
+                <HRUpperLimit scaleContainerHeight={scaleContainerHeight}
+                              innerRef={(HRTop) => {
+                                this.HRTop = HRTop
+                              }}>
                   {fakeDefaultVitalSignData[vitalSign].top}
                 </HRUpperLimit>
-                <HRLowerLimit scaleContainerHeight={scaleContainerHeight} innerRef={(HRBottom) => {
-                  this.HRBottom = HRBottom
-                }}>
+                <HRLowerLimit scaleContainerHeight={scaleContainerHeight}
+                              innerRef={(HRBottom) => {
+                                this.HRBottom = HRBottom
+                              }}>
                   {fakeDefaultVitalSignData[vitalSign].bottom}
                 </HRLowerLimit>
               </HRUpperAndLowerLimitWrapper>
             </HRTextAndUpperLowerLimitWrapper>
-            <HRDataWrapper scaleContainerHeight={scaleContainerHeight} innerRef={(HRData) => {
-              this.HRData = HRData
-            }}>
-              {fakeDefaultVitalSignData[vitalSign].data}
+            <HRDataWrapper scaleContainerHeight={scaleContainerHeight}
+                           innerRef={(HRData) => {
+                             this.HRData = HRData
+                           }}
+                           onDoubleClick={this.onDoubleClickHRData}>
+              <InputWrapper
+                disabled={this.state.inputDisabled}
+                value={this.state.inputValue}
+                onChange={this.onChangeHRData}
+                onKeyPress={this.onKeyPressHRData}
+                onScroll={this.onScroll}/>
             </HRDataWrapper>
           </HRWrapper>
         );
@@ -154,9 +179,10 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
               {"/"}
               {fakeDefaultVitalSignData[vitalSign].diastolic}
             </BPSystolicAndDiastolicWrapper>
-            <BPMeanWrapper scaleContainerHeight={scaleContainerHeight} innerRef={(BPMean) => {
-              this.BPMean = BPMean
-            }}>
+            <BPMeanWrapper scaleContainerHeight={scaleContainerHeight}
+                           innerRef={(BPMean) => {
+                             this.BPMean = BPMean
+                           }}>
               {"("}
               {fakeDefaultVitalSignData[vitalSign].mean}
               {")"}
@@ -205,13 +231,39 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
   initialSimulationMode = () => {
     let self = this;
-    self.intervalId = requestVitalSignDataInterval(self.props.vitalSign, 3000, self.vitalSignDataCallback);
+    // self.intervalId = requestVitalSignDataInterval(self.props.vitalSign, 3000, self.vitalSignDataCallback);
   };
 
   requestVitalSignDataClearInterval = () => {
     let self = this;
     clearInterval(self.intervalId);
   };
+
+  onDoubleClickHRData = () => {
+    this.setState({
+      inputDisabled: false
+    });
+  };
+
+  onKeyPressHRData = (event) => {
+    console.log(event.nativeEvent.target.value);
+    if (event.key === 'Enter') {
+      this.setState({
+        inputDisabled: true
+      });
+      window._HR = this.state.inputValue;
+    }
+  };
+
+  onChangeHRData = (event) => {
+    this.setState({
+      inputValue: event.target.value
+    });
+  };
+
+  onScroll = (event) => {
+    console.log("Scroll test");
+  }
 }
 
 export default Dimensions()(VitalSign) // Enhanced component
