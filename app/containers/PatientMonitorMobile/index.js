@@ -47,7 +47,8 @@ import {
   handlePowerButtonToggle,
 
   handleWaveformToolbarGridOnButtonToggle,
-  handleDisplayModeChange
+  handleDisplayModeChange,
+  handleVitalSignEditingChange
 } from './actions';
 
 import {
@@ -338,14 +339,24 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       handleVitalSignDrawerToggle,
       vitalSignItems,
       powerOn,
-      displayMode
+      displayMode,
+      handleVitalSignEditingChange
     } = this.props;
 
     const vitalSignItemId = el.get('i');
     const vitalSignItem = vitalSignItems.get(vitalSignItemId);
     const vitalSign = vitalSignItem.get('vitalSign');
     const strokeStyle = vitalSignItem.get('strokeStyle');
+    const isEditing = vitalSignItem.get('isEditing');
     const w = el.get('w');
+
+    console.log(isEditing);
+    if (isEditing) {
+      console.log(el.toString());
+      el = el.set("isDraggable", false);
+      el = el.set("isResizable", false);
+      console.log(el.toString());
+    }
 
     const customVitalSignItem = (
       <div key={vitalSignItemId} data-grid={el.toObject()}>
@@ -360,7 +371,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             vitalSign={vitalSign}
             strokeStyle={strokeStyle}
             w={w}
-            displayMode={displayMode}/>
+            displayMode={displayMode}
+            handleVitalSignEditingChange={handleVitalSignEditingChange.bind(this, vitalSignItemId)}/>
         </Card>
       </div>
     );
@@ -429,7 +441,8 @@ function mapDispatchToProps(dispatch) {
     handlePowerButtonToggle: () => dispatch(handlePowerButtonToggle()),
 
     handleWaveformToolbarGridOnButtonToggle: (waveformItemId) => dispatch(handleWaveformToolbarGridOnButtonToggle(waveformItemId)),
-    handleDisplayModeChange: (event, index, value) => dispatch(handleDisplayModeChange(value))
+    handleDisplayModeChange: (event, index, value) => dispatch(handleDisplayModeChange(value)),
+    handleVitalSignEditingChange: (i) => dispatch(handleVitalSignEditingChange(i))
   };
 }
 

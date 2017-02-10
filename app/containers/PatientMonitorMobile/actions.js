@@ -4,7 +4,7 @@
  *
  */
 import uuid from 'node-uuid';
-import {waveformItemTemplate, vitalSignItemTemplate} from '../../utils/utililtyFunctions';
+import {waveformItemTemplate, vitalSignItemTemplate, waveformLayoutTemplate, vitalSignLayoutTemplate} from '../../utils/utililtyFunctions';
 
 import {
   CHANGE_WAVEFORM_LAYOUT,
@@ -27,13 +27,14 @@ import {
   HANDLE_POWER_BUTTON_TOGGLE,
   SOCKET_CONNECTED,
   HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE,
-  HANDLE_DISPLAY_MODE_CHANGE
+  HANDLE_DISPLAY_MODE_CHANGE,
+  HANDLE_VITAL_SIGN_EDITING_CHANGE
 } from './constants';
 
-export function changeWaveformLayout(layout1) {
+export function changeWaveformLayout(waveformLayout) {
   return {
     type: CHANGE_WAVEFORM_LAYOUT,
-    waveformLayout: layout1
+    waveformLayout: waveformLayout
   };
 }
 
@@ -47,18 +48,8 @@ export function addWaveformItem() {
   let i = uuid.v4();
   return {
     type: ADD_WAVEFORM_ITEM,
-    waveformLayout: [
-      {
-        i: i,
-        x: 0,
-        y: Infinity, // puts it at the bottom
-        w: 12,
-        h: 1
-      }
-    ],
-    waveformItems: {
-      [i]: waveformItemTemplate()
-    }
+    waveformLayout: [waveformLayoutTemplate(i, 0, Infinity, 12, 1)],
+    waveformItems: {[i]: waveformItemTemplate()}
   }
 }
 
@@ -69,10 +60,10 @@ export function removeWaveformItem(i) {
   };
 }
 
-export function changeVitalSignLayout(layout2) {
+export function changeVitalSignLayout(vitalSignLayout) {
   return {
     type: CHANGE_VITAL_SIGN_LAYOUT,
-    vitalSignLayout: layout2
+    vitalSignLayout: vitalSignLayout
   };
 }
 
@@ -86,19 +77,8 @@ export function addVitalSignItem() {
   let i = uuid.v4();
   return {
     type: ADD_VITAL_SIGN_ITEM,
-    vitalSignLayout: [
-      {
-        i: i,
-        x: 9,
-        y: Infinity, // puts it at the bottom
-        w: 12,
-        h: 1,
-        minW: 6
-      }
-    ],
-    vitalSignItems: {
-      [i]: vitalSignItemTemplate()
-    }
+    vitalSignLayout: [vitalSignLayoutTemplate(i, 0, Infinity, 12, 1, 6)],
+    vitalSignItems: {[i]: vitalSignItemTemplate()}
   }
 }
 
@@ -194,5 +174,12 @@ export function handleDisplayModeChange(displayModeValue) {
   return {
     type: HANDLE_DISPLAY_MODE_CHANGE,
     value: displayModeValue
+  }
+}
+
+export function handleVitalSignEditingChange(i) {
+  return {
+    type: HANDLE_VITAL_SIGN_EDITING_CHANGE,
+    i: i
   }
 }

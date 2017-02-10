@@ -27,7 +27,8 @@ import {
   HANDLE_POWER_BUTTON_TOGGLE,
   SOCKET_CONNECTED,
   HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE,
-  HANDLE_DISPLAY_MODE_CHANGE
+  HANDLE_DISPLAY_MODE_CHANGE,
+  HANDLE_VITAL_SIGN_EDITING_CHANGE
 } from './constants';
 
 import {
@@ -148,6 +149,9 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case HANDLE_DISPLAY_MODE_CHANGE:
       return state.set('displayMode', action.value);
+
+    case HANDLE_VITAL_SIGN_EDITING_CHANGE:
+      return state.setIn(['vitalSignItems', action.i, 'isEditing'], true);
 
     default:
       return state;

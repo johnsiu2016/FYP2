@@ -152,11 +152,14 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
                            }}
                            onDoubleClick={this.onDoubleClickHRData}>
               <InputWrapper
+                type="number"
                 disabled={this.state.inputDisabled}
                 value={this.state.inputValue}
                 onChange={this.onChangeHRData}
                 onKeyPress={this.onKeyPressHRData}
-                onScroll={this.onScroll}/>
+                onWheel={this.onScroll}
+                min={20}
+                max={240}/>
             </HRDataWrapper>
           </HRWrapper>
         );
@@ -243,10 +246,11 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     this.setState({
       inputDisabled: false
     });
+    this.props.handleVitalSignEditingChange();
   };
 
   onKeyPressHRData = (event) => {
-    console.log(event.nativeEvent.target.value);
+    console.log("onKeyPress");
     if (event.key === 'Enter') {
       this.setState({
         inputDisabled: true
@@ -256,6 +260,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   };
 
   onChangeHRData = (event) => {
+    console.log("onChange")
     this.setState({
       inputValue: event.target.value
     });
