@@ -28,7 +28,8 @@ import {
   SOCKET_CONNECTED,
   HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE,
   HANDLE_DISPLAY_MODE_CHANGE,
-  HANDLE_VITAL_SIGN_EDITING_CHANGE
+  HANDLE_VITAL_SIGN_EDITING_CHANGE,
+  HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE
 } from './constants';
 
 import {
@@ -152,6 +153,14 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case HANDLE_VITAL_SIGN_EDITING_CHANGE:
       return state.setIn(['vitalSignItems', action.i, 'isEditing'], true);
+
+    case HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE:
+      console.log("HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE")
+      console.log(action.vitalSign)
+      changedState = state.setIn(['vitalSignItems', action.i, 'formStorage'], action.formStorage);
+      if (action.vitalSign === "HR") window._HR = action.formStorage.get("data");
+      saveToLS('patientMonitorMobile', changedState);
+      return changedState;
 
     default:
       return state;

@@ -48,7 +48,8 @@ import {
 
   handleWaveformToolbarGridOnButtonToggle,
   handleDisplayModeChange,
-  handleVitalSignEditingChange
+  handleVitalSignEditingChange,
+  handleVitalSignFormStorageChange
 } from './actions';
 
 import {
@@ -69,6 +70,8 @@ import {
   selectProtocol,
   selectPatientMonitor
 } from 'containers/Settings/selectors';
+
+import fakeDefaultVitalSignData from 'utils/fakeDefaultVitalSignData';
 
 import ECG from 'components/ECG';
 import VitalSign from 'components/VitalSign';
@@ -340,7 +343,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       vitalSignItems,
       powerOn,
       displayMode,
-      handleVitalSignEditingChange
+      handleVitalSignEditingChange,
+      handleVitalSignFormStorageChange,
     } = this.props;
 
     const vitalSignItemId = el.get('i');
@@ -348,6 +352,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
     const vitalSign = vitalSignItem.get('vitalSign');
     const strokeStyle = vitalSignItem.get('strokeStyle');
     const isEditing = vitalSignItem.get('isEditing');
+    const formStorage = vitalSignItem.get('formStorage');
     const w = el.get('w');
 
     console.log(isEditing);
@@ -372,7 +377,9 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             strokeStyle={strokeStyle}
             w={w}
             displayMode={displayMode}
-            handleVitalSignEditingChange={handleVitalSignEditingChange.bind(this, vitalSignItemId)}/>
+            handleVitalSignEditingChange={handleVitalSignEditingChange.bind(this, vitalSignItemId)}
+            handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
+            initialValues={formStorage || fakeDefaultVitalSignData[vitalSign]}/>
         </Card>
       </div>
     );
@@ -387,7 +394,10 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             vitalSign={vitalSign}
             strokeStyle={strokeStyle}
             w={w}
-            displayMode={displayMode}/>
+            displayMode={displayMode}
+            handleVitalSignEditingChange={handleVitalSignEditingChange.bind(this, vitalSignItemId)}
+            handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
+            initialValues={formStorage || fakeDefaultVitalSignData[vitalSign]}/>
         </VitalSignWrapperForPowerOnElement>
       </div>
     );
@@ -442,7 +452,8 @@ function mapDispatchToProps(dispatch) {
 
     handleWaveformToolbarGridOnButtonToggle: (waveformItemId) => dispatch(handleWaveformToolbarGridOnButtonToggle(waveformItemId)),
     handleDisplayModeChange: (event, index, value) => dispatch(handleDisplayModeChange(value)),
-    handleVitalSignEditingChange: (i) => dispatch(handleVitalSignEditingChange(i))
+    handleVitalSignEditingChange: (i) => dispatch(handleVitalSignEditingChange(i)),
+    handleVitalSignFormStorageChange: (i, formStorage, vitalSign) => dispatch(handleVitalSignFormStorageChange(i, formStorage, vitalSign))
   };
 }
 

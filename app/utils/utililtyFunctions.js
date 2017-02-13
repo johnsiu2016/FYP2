@@ -245,11 +245,14 @@ export function vitalSignLayoutTemplate(i, x, y, w, h, minW) {
   }
 }
 
+import fakeDefaultVitalSignData from './fakeDefaultVitalSignData';
+
 export function vitalSignItemTemplate(vitalSign, strokeStyle) {
   return {
     vitalSign: vitalSign || "HR",
     strokeStyle: strokeStyle || "green",
-    isEditing: false
+    isEditing: false,
+    formStorage: fakeDefaultVitalSignData[vitalSign]
   }
 }
 

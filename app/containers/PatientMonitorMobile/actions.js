@@ -28,7 +28,8 @@ import {
   SOCKET_CONNECTED,
   HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE,
   HANDLE_DISPLAY_MODE_CHANGE,
-  HANDLE_VITAL_SIGN_EDITING_CHANGE
+  HANDLE_VITAL_SIGN_EDITING_CHANGE,
+  HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE
 } from './constants';
 
 export function changeWaveformLayout(waveformLayout) {
@@ -181,5 +182,15 @@ export function handleVitalSignEditingChange(i) {
   return {
     type: HANDLE_VITAL_SIGN_EDITING_CHANGE,
     i: i
+  }
+}
+
+
+export function handleVitalSignFormStorageChange(i, formStorage, vitalSign) {
+  return {
+    type: HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE,
+    i: i,
+    formStorage: formStorage,
+    vitalSign: vitalSign
   }
 }

@@ -9,6 +9,7 @@ import { LOCATION_CHANGE } from 'react-router-redux';
 
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
 import settingsReducer from 'containers/Settings/reducer';
+import { reducer as formReducer } from 'redux-form/immutable'
 
 /*
  * routeReducer
@@ -46,6 +47,7 @@ export default function createReducer(asyncReducers) {
     route: routeReducer,
     language: languageProviderReducer,
     settings: settingsReducer,
+    form: formReducer,
     ...asyncReducers,
   });
 }
