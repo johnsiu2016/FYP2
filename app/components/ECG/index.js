@@ -28,6 +28,8 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     this.px = 0;
 
     this.intervalId = null;
+    this.bufferLength = 0;
+
   }
 
   componentDidMount() {
@@ -136,23 +138,35 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       self.dataIndex = self.dataIndex + 1;
       if (self.dataIndex >= self.ecgData.length) {
         self.dataIndex = 0;
-        self.ecgData = self.ecgDataBuffer.shift();
-        if (self.ecgData) {
-          self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length;
-          self.speed = self.ecgData.length / 60 || 2;
+        if (self.ecgDataBuffer.length > 0) {
+          self.getData();
         }
       }
-
       return py;
 
-    } else {
-      if (self.ecgDataBuffer.length > 2) {
-        self.ecgData = self.ecgDataBuffer.shift();
-        self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length; // potential problem: if the data length of different waveform is not the same, the clear bar will be different
-        self.speed = self.ecgData.length / 60 || 2;
+    } else { // initial
+      if (self.props.displayMode === "Simulation mode") {
+        self.bufferLength = 0;
+      } else if (self.props.displayMode === "Real-time mode") {
+        self.bufferLength = 2;
       }
-      return self.h / 2
+      if (self.ecgDataBuffer.length > self.bufferLength) {
+        self.getData();
+      }
+      return self.h / 2;
     }
+  };
+
+  getData = () => {
+    const self = this;
+    self.ecgData = self.ecgDataBuffer.shift();
+    self.calculateSpeed();
+  };
+
+  calculateSpeed = () => {
+    const self = this;
+    self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length; // potential problem: if the data length of different waveform is not the same, the clear bar will be different
+    self.speed = self.ecgData.length / 60 || 2;
   };
 
   initialSocket = () => {
@@ -249,6 +263,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   initialSimulationMode = () => {
     let self = this;
     self.intervalId = requestWaveformDataInterval(self.props.waveform, 1000, self.waveformDataCallback);
+
   };
 
   requestWaveformDataClearInterval = () => {
