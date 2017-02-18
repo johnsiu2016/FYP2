@@ -175,42 +175,63 @@ let rawWaveformDataLookUpTable = {
     -0.0305176, -0.00976563, 0.00732422, 0.0180054, 0.0213623, 0.0204468, 0.0177002, 0.0140381, 0.0128174
   ]
 };
-let formatZeroPointWaveformArray = interpolateArray([0], 120);
+let formatZeroPointWaveform = interpolateArray([0], 120);
 
-let formatRawWaveformArrayLookUpTable = {};
-let repeatFormatRawWaveformArrayLookUpTable = {};
-for (let rawWaveformArrayProp in rawWaveformDataLookUpTable) {
-  let cur = rawWaveformDataLookUpTable[rawWaveformArrayProp];
+let formatWaveformLookUpTable = {};
+let normalizedWaveformLookUpTable = {};
+let repeatNormalizedWaveformLookUpTable = {};
+for (let waveform in rawWaveformDataLookUpTable) {
+  let cur = rawWaveformDataLookUpTable[waveform];
   let formatLength = 120 * Math.ceil(cur.length / 120);
-  let formatRawWaveformArray = interpolateArray(cur, formatLength);
-  formatRawWaveformArrayLookUpTable[rawWaveformArrayProp] = formatRawWaveformArray;
-  repeatFormatRawWaveformArrayLookUpTable[rawWaveformArrayProp] = formatRawWaveformArray.concat(formatRawWaveformArray).concat(formatRawWaveformArray).concat(formatRawWaveformArray);
+  let formatWaveform = interpolateArray(cur, formatLength);
+  const max = Math.min(...cur);
+  const min = Math.max(...cur);
+  const dataHeight = max - min;
+  let repostion = min >= 0 ? -min : min;
+  let normalizedWaveform = [];
+
+  formatWaveformLookUpTable[waveform] = formatWaveform;
+  for (let i=0, len=formatWaveform.length; i<len; i++) {
+    normalizedWaveform.push((formatWaveform[i] + repostion) / dataHeight);
+  }
+  normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
+  repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform.concat(normalizedWaveform).concat(normalizedWaveform).concat(normalizedWaveform);
 }
 
 export function calculateECGArray(type) {
-  const formatRawWaveformArray = formatRawWaveformArrayLookUpTable[type];
-  const repeatFormatRawWaveformArray = repeatFormatRawWaveformArrayLookUpTable[type];
-  const baseDataLength = repeatFormatRawWaveformArray.length;
+  const normalizedWaveform = normalizedWaveformLookUpTable[type];
+  const repeatNormalizedWaveform = repeatNormalizedWaveformLookUpTable[type];
+  const baseDataLength = repeatNormalizedWaveform.length;
 
   let splitPoint = 0;
   return (HR) => {
     if (HR === 0) {
-      return formatZeroPointWaveformArray;
+      return formatZeroPointWaveform;
     }
 
-    const HRDataLength = (HR / 60) * formatRawWaveformArray.length;
-    const numberOfMovingPoint = HRDataLength >= 120 ? HRDataLength - formatRawWaveformArray.length : HRDataLength;
+    const HRDataLength = (HR / 60) * normalizedWaveform.length;
+    const numberOfMovingPoint = HRDataLength >= 120 ? HRDataLength - normalizedWaveform.length : HRDataLength;
     const outputDataLength = 120 * Math.ceil(HRDataLength / 120);
 
-    let resultArray = repeatFormatRawWaveformArray.slice(splitPoint, splitPoint + HRDataLength).concat(repeatFormatRawWaveformArray.slice(0, Math.max(splitPoint + HRDataLength - baseDataLength, 0)));
+    let resultArray = repeatNormalizedWaveform.slice(splitPoint, splitPoint + HRDataLength).concat(repeatNormalizedWaveform.slice(0, Math.max(splitPoint + HRDataLength - baseDataLength, 0)));
     splitPoint = splitPoint + numberOfMovingPoint;
     if (splitPoint >= baseDataLength) splitPoint = splitPoint - baseDataLength;
+    let formatResultArray = interpolateArray(resultArray, outputDataLength);
 
-    // console.log(formatRawWaveformArray.length)
+    if (type === "PPG") {
+      const ABPHeight = window._ABPHeight || 150;
+      const ABPSystolic = window._ABPSystolic || 150;
+      const dc = (150 - ABPSystolic) / 150 ;
+
+      return formatResultArray.map((dataPoint) => {
+        return dataPoint * (ABPHeight / 150) + dc;
+      });
+    }
+    // console.log(normalizedWaveform.length)
     // console.log(splitPoint)
     // console.log(resultArray.length)
     // console.log(outputDataLength)
-    return interpolateArray(resultArray, outputDataLength);
+    return formatResultArray;
   };
 }
 

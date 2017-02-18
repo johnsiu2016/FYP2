@@ -114,7 +114,7 @@ const StyledInputMean = styled(StyledInput)`
 const renderField = ({input, type}) => (<StyledInput {...input} type={type}/>);
 const renderFieldDiastolic = ({input, type}) => (<StyledInputDiastolic {...input} type={type}/>);
 const renderFieldSystolic = ({input, type}) => (<StyledInputSystolic {...input} type={type}/>);
-const renderFieldMean = ({input, type}) => (<StyledInputMean {...input} type={type}/>);
+const renderFieldMean = ({input, type}) => (<StyledInputMean {...input} disabled={true} type={type}/>);
 
 class VitalSign extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -136,7 +136,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     let self = this;
     if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
     else self.initialSocket();
-    if (this.props.initialValues && this.props.vitalSign === "HR") window._HR = this.props.initialValues.get("data");
+    this.props.handleVitalSignFormStorageChange(this.props.initialValues, this.props.vitalSign);
     global.dispatchEvent(new Event('resize'));
   }
 
@@ -204,7 +204,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
         case "PAP":
         case "NBP":
           element = (
-            <StyledForm onSubmit={handleSubmit(this.handleHRSubmit)}>
+            <StyledForm onSubmit={handleSubmit(this.handleABPSubmit)}>
               <BPWrapper color={color[strokeStyle]}>
                 <BPTextWrapper>
                   <BPText>
@@ -351,76 +351,84 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     const top = values.get("top");
     const bottom = values.get("bottom");
     const data = values.get("data");
-    let errorFlag = false;
+
+    if (top < 0) {
+      this.props.change("top", 0);
+      alert("The value should not be negative");
+    }
+    if (bottom < 0) {
+      this.props.change("bottom", 0);
+      alert("The value should not be negative");
+    }
+    if (data < 0) {
+      this.props.change("data", 0);
+      alert("The value should not be negative");
+    }
 
     switch (this.props.vitalSign) {
       case "HR":
-        if (top < 0) {
-          this.props.change("top", 0);
-          alert("The value should not be negative");
-          errorFlag = true;
-        }
-        if (bottom < 0) {
-          this.props.change("bottom", 0);
-          alert("The value should not be negative");
-          errorFlag = true;
-        }
         if (data < 20) {
           this.props.change("data", 20);
           alert("The value should not be less than 20");
-          errorFlag = true;
         }
         if (data > 240) {
           this.props.change("data", 240);
           alert("The value should not be greater than 240");
-          errorFlag = true;
         }
         break;
       case "SpO2":
-        if (top < 0) {
-          this.props.change("top", 0);
-          alert("The value should not be negative");
-          errorFlag = true;
-        }
-        if (bottom < 0) {
-          this.props.change("bottom", 0);
-          alert("The value should not be negative");
-          errorFlag = true;
-        }
-        if (data < 0) {
-          this.props.change("data", 0);
-          alert("The value should not be negative");
-          errorFlag = true;
-        }
         if (top > 100) {
           this.props.change("top", 100);
           alert("The value should not be greater than 100");
-          errorFlag = true;
         }
         break;
       case "RP":
-        if (top < 0) {
-          this.props.change("top", 0);
-          alert("The value should not be negative");
-          errorFlag = true;
-        }
-        if (bottom < 0) {
-          this.props.change("bottom", 0);
-          alert("The value should not be negative");
-          errorFlag = true;
-        }
-        if (data < 0) {
-          this.props.change("data", 0);
-          alert("The value should not be negative");
-          errorFlag = true;
-        }
         break;
     }
     console.log(values.toObject());
     console.log(this.props.vitalSign);
-    if (errorFlag === false) {
-      this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
+    this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
+  };
+
+  handleABPSubmit = (values) => {
+    let systolic = values.get("systolic");
+    let diastolic = values.get("diastolic");
+
+    if (systolic < 0) {
+      this.props.change("systolic", 0);
+      values = values.set("systolic", 0);
+      alert("The value should not be negative");
     }
+    if (diastolic < 0) {
+      this.props.change("diastolic", 0);
+      values = values.set("diastolic", 0);
+      alert("The value should not be negative");
+    }
+
+    switch (this.props.vitalSign) {
+      case "ABP":
+        if (systolic > 150) {
+          this.props.change("systolic", 150);
+          values = values.set("systolic", 150);
+          alert("The value should not be greater than or equal to 150");
+        }
+        if (diastolic > 140) {
+          this.props.change("diastolic", 140);
+          values = values.set("diastolic", 140);
+          alert("The value should not be greater than 140");
+        }
+        break;
+      case "SpO2":
+        break;
+      case "RP":
+        break;
+    }
+
+    const mean = Math.round((Number(values.get("systolic")) + Number(values.get("diastolic")) * 2)/ 3);
+    this.props.change("mean", mean);
+    console.log(values.toObject());
+    console.log(this.props.vitalSign);
+    this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
   };
 
   onScroll = (event) => {

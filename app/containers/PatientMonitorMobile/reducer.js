@@ -155,10 +155,18 @@ function patientMonitorMobileReducer(state = initialState, action) {
       return state.setIn(['vitalSignItems', action.i, 'isEditing'], true);
 
     case HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE:
-      console.log("HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE")
-      console.log(action.vitalSign)
+      console.log("HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE");
+      console.log(action.vitalSign);
       changedState = state.setIn(['vitalSignItems', action.i, 'formStorage'], action.formStorage);
       if (action.vitalSign === "HR") window._HR = action.formStorage.get("data");
+      if (action.vitalSign === "ABP") {
+        const systolic = action.formStorage.get("systolic");
+        const diastolic = action.formStorage.get("diastolic");
+        const mean = action.formStorage.get("mean");
+
+        window._ABPHeight = Number(systolic) - Number(diastolic);
+        window._ABPSystolic = Number(systolic);
+      }
       saveToLS('patientMonitorMobile', changedState);
       return changedState;
 

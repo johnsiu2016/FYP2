@@ -129,12 +129,11 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     }
   };
 
-  getDataPoint = () => {
+  getDataPoint =  () => {
     let self = this;
     let py;
-
     if (self.ecgData) {
-      py = self.convertToGraphCoord(self.ecgData[self.dataIndex], self.h);
+      py = self.ecgData[self.dataIndex] * self.h;
       self.dataIndex = self.dataIndex + 1;
       if (self.dataIndex >= self.ecgData.length) {
         self.dataIndex = 0;
@@ -204,10 +203,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       self.animation = self.draw();
       self.animation.start();
     }
-  };
-
-  convertToGraphCoord = (num, height) => {
-    return (height / 2) * -(num * this.props.scale) + height / 2;
   };
 
   drawGrid = () => {
