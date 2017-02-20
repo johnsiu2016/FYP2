@@ -1,9 +1,9 @@
 import {take, call, put, select, fork, cancel} from 'redux-saga/effects';
 import {LOCATION_CHANGE} from 'react-router-redux';
 import {HANDLE_POWER_BUTTON_TOGGLE} from './constants';
-import {makeSelectWaveformItems, makeSelectVitalSignItems, makeSelectPowerOn, makeSelectSocket} from './selectors';
+import {makeSelectWaveformItems, makeSelectVitalSignItems, makeSelectPowerOn, makeSelectSocket, makeSelectSoundOn, makeSelectAudioSource} from './selectors';
 import {selectSettingsDomain} from 'containers/Settings/selectors';
-import {socketConnected} from './actions'
+import {socketConnected} from './actions';
 
 export function* getSocket() {
   const powerOn = yield select(makeSelectPowerOn());
@@ -40,16 +40,16 @@ export function* getPowerOnWatcher() {
   }
 }
 
-export function* socketIO() {
+export function* patientMonitorSaga() {
   // Fork watcher so we can continue execution
-  const watcher = yield fork(getPowerOnWatcher);
+  const powerOnWatcher = yield fork(getPowerOnWatcher);
 
   // Suspend execution until location changes
   yield take(LOCATION_CHANGE);
-  yield cancel(watcher);
+  yield cancel(powerOnWatcher);
 }
 
 // Bootstrap sagas
 export default [
-  socketIO,
+  patientMonitorSaga,
 ];

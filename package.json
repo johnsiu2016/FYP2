@@ -245,6 +245,7 @@
     "reselect": "2.5.4",
     "sanitize.css": "4.1.0",
     "styled-components": "1.1.2",
+    "tone": "^0.9.0",
     "warning": "3.0.0",
     "whatwg-fetch": "2.0.1"
   },
@@ -269,6 +270,7 @@
     "babel-preset-stage-0": "6.16.0",
     "cheerio": "0.22.0",
     "circular-dependency-plugin": "2.0.0",
+    "copy-webpack-plugin": "^4.0.1",
     "coveralls": "2.11.15",
     "css-loader": "0.26.1",
     "enzyme": "2.6.0",

@@ -132,7 +132,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   }
 
   componentDidMount() {
-    console.log(`componentDidMount ${this.props.vitalSign}`);
+    // console.log(`componentDidMount ${this.props.vitalSign}`);
     let self = this;
     if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
     else self.initialSocket();
@@ -141,14 +141,14 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   }
 
   componentWillUnmount() {
-    console.log(`componentWillUnmount ${this.props.vitalSign}`);
+    // console.log(`componentWillUnmount ${this.props.vitalSign}`);
     let self = this;
     self.requestVitalSignDataClearInterval();
     self.clearUpSocket();
   }
 
   componentDidUpdate() {
-    console.log(`componentDidUpdate ${this.props.vitalSign}`);
+    // console.log(`componentDidUpdate ${this.props.vitalSign}`);
     let self = this;
     self.requestVitalSignDataClearInterval();
     self.clearUpSocket();
@@ -157,7 +157,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   }
 
   render() {
-    console.log(`render ${this.props.vitalSign}`);
+    // console.log(`render ${this.props.vitalSign}`);
     let {containerHeight, w, strokeStyle, vitalSign, displayMode} = this.props;
     const {handleSubmit} = this.props; // redux form
     let scaleRatio = w / 12;
@@ -354,14 +354,17 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
     if (top < 0) {
       this.props.change("top", 0);
+      values = values.set("top", 0);
       alert("The value should not be negative");
     }
     if (bottom < 0) {
       this.props.change("bottom", 0);
+      values = values.set("bottom", 0);
       alert("The value should not be negative");
     }
     if (data < 0) {
       this.props.change("data", 0);
+      values = values.set("data", 0);
       alert("The value should not be negative");
     }
 
@@ -369,10 +372,12 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       case "HR":
         if (data < 20) {
           this.props.change("data", 20);
+          values = values.set("data", 20);
           alert("The value should not be less than 20");
         }
         if (data > 240) {
           this.props.change("data", 240);
+          values = values.set("data", 240);
           alert("The value should not be greater than 240");
         }
         break;
@@ -385,8 +390,8 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       case "RP":
         break;
     }
-    console.log(values.toObject());
-    console.log(this.props.vitalSign);
+    // console.log(values.toObject());
+    // console.log(this.props.vitalSign);
     this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
   };
 
@@ -426,8 +431,8 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
     const mean = Math.round((Number(values.get("systolic")) + Number(values.get("diastolic")) * 2)/ 3);
     this.props.change("mean", mean);
-    console.log(values.toObject());
-    console.log(this.props.vitalSign);
+    // console.log(values.toObject());
+    // console.log(this.props.vitalSign);
     this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
   };
 

@@ -59,6 +59,16 @@ const makeSelectDisplayMode = () => createSelector(
   (patientMonitorMobileState) => patientMonitorMobileState.get('displayMode')
 );
 
+const makeSelectAudioSource = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('audioSource')
+);
+
+const makeSelectSoundOn = () => createSelector(
+  selectPatientMonitorMobile(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('soundOn')
+);
+
 export {
   selectPatientMonitorMobile,
   makeSelectWaveformLayout,
@@ -69,5 +79,7 @@ export {
   makeSelectVitalSignDrawer,
   makeSelectPowerOn,
   makeSelectSocket,
-  makeSelectDisplayMode
+  makeSelectDisplayMode,
+  makeSelectAudioSource,
+  makeSelectSoundOn
 };

@@ -21,48 +21,10 @@ import {Card} from 'material-ui/Card';
 import {createStructuredSelector} from 'reselect';
 
 // my custom import
+import audio from '../../utils/audio';
 import color from '../../utils/color';
-import {
-  changeWaveformLayout,
-  resetWaveformLayout,
-  addWaveformItem,
-  removeWaveformItem,
-
-  changeVitalSignLayout,
-  resetVitalSignLayout,
-  addVitalSignItem,
-  removeVitalSignItem,
-
-  handleWaveformDrawerToggle,
-  handleWaveformDrawerClose,
-  handleWaveformChange,
-  handleWaveformColorChange,
-  handleWaveformScaleChange,
-
-  handleVitalSignDrawerToggle,
-  handleVitalSignDrawerClose,
-  handleVitalSignChange,
-  handleVitalSignColorChange,
-
-  handlePowerButtonToggle,
-
-  handleWaveformToolbarGridOnButtonToggle,
-  handleDisplayModeChange,
-  handleVitalSignEditingChange,
-  handleVitalSignFormStorageChange
-} from './actions';
-
-import {
-  makeSelectWaveformLayout,
-  makeSelectWaveformItems,
-  makeSelectVitalSignLayout,
-  makeSelectVitalSignItems,
-  makeSelectWaveformDrawer,
-  makeSelectVitalSignDrawer,
-  makeSelectPowerOn,
-  makeSelectSocket,
-  makeSelectDisplayMode
-} from './selectors';
+import * as actions from './actions';
+import * as selectors from './selectors';
 
 import {
   selectIP,
@@ -84,6 +46,7 @@ import PowerOnIconButton from 'components/PowerOnIconButton';
 import WaveformDrawer from 'components/WaveformDrawer';
 import VitalSignDrawer from 'components/VitalSignDrawer';
 import DisplayModeDropDownMenu from 'components/DisplayModeDropDownMenu';
+import SoundOnIconButton from 'components/SoundOnIconButton';
 const ECGToolbarWrapper = styled.div`
   height: 15%;
   width: 100%;
@@ -137,7 +100,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       handleVitalSignChange,
       handleVitalSignColorChange,
       handlePowerButtonToggle,
-      handleDisplayModeChange
+      handleDisplayModeChange,
+      handleHeartBeepSoundToggle
     } = this.props;
 
     const {
@@ -148,7 +112,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       waveformDrawer,
       vitalSignDrawer,
       powerOn,
-      displayMode
+      displayMode,
+      soundOn
     } = this.props;
 
     const waveformItemId = waveformDrawer.get('i');
@@ -204,6 +169,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
           <Col lg={12} style={{height: '5vh', minHeight: 48, background: grey700}}>
             <PowerOnIconButton onClick={handlePowerButtonToggle} powerOn={powerOn}/>
             <DisplayModeDropDownMenu value={displayMode} onChange={handleDisplayModeChange}/>
+            <SoundOnIconButton onClick={handleHeartBeepSoundToggle} soundOn={soundOn}/>
           </Col>
         </Row>
         <WaveformDrawer
@@ -308,7 +274,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             lineWidth={lineWidth}
             scale={scale}
             gridOn={gridOn}
-            displayMode={displayMode}/>
+            displayMode={displayMode}
+            audioSource={this.props.soundOn ? audio : null}/>
         </Card>
       </div>
     );
@@ -355,12 +322,12 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
     const formStorage = vitalSignItem.get('formStorage');
     const w = el.get('w');
 
-    console.log(isEditing);
+    // console.log(isEditing);
     if (isEditing) {
-      console.log(el.toString());
+      // console.log(el.toString());
       el = el.set("isDraggable", false);
       el = el.set("isResizable", false);
-      console.log(el.toString());
+      // console.log(el.toString());
     }
 
     const customVitalSignItem = (
@@ -407,15 +374,17 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
 }
 
 const mapStateToProps = createStructuredSelector({
-  waveformLayout: makeSelectWaveformLayout(),
-  waveformItems: makeSelectWaveformItems(),
-  vitalSignLayout: makeSelectVitalSignLayout(),
-  vitalSignItems: makeSelectVitalSignItems(),
-  waveformDrawer: makeSelectWaveformDrawer(),
-  vitalSignDrawer: makeSelectVitalSignDrawer(),
-  powerOn: makeSelectPowerOn(),
-  socket: makeSelectSocket(),
-  displayMode: makeSelectDisplayMode(),
+  waveformLayout: selectors.makeSelectWaveformLayout(),
+  waveformItems: selectors.makeSelectWaveformItems(),
+  vitalSignLayout: selectors.makeSelectVitalSignLayout(),
+  vitalSignItems: selectors.makeSelectVitalSignItems(),
+  waveformDrawer: selectors.makeSelectWaveformDrawer(),
+  vitalSignDrawer: selectors.makeSelectVitalSignDrawer(),
+  powerOn: selectors.makeSelectPowerOn(),
+  socket: selectors.makeSelectSocket(),
+  displayMode: selectors.makeSelectDisplayMode(),
+  audioSource: selectors.makeSelectAudioSource(),
+  soundOn: selectors.makeSelectSoundOn(),
 
   ip: selectIP(),
   port: selectPort(),
@@ -425,35 +394,37 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    changeWaveformLayout: (layout1) => dispatch(changeWaveformLayout(layout1)),
-    resetWaveformLayout: () => dispatch(resetWaveformLayout()),
-    addWaveformItem: () => dispatch(addWaveformItem()),
-    removeWaveformItem: (i) => dispatch(removeWaveformItem(i)),
+    changeWaveformLayout: (layout1) => dispatch(actions.changeWaveformLayout(layout1)),
+    resetWaveformLayout: () => dispatch(actions.resetWaveformLayout()),
+    addWaveformItem: () => dispatch(actions.addWaveformItem()),
+    removeWaveformItem: (i) => dispatch(actions.removeWaveformItem(i)),
 
-    changeVitalSignLayout: (layout2) => dispatch(changeVitalSignLayout(layout2)),
-    resetVitalSignLayout: () => dispatch(resetVitalSignLayout()),
-    addVitalSignItem: () => dispatch(addVitalSignItem()),
-    removeVitalSignItem: (i) => dispatch(removeVitalSignItem(i)),
+    changeVitalSignLayout: (layout2) => dispatch(actions.changeVitalSignLayout(layout2)),
+    resetVitalSignLayout: () => dispatch(actions.resetVitalSignLayout()),
+    addVitalSignItem: () => dispatch(actions.addVitalSignItem()),
+    removeVitalSignItem: (i) => dispatch(actions.removeVitalSignItem(i)),
 
-    onPowerOnModeKeyUp: (e) => e.keyCode === 27 ? dispatch(handlePowerButtonToggle()) : null,
+    onPowerOnModeKeyUp: (e) => e.keyCode === 27 ? dispatch(actions.handlePowerButtonToggle()) : null,
 
-    handleWaveformDrawerToggle: (i) => dispatch(handleWaveformDrawerToggle(i)),
-    handleWaveformDrawerClose: () => dispatch(handleWaveformDrawerClose()),
-    handleWaveformChange: (event, index, value) => dispatch(handleWaveformChange(value)),
-    handleWaveformColorChange: (event, index, value) => dispatch(handleWaveformColorChange(value)),
-    handleWaveformScaleChange: (event, value) => dispatch(handleWaveformScaleChange(value)),
+    handleWaveformDrawerToggle: (i) => dispatch(actions.handleWaveformDrawerToggle(i)),
+    handleWaveformDrawerClose: () => dispatch(actions.handleWaveformDrawerClose()),
+    handleWaveformChange: (event, index, value) => dispatch(actions.handleWaveformChange(value)),
+    handleWaveformColorChange: (event, index, value) => dispatch(actions.handleWaveformColorChange(value)),
+    handleWaveformScaleChange: (event, value) => dispatch(actions.handleWaveformScaleChange(value)),
 
-    handleVitalSignDrawerToggle: (i) => dispatch(handleVitalSignDrawerToggle(i)),
-    handleVitalSignDrawerClose: () => dispatch(handleVitalSignDrawerClose()),
-    handleVitalSignChange: (event, index, value) => dispatch(handleVitalSignChange(value)),
-    handleVitalSignColorChange: (event, index, value) => dispatch(handleVitalSignColorChange(value)),
+    handleVitalSignDrawerToggle: (i) => dispatch(actions.handleVitalSignDrawerToggle(i)),
+    handleVitalSignDrawerClose: () => dispatch(actions.handleVitalSignDrawerClose()),
+    handleVitalSignChange: (event, index, value) => dispatch(actions.handleVitalSignChange(value)),
+    handleVitalSignColorChange: (event, index, value) => dispatch(actions.handleVitalSignColorChange(value)),
 
-    handlePowerButtonToggle: () => dispatch(handlePowerButtonToggle()),
+    handlePowerButtonToggle: () => dispatch(actions.handlePowerButtonToggle()),
 
-    handleWaveformToolbarGridOnButtonToggle: (waveformItemId) => dispatch(handleWaveformToolbarGridOnButtonToggle(waveformItemId)),
-    handleDisplayModeChange: (event, index, value) => dispatch(handleDisplayModeChange(value)),
-    handleVitalSignEditingChange: (i) => dispatch(handleVitalSignEditingChange(i)),
-    handleVitalSignFormStorageChange: (i, formStorage, vitalSign) => dispatch(handleVitalSignFormStorageChange(i, formStorage, vitalSign))
+    handleWaveformToolbarGridOnButtonToggle: (waveformItemId) => dispatch(actions.handleWaveformToolbarGridOnButtonToggle(waveformItemId)),
+    handleDisplayModeChange: (event, index, value) => dispatch(actions.handleDisplayModeChange(value)),
+    handleVitalSignEditingChange: (i) => dispatch(actions.handleVitalSignEditingChange(i)),
+    handleVitalSignFormStorageChange: (i, formStorage, vitalSign) => dispatch(actions.handleVitalSignFormStorageChange(i, formStorage, vitalSign)),
+
+    handleHeartBeepSoundToggle: () => dispatch(actions.handleHeartBeepSoundToggle())
   };
 }
 

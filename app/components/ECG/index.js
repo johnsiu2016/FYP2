@@ -29,7 +29,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
     this.intervalId = null;
     this.bufferLength = 0;
-
+    this.beepFlag = false;
   }
 
   componentDidMount() {
@@ -134,6 +134,14 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let py;
     if (self.ecgData) {
       py = self.ecgData[self.dataIndex] * self.h;
+      if (!this.beepFlag && self.ecgData[self.dataIndex] < 0.2 && self.ecgData[self.dataIndex] < self.ecgData[self.dataIndex - 1]) {
+        this.beepFlag = true;
+        console.log("test")
+      }
+      if (this.beepFlag && self.ecgData[self.dataIndex] > 0.2 && self.ecgData[self.dataIndex] > self.ecgData[self.dataIndex - 1]) {
+        this.beepFlag = false;
+      }
+      if (this.beepFlag) this.props.audioSource.beep();
       self.dataIndex = self.dataIndex + 1;
       if (self.dataIndex >= self.ecgData.length) {
         self.dataIndex = 0;

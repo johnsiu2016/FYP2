@@ -187,16 +187,16 @@ for (let waveform in rawWaveformDataLookUpTable) {
   const max = Math.min(...cur);
   const min = Math.max(...cur);
   const dataHeight = max - min;
-  let repostion = min >= 0 ? -min : min;
   let normalizedWaveform = [];
 
   formatWaveformLookUpTable[waveform] = formatWaveform;
   for (let i=0, len=formatWaveform.length; i<len; i++) {
-    normalizedWaveform.push((formatWaveform[i] + repostion) / dataHeight);
+    normalizedWaveform.push((formatWaveform[i] - min) / dataHeight);
   }
   normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
   repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform.concat(normalizedWaveform).concat(normalizedWaveform).concat(normalizedWaveform);
 }
+console.log(normalizedWaveformLookUpTable)
 
 export function calculateECGArray(type) {
   const normalizedWaveform = normalizedWaveformLookUpTable[type];
