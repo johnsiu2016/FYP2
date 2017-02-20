@@ -129,6 +129,12 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
     const vitalSignType = vitalSignItem ? vitalSignItem.get('vitalSign') : "HR";
     const vitalSignColor = vitalSignItem ? vitalSignItem.get('strokeStyle') : "green";
 
+    if (soundOn) {
+      audio.gainNode.gain.value = 1;
+    } else {
+      audio.gainNode.gain.value = 0;
+    }
+
     const customMode = (
       <Grid fluid={true}>
         <Row>
@@ -225,6 +231,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
           <Col lg={12} style={{height: '5vh', minHeight: 48, background: grey700}}>
             <PowerOnIconButton onClick={handlePowerButtonToggle} powerOn={powerOn}/>
             <DisplayModeDropDownMenu value={displayMode} onChange={handleDisplayModeChange} powerOn={powerOn}/>
+            <SoundOnIconButton onClick={handleHeartBeepSoundToggle} soundOn={soundOn}/>
           </Col>
         </Row>
       </Grid>
@@ -274,8 +281,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             lineWidth={lineWidth}
             scale={scale}
             gridOn={gridOn}
-            displayMode={displayMode}
-            audioSource={this.props.soundOn ? audio : null}/>
+            displayMode={displayMode}/>
         </Card>
       </div>
     );

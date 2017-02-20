@@ -245,7 +245,6 @@
     "reselect": "2.5.4",
     "sanitize.css": "4.1.0",
     "styled-components": "1.1.2",
-    "tone": "^0.9.0",
     "warning": "3.0.0",
     "whatwg-fetch": "2.0.1"
   },

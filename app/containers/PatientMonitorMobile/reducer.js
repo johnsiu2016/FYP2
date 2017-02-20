@@ -5,8 +5,6 @@
  */
 
 import {fromJS} from 'immutable';
-import Tone from 'tone';
-
 import * as constant from './constants';
 
 import {

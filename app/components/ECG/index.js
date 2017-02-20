@@ -9,6 +9,7 @@ import React from 'react';
 import Dimensions from 'react-dimensions';
 import color from '../../utils/color.js';
 import {waveformItemTemplate, requestWaveformDataInterval} from '../../utils/utililtyFunctions';
+import audio from '../../utils/audio';
 
 class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -16,7 +17,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   constructor(props) {
     super(props);
-
+    console.log("constructor")
     this.ecgDataBuffer = [];
     this.ecgData = null;
     this.dataIndex = 0;
@@ -30,6 +31,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     this.intervalId = null;
     this.bufferLength = 0;
     this.beepFlag = false;
+    this.animation = null;
   }
 
   componentDidMount() {
@@ -43,12 +45,15 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   }
 
   componentWillUnmount() {
+    console.log(`componentWillUnmount ${this.props.waveform} ${this.dataIndex}`);
     let self = this;
     self.requestWaveformDataClearInterval();
     self.clearUpSocket();
+    self.animation.cancel(); // animation need to clear, although canvas destroyed, the animation is still running
   }
 
   componentDidUpdate() {
+    console.log(`componentDidUpdate ${this.props.waveform} ${this.props.displayMode}`);
     let self = this;
     self.initial();
     if (self.props.gridOn) self.drawGrid();
@@ -129,22 +134,16 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     }
   };
 
-  getDataPoint =  () => {
+  getDataPoint = () => {
     let self = this;
     let py;
     if (self.ecgData) {
       py = self.ecgData[self.dataIndex] * self.h;
-      if (!this.beepFlag && self.ecgData[self.dataIndex] < 0.2 && self.ecgData[self.dataIndex] < self.ecgData[self.dataIndex - 1]) {
-        this.beepFlag = true;
-        console.log("test")
-      }
-      if (this.beepFlag && self.ecgData[self.dataIndex] > 0.2 && self.ecgData[self.dataIndex] > self.ecgData[self.dataIndex - 1]) {
-        this.beepFlag = false;
-      }
-      if (this.beepFlag) this.props.audioSource.beep();
+      self.emitSound();
       self.dataIndex = self.dataIndex + 1;
       if (self.dataIndex >= self.ecgData.length) {
         self.dataIndex = 0;
+        self.ecgData = null;
         if (self.ecgDataBuffer.length > 0) {
           self.getData();
         }
@@ -168,6 +167,19 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     const self = this;
     self.ecgData = self.ecgDataBuffer.shift();
     self.calculateSpeed();
+  };
+
+  emitSound = () => {
+    const self = this;
+    if (self.props.waveform === "ECG - II") {
+      if (!this.beepFlag && self.ecgData[self.dataIndex] < 0.2 && self.ecgData[self.dataIndex] < self.ecgData[self.dataIndex - 1]) {
+        audio.beep();
+        this.beepFlag = true;
+      }
+      if (this.beepFlag && self.ecgData[self.dataIndex] > 0.2 && self.ecgData[self.dataIndex] > self.ecgData[self.dataIndex - 1]) {
+        this.beepFlag = false;
+      }
+    }
   };
 
   calculateSpeed = () => {
@@ -194,7 +206,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let self = this;
     if (self.ecgDataBuffer.length < 10) {
       self.ecgDataBuffer.push(data);
-      // console.log(`${self.props.waveform} ${self.ecgDataBuffer.length}`)
     }
   };
 
@@ -221,7 +232,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     self.renderGrid(ctx, self.minorGridPixelSize, "#546E7A", 0.3);
   };
 
-  // Render Major Grid
+// Render Major Grid
   renderGrid = (ctx, majorGridPixelSize, color, lineWidth, major) => {
     const ECGWidth = ctx.canvas.width;
     const ECGHeight = ctx.canvas.height;

@@ -196,7 +196,6 @@ for (let waveform in rawWaveformDataLookUpTable) {
   normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
   repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform.concat(normalizedWaveform).concat(normalizedWaveform).concat(normalizedWaveform);
 }
-console.log(normalizedWaveformLookUpTable)
 
 export function calculateECGArray(type) {
   const normalizedWaveform = normalizedWaveformLookUpTable[type];
