@@ -47,20 +47,7 @@ import WaveformDrawer from 'components/WaveformDrawer';
 import VitalSignDrawer from 'components/VitalSignDrawer';
 import DisplayModeDropDownMenu from 'components/DisplayModeDropDownMenu';
 import SoundOnIconButton from 'components/SoundOnIconButton';
-const ECGToolbarWrapper = styled.div`
-  height: 15%;
-  width: 100%;
-`;
-const ECGText = styled.span`
-  font-size: 2em;
-  color: ${(props) => props.color};
-  position: absolute;
-  left: 0px;
-`;
-const ECGWrapperForPowerOnElement = styled.div`
-  height: 85%;
-  width: 100%;
-`;
+
 const ECGControlButtonsWrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
@@ -262,50 +249,22 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       el = el.set('y', Infinity);
     }
 
-    const customWaveformItem = (
+    return (
       <div key={waveformItemId} data-grid={el.toObject()}>
-        <ECGToolbarWrapper>
-          <ECGText color={color[strokeStyle]}>{waveform}</ECGText>
-          <CustomFontIcon iconString="grid_on"
-                          onClick={handleWaveformToolbarGridOnButtonToggle.bind(this, waveformItemId)}/>
-          <BuildFontIcon onTouchTap={handleWaveformDrawerToggle.bind(this, waveformItemId)}/>
-          <CloseFontIcon onClick={removeWaveformItem.bind(this, waveformItemId)}/>
-        </ECGToolbarWrapper>
-        <Card containerStyle={{height: '100%', width: '100%'}}
-              style={{height: '85%', width: '100%', position: 'absolute', zIndex: -1}}>
-          <ECG
-            socket={this.props.socket}
-            i={waveformItemId}
-            waveform={waveform}
-            strokeStyle={strokeStyle}
-            lineWidth={lineWidth}
-            scale={scale}
-            gridOn={gridOn}
-            displayMode={displayMode}/>
-        </Card>
-      </div>
-    );
-
-    const powerOnWaveformItem = (
-      <div key={waveformItemId} data-grid={el.toObject()}>
-        <ECGToolbarWrapper>
-          <ECGText color={color[strokeStyle]}>{waveform}</ECGText>
-        </ECGToolbarWrapper>
-        <ECGWrapperForPowerOnElement>
-          <ECG
-            socket={this.props.socket}
-            i={waveformItemId}
-            waveform={waveform}
-            strokeStyle={strokeStyle}
-            lineWidth={lineWidth}
-            scale={scale}
-            gridOn={gridOn}
-            displayMode={displayMode}/>
-        </ECGWrapperForPowerOnElement>
-      </div>
-    );
-
-    return powerOn ? powerOnWaveformItem : customWaveformItem;
+        <ECG
+          handleWaveformDrawerToggle={handleWaveformDrawerToggle}
+          removeWaveformItem={removeWaveformItem}
+          handleWaveformToolbarGridOnButtonToggle={handleWaveformToolbarGridOnButtonToggle}
+          socket={this.props.socket}
+          waveformItemId={waveformItemId}
+          waveform={waveform}
+          strokeStyle={strokeStyle}
+          lineWidth={lineWidth}
+          scale={scale}
+          gridOn={gridOn}
+          displayMode={displayMode}
+          powerOn={powerOn}/>
+      </div>);
   };
 
   // vital sign

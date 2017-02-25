@@ -11,6 +11,28 @@ import color from '../../utils/color.js';
 import {waveformItemTemplate, requestWaveformDataInterval} from '../../utils/utililtyFunctions';
 import audio from '../../utils/audio';
 
+import {Card} from 'material-ui/Card';
+import BuildFontIcon from 'components/BuildFontIcon';
+import CloseFontIcon from 'components/CloseFontIcon';
+import CustomFontIcon from 'components/CustomFontIcon';
+
+import styled from 'styled-components';
+
+const ECGToolbarWrapper = styled.div`
+  height: 15%;
+  width: 100%;
+`;
+const ECGText = styled.span`
+  font-size: 2em;
+  color: ${(props) => props.color};
+  position: absolute;
+  left: 0px;
+`;
+const ECGWrapperForPowerOnElement = styled.div`
+  height: 85%;
+  width: 100%;
+`;
+
 class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   static defaultProps = waveformItemTemplate();
@@ -38,6 +60,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let self = this;
     self.initial();
     if (self.props.gridOn) self.drawGrid();
+    self.drawScale();
     self.startAnimation();
     if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
     else self.initialSocket();
@@ -58,6 +81,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     self.initial();
     if (self.props.gridOn) self.drawGrid();
     else self.clearGrid();
+    self.drawScale();
     self.restartAnimation();
     self.requestWaveformDataClearInterval();
     self.clearUpSocket();
@@ -66,21 +90,58 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   }
 
   render() {
-    let {containerWidth, containerHeight} = this.props;
-    return (
-      <div>
-        <canvas width={containerWidth}
-                height={containerHeight}
-                style={{position: 'absolute', zIndex: 1}}
-                ref={(c) => this.backgroundCanvas = c}>
-        </canvas>
-        <canvas width={containerWidth}
-                height={containerHeight}
-                style={{position: 'absolute', zIndex: 2}}
-                ref={(c) => this.canvas = c}>
-        </canvas>
-      </div>
-    );
+    let {
+      containerWidth,
+      containerHeight,
+      strokeStyle,
+      waveform,
+      powerOn,
+      waveformItemId,
+      handleWaveformToolbarGridOnButtonToggle,
+      handleWaveformDrawerToggle,
+      removeWaveformItem
+    } = this.props;
+
+    return powerOn ?
+      (<div style={{height: '100%', width: '100%'}}>
+        <ECGToolbarWrapper>
+          <ECGText color={color[strokeStyle]}>{waveform}</ECGText>
+        </ECGToolbarWrapper>
+        <ECGWrapperForPowerOnElement>
+          <canvas width={containerWidth}
+                  height={containerHeight * 0.85}
+                  style={{position: 'absolute', zIndex: 1}}
+                  ref={(c) => this.backgroundCanvas = c}>
+          </canvas>
+          <canvas width={containerWidth}
+                  height={containerHeight * 0.85}
+                  style={{position: 'absolute', zIndex: 2}}
+                  ref={(c) => this.canvas = c}>
+          </canvas>
+        </ECGWrapperForPowerOnElement>
+      </div>)
+      :
+      (<div style={{height: '100%', width: '100%'}}>
+        <ECGToolbarWrapper>
+          <ECGText color={color[strokeStyle]}>{waveform}</ECGText>
+          <CustomFontIcon iconString="grid_on"
+                          onClick={handleWaveformToolbarGridOnButtonToggle.bind(this, waveformItemId)}/>
+          <BuildFontIcon onTouchTap={handleWaveformDrawerToggle.bind(this, waveformItemId)}/>
+          <CloseFontIcon onClick={removeWaveformItem.bind(this, waveformItemId)}/>
+        </ECGToolbarWrapper>
+        <Card style={{height: '85%', width: '100%', position: 'absolute', zIndex: -1}}>
+          <canvas width={containerWidth}
+                  height={containerHeight * 0.85}
+                  style={{position: 'absolute', zIndex: 1}}
+                  ref={(c) => this.backgroundCanvas = c}>
+          </canvas>
+          <canvas width={containerWidth}
+                  height={containerHeight * 0.85}
+                  style={{position: 'absolute', zIndex: 2}}
+                  ref={(c) => this.canvas = c}>
+          </canvas>
+        </Card>
+      </div>);
   }
 
   draw = () => {
@@ -101,6 +162,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     ctx.lineWidth = self.props.lineWidth;
 
     let speedCount = self.speed || 1;
+
     function animate() {
       while (speedCount > 0) {
         self.py = self.getDataPoint();
@@ -232,7 +294,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     self.renderGrid(ctx, self.minorGridPixelSize, "#546E7A", 0.3);
   };
 
-// Render Major Grid
+  // Render Major Grid
   renderGrid = (ctx, majorGridPixelSize, color, lineWidth, major) => {
     const ECGWidth = ctx.canvas.width;
     const ECGHeight = ctx.canvas.height;
@@ -264,6 +326,47 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let self = this;
     let ctx = self.backgroundCanvas.getContext('2d');
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  };
+
+  drawScale = () => {
+    if (this.props.waveform !== "PPG") return;
+    let self = this;
+    let ctx = self.backgroundCanvas.getContext('2d');
+
+    const ECGWidth = ctx.canvas.width;
+    const ECGHeight = ctx.canvas.height;
+
+    ctx.font="25px Comic Sans MS";
+    ctx.fillStyle = color[self.props.strokeStyle];
+    ctx.textAlign = "right";
+    ctx.fillText("150", 110, 20);
+    ctx.fillText("75", 110, 10 + ECGHeight/2);
+    ctx.fillText("0", 110, ECGHeight);
+
+    ctx.lineWidth = self.props.lineWidth * 0.25;
+    ctx.strokeStyle = color[self.props.strokeStyle];
+    ctx.beginPath();
+    ctx.moveTo(125, 0);
+    ctx.lineTo(ECGWidth, 0);
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.lineWidth = self.props.lineWidth * 0.1;
+    ctx.strokeStyle = color[self.props.strokeStyle];
+    ctx.beginPath();
+    ctx.moveTo(125, ECGHeight / 2);
+    ctx.lineTo(ECGWidth, ECGHeight / 2);
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.lineWidth = self.props.lineWidth * 0.25;
+    ctx.strokeStyle = color[self.props.strokeStyle];
+    ctx.beginPath();
+    ctx.moveTo(125, ECGHeight);
+    ctx.lineTo(ECGWidth, ECGHeight);
+    ctx.closePath();
+    ctx.stroke();
+
   };
 
   initial = () => {
