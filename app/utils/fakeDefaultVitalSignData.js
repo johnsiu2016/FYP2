@@ -1,33 +1,48 @@
 let fakeDefaultVitalSignData = {
-  'HR': {
+  "MDC_ECG_HEART_RATE": {
     'top': 120,
     'bottom': 50,
-    'data': 60
+    'data': 90
   },
-  'SpO2': {
+  "MDC_PULS_OXIM_PULS_RATE": {
+    'top': 120,
+    'bottom': 50,
+    'data': 90
+  },
+  "MDC_PULS_OXIM_SAT_O2": {
     'top': 100,
     'bottom': 90,
-    'data': 97
+    'data': 99
   },
-  'RP': {
+  'MDC_CO2_RESP_RATE': {
     'top': 45,
     'bottom': 8,
-    'data': 40
+    'data': 36
   },
-  'ABP': {
-    'systolic': 116,
-    'diastolic': 78,
-    'mean': 91
+  "MDC_TTHOR_RESP_RATE": {
+    'top': 45,
+    'bottom': 8,
+    'data': 36
+  },
+  "MDC_PRESS_BLD_ART_ABP_NUMERIC": {
+    'systolic': 122,
+    'diastolic': 82,
+    'mean': 93
   },
   'PAP': {
-    'systolic': 28,
-    'diastolic': 15,
-    'mean': 21
+    'systolic': 32,
+    'diastolic': 18,
+    'mean': 23
   },
   'NBP': {
-    'systolic': 120,
-    'diastolic': 80,
-    'mean': 90
+    'systolic': 125,
+    'diastolic': 84,
+    'mean': 92
+  },
+  'MDC_AWAY_CO2_ET': {
+    'top': 65,
+    'bottom': 25,
+    'data': 34
   }
 };
 

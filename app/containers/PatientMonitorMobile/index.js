@@ -106,14 +106,14 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
     const waveformItemId = waveformDrawer.get('i');
     const isWaveformDrawerOpen = waveformDrawer.get('open');
     const waveformItem = waveformItems.get(waveformItemId);
-    const waveformType = waveformItem ? waveformItem.get('waveform') : "ECG - II";
+    const waveformType = waveformItem ? waveformItem.get('waveform') : "MDC_ECG_LEAD_II";
     const waveformColor = waveformItem ? waveformItem.get('strokeStyle') : "green";
     const waveformScale = waveformItem ? waveformItem.get('scale') : 0.8;
 
     const vitalSignItemId = vitalSignDrawer.get('i');
     const isVitalSignDrawerOpen = vitalSignDrawer.get('open');
     const vitalSignItem = vitalSignItems.get(vitalSignItemId);
-    const vitalSignType = vitalSignItem ? vitalSignItem.get('vitalSign') : "HR";
+    const vitalSignType = vitalSignItem ? vitalSignItem.get('vitalSign') : "MDC_ECG_HEART_RATE";
     const vitalSignColor = vitalSignItem ? vitalSignItem.get('strokeStyle') : "green";
 
     if (soundOn) {

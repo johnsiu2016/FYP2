@@ -10,6 +10,7 @@ import Dimensions from 'react-dimensions';
 import color from '../../utils/color.js';
 import {waveformItemTemplate, requestWaveformDataInterval} from '../../utils/utililtyFunctions';
 import audio from '../../utils/audio';
+import {getCommonName} from '../../utils/preferences';
 
 import {Card} from 'material-ui/Card';
 import BuildFontIcon from 'components/BuildFontIcon';
@@ -105,7 +106,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     return powerOn ?
       (<div style={{height: '100%', width: '100%'}}>
         <ECGToolbarWrapper>
-          <ECGText color={color[strokeStyle]}>{waveform}</ECGText>
+          <ECGText color={color[strokeStyle]}>{getCommonName(waveform)}</ECGText>
         </ECGToolbarWrapper>
         <ECGWrapperForPowerOnElement>
           <canvas width={containerWidth}
@@ -123,7 +124,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       :
       (<div style={{height: '100%', width: '100%'}}>
         <ECGToolbarWrapper>
-          <ECGText color={color[strokeStyle]}>{waveform}</ECGText>
+          <ECGText color={color[strokeStyle]}>{getCommonName(waveform)}</ECGText>
           <CustomFontIcon iconString="grid_on"
                           onClick={handleWaveformToolbarGridOnButtonToggle.bind(this, waveformItemId)}/>
           <BuildFontIcon onTouchTap={handleWaveformDrawerToggle.bind(this, waveformItemId)}/>
@@ -233,7 +234,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   emitSound = () => {
     const self = this;
-    if (self.props.waveform === "ECG - II") {
+    if (self.props.waveform === "MDC_ECG_LEAD_II") {
       if (!this.beepFlag && self.ecgData[self.dataIndex] < 0.2 && self.ecgData[self.dataIndex] < self.ecgData[self.dataIndex - 1]) {
         audio.beep();
         this.beepFlag = true;
@@ -253,21 +254,22 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   initialSocket = () => {
     let self = this;
     if (self.props.socket) {
-      self.props.socket.on(self.props.i, self.waveformDataCallback);
+      self.props.socket.on(self.props.waveform, self.waveformDataCallback);
     }
   };
 
   clearUpSocket = () => {
     let self = this;
     if (self.props.socket) {
-      self.props.socket.off(self.props.i, self.waveformDataCallback);
+      self.props.socket.off(self.props.waveform, self.waveformDataCallback);
     }
   };
 
   waveformDataCallback = (data) => {
     let self = this;
     if (self.ecgDataBuffer.length < 10) {
-      self.ecgDataBuffer.push(data);
+      if (data) {self.ecgDataBuffer.push(data);}
+      console.log(self.ecgDataBuffer.length)
     }
   };
 
@@ -329,7 +331,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   };
 
   drawScale = () => {
-    if (this.props.waveform !== "PPG") return;
+    if (this.props.waveform !== "MDC_PRESS_BLD_ART_ABP") return;
     let self = this;
     let ctx = self.backgroundCanvas.getContext('2d');
 

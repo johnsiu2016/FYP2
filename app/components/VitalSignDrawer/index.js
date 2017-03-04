@@ -12,6 +12,8 @@ import Subheader from 'material-ui/Subheader';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
+import {getCommonName} from '../../utils/preferences';
+
 function VitalSignDrawer({
   openVitalSignDrawer,
   vitalSignType,
@@ -34,12 +36,13 @@ function VitalSignDrawer({
             value={vitalSignType}
             onChange={handleVitalSignTypeChange}
           >
-            <MenuItem value="HR" primaryText="HR"/>
-            <MenuItem value="ABP" primaryText="ABP"/>
-            <MenuItem value="PAP" primaryText="PAP"/>
-            <MenuItem value="SpO2" primaryText="SpO2"/>
-            <MenuItem value="RP" primaryText="RP"/>
-            <MenuItem value="NBP" primaryText="NBP"/>
+            <MenuItem value="MDC_ECG_HEART_RATE" primaryText={getCommonName("MDC_ECG_HEART_RATE")}/>
+            <MenuItem value="MDC_TTHOR_RESP_RATE" primaryText={getCommonName("MDC_TTHOR_RESP_RATE")}/>
+            <MenuItem value="MDC_PULS_OXIM_PULS_RATE" primaryText={getCommonName("MDC_PULS_OXIM_PULS_RATE")}/>
+            <MenuItem value="MDC_PULS_OXIM_SAT_O2" primaryText={getCommonName("MDC_PULS_OXIM_SAT_O2")}/>
+            <MenuItem value="MDC_CO2_RESP_RATE" primaryText={getCommonName("MDC_CO2_RESP_RATE")}/>
+            <MenuItem value="MDC_AWAY_CO2_ET" primaryText={getCommonName("MDC_AWAY_CO2_ET")}/>
+            <MenuItem value="MDC_PRESS_BLD_ART_ABP_NUMERIC" primaryText={getCommonName("MDC_PRESS_BLD_ART_ABP_NUMERIC")}/>
           </SelectField>
         </ListItem>
         <ListItem>

@@ -14,6 +14,8 @@ import styled from 'styled-components';
 import color from '../../utils/color.js';
 import fakeDefaultVitalSignData from '../../utils/fakeDefaultVitalSignData.js';
 
+import {getCommonName} from '../../utils/preferences';
+
 import {vitalSignItemTemplate, requestVitalSignDataInterval} from '../../utils/utililtyFunctions';
 
 const HRWrapper = styled.div`
@@ -166,15 +168,18 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
     if (displayMode === "Simulation mode") {
       switch (vitalSign) {
-        case "HR":
-        case "SpO2":
-        case "RP":
+        case "MDC_ECG_HEART_RATE":
+        case "MDC_PULS_OXIM_SAT_O2":
+        case "MDC_PULS_OXIM_PULS_RATE":
+        case "MDC_CO2_RESP_RATE":
+        case "MDC_AWAY_CO2_ET":
+        case "MDC_TTHOR_RESP_RATE":
           element = (
             <StyledForm onSubmit={handleSubmit(this.handleHRSubmit)}>
               <HRWrapper color={color[strokeStyle]}>
                 <HRTextAndUpperLowerLimitWrapper>
                   <HRText>
-                    {vitalSign}
+                    {getCommonName(vitalSign)}
                   </HRText>
                   <HRUpperAndLowerLimitWrapper>
                     <HRUpperLimit scaleContainerHeight={scaleContainerHeight}>
@@ -200,7 +205,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
             </StyledForm>
           );
           break;
-        case "ABP":
+        case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
         case "PAP":
         case "NBP":
           element = (
@@ -208,7 +213,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
               <BPWrapper color={color[strokeStyle]}>
                 <BPTextWrapper>
                   <BPText>
-                    {vitalSign}
+                    {getCommonName(vitalSign)}
                   </BPText>
                 </BPTextWrapper>
                 <BPSystolicAndDiastolicWrapper scaleContainerHeight={scaleContainerHeight}>
@@ -232,14 +237,17 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       }
     } else {
       switch (vitalSign) {
-        case "HR":
-        case "SpO2":
-        case "RP":
+        case "MDC_ECG_HEART_RATE":
+        case "MDC_PULS_OXIM_SAT_O2":
+        case "MDC_PULS_OXIM_PULS_RATE":
+        case "MDC_CO2_RESP_RATE":
+        case "MDC_AWAY_CO2_ET":
+        case "MDC_TTHOR_RESP_RATE":
           element = (
             <HRWrapper color={color[strokeStyle]}>
               <HRTextAndUpperLowerLimitWrapper>
                 <HRText>
-                  {vitalSign}
+                  {getCommonName(vitalSign)}
                 </HRText>
                 <HRUpperAndLowerLimitWrapper>
                   <HRUpperLimit scaleContainerHeight={scaleContainerHeight}
@@ -265,13 +273,13 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
             </HRWrapper>
           );
           break;
-        case "ABP":
+        case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
         case "PAP":
         case "NBP":
           element = (<BPWrapper color={color[strokeStyle]}>
             <BPTextWrapper>
               <BPText>
-                {vitalSign}
+                {getCommonName(vitalSign)}
               </BPText>
             </BPTextWrapper>
             <BPSystolicAndDiastolicWrapper scaleContainerHeight={scaleContainerHeight}
@@ -301,35 +309,41 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   initialSocket = () => {
     let self = this;
     if (self.props.socket) {
-      self.props.socket.on(self.props.i, self.vitalSignDataCallback);
+      self.props.socket.on(self.props.vitalSign, self.vitalSignDataCallback);
     }
   };
 
   clearUpSocket = () => {
     let self = this;
     if (self.props.socket) {
-      self.props.socket.off(self.props.i, self.vitalSignDataCallback);
+      self.props.socket.off(self.props.vitalSign, self.vitalSignDataCallback);
     }
   };
 
   vitalSignDataCallback = (data) => {
     // console.log(`test ${JSON.stringify(data)}}`);
-    switch (this.props.vitalSign) {
-      case "HR":
-        window._HR = data.data;
-      case "SpO2":
-      case "RP":
-        this.HRTop.innerHTML = data.top;
-        this.HRBottom.innerHTML = data.bottom;
-        this.HRData.innerHTML = data.data;
-        break;
+    if (data.data) {
+      switch (this.props.vitalSign) {
+        case "MDC_ECG_HEART_RATE":
+          window._HR = data.data;
+        case 'MDC_PULS_OXIM_PULS_RATE':
+        case "MDC_PULS_OXIM_SAT_O2":
+        case 'MDC_AWAY_CO2_ET':
+        case 'MDC_CO2_RESP_RATE':
+        case 'MDC_TTHOR_RESP_RATE':
+        case "RP":
+          this.HRTop.innerHTML = data.top || this.HRTop.innerHTML;
+          this.HRBottom.innerHTML = data.bottom || this.HRBottom.innerHTML;
+          this.HRData.innerHTML = data.data;
+          break;
 
-      case "ABP":
-      case "PAP":
-      case "NBP":
-        this.BPSystolicAndDiastolic.innerHTML = `${data.systolic}/${data.diastolic}`;
-        this.BPMean.innerHTML = `(${data.mean})`;
-        break;
+        case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
+        case "PAP":
+        case "NBP":
+          this.BPSystolicAndDiastolic.innerHTML = `${data.systolic}/${data.diastolic}`;
+          this.BPMean.innerHTML = `(${data.mean})`;
+          break;
+      }
     }
   };
 
@@ -369,7 +383,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     }
 
     switch (this.props.vitalSign) {
-      case "HR":
+      case "MDC_ECG_HEART_RATE":
         if (data < 20) {
           this.props.change("data", 20);
           values = values.set("data", 20);
@@ -381,7 +395,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
           alert("The value should not be greater than 240");
         }
         break;
-      case "SpO2":
+      case "MDC_PULS_OXIM_SAT_O2":
         if (top > 100) {
           this.props.change("top", 100);
           alert("The value should not be greater than 100");
@@ -411,7 +425,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     }
 
     switch (this.props.vitalSign) {
-      case "ABP":
+      case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
         if (systolic > 150) {
           this.props.change("systolic", 150);
           values = values.set("systolic", 150);
@@ -423,7 +437,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
           alert("The value should not be greater than 140");
         }
         break;
-      case "SpO2":
+      case "MDC_PULS_OXIM_SAT_O2":
         break;
       case "RP":
         break;

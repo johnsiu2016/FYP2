@@ -133,13 +133,13 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case constant.HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE:
       changedState = state.setIn(['vitalSignItems', action.i, 'formStorage'], action.formStorage);
-      if (action.vitalSign === "HR") {
+      if (action.vitalSign === "MDC_ECG_HEART_RATE") {
         window._HR = action.formStorage.get("data");
         // Tone.Transport.pause();
         // Tone.Transport.bpm.value = window._HR || 30;
         // Tone.Transport.start(`+${(1/60) * (60 * 0.45) / (window._HR || 30/ 60)}`);
       }
-      if (action.vitalSign === "ABP") {
+      if (action.vitalSign === "MDC_PRESS_BLD_ART_ABP_NUMERIC") {
         const systolic = action.formStorage.get("systolic");
         const diastolic = action.formStorage.get("diastolic");
         const mean = action.formStorage.get("mean");
