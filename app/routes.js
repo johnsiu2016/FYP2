@@ -34,19 +34,19 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
-      path: '/patientMonitorMobile',
-      name: 'patientMonitorMobile',
+      path: '/patientMonitor',
+      name: 'patientMonitor',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          import('containers/PatientMonitorMobile/reducer'),
-          import('containers/PatientMonitorMobile/sagas'),
-          import('containers/PatientMonitorMobile'),
+          import('containers/PatientMonitor/reducer'),
+          import('containers/PatientMonitor/sagas'),
+          import('containers/PatientMonitor'),
         ]);
 
         const renderRoute = loadModule(cb);
 
         importModules.then(([reducer, sagas, component]) => {
-          injectReducer('patientMonitorMobile', reducer.default);
+          injectReducer('patientMonitor', reducer.default);
           injectSagas(sagas.default);
 
           renderRoute(component);

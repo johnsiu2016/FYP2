@@ -445,8 +445,6 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
     const mean = Math.round((Number(values.get("systolic")) + Number(values.get("diastolic")) * 2)/ 3);
     this.props.change("mean", mean);
-    // console.log(values.toObject());
-    // console.log(this.props.vitalSign);
     this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
   };
 

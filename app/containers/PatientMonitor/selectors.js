@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 
 /**
- * Direct selector to the patientMonitorMobile state domain
+ * Direct selector to the patientMonitor state domain
  */
-const selectPatientMonitorMobile = () => state => state.get('patientMonitorMobile');
+const selectPatientMonitorMobile = () => state => state.get('patientMonitor');
 
 /**
  * Other specific selectors
@@ -11,7 +11,7 @@ const selectPatientMonitorMobile = () => state => state.get('patientMonitorMobil
 
 
 /**
- * Default selector used by PatientMonitorMobile
+ * Default selector used by PatientMonitor
  */
 
 const makeSelectWaveformLayout = () => createSelector(

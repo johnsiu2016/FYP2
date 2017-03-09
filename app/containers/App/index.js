@@ -49,8 +49,8 @@ export default class App extends React.Component { // eslint-disable-line react/
 
   render() {
     let container = {
-      'transform-origin': '100% center 0',
-      'transform-style': 'preserve-3d',
+      'transformOrigin': '100% center 0',
+      'transformStyle': 'preserve-3d',
       'transition': 'all 0.5s',
       'transform': 'perspective(1500px) translate3d(0px,0px,-300px)'
     };
@@ -91,18 +91,17 @@ export default class App extends React.Component { // eslint-disable-line react/
               <CardHeader
                 title="Patient Monitor"
                 subtitle="Anytime, Everywhere"
-                avatar="https://cdn0.iconfinder.com/data/icons/health-icons/110/Patient-Monitor-512.png"
+                avatar="img/Patient-Monitor-512.png"
               />
               <CardMedia>
-                <img src="http://www.ampronix.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/m/x/mx600_mx700_gallery7_1.jpg" />
+                <img src="img/mx600_mx700_gallery7_1.jpg" />
               </CardMedia>
             </Card>
-            <Subheader>Go To</Subheader>
-            <MenuItem onTouchTap={this.handleClose}><Link to="/patientMonitor">Patient Monitor Desktop</Link></MenuItem>
-            <MenuItem onTouchTap={this.handleClose}><Link to="/patientMonitorMobile">Patient Monitor Mobile</Link></MenuItem>
-            <MenuItem onTouchTap={this.handleClose}><Link to="/settings">Settings</Link></MenuItem>
-            <MenuItem onTouchTap={this.handleClose}><Link to="/credit">Credit</Link></MenuItem>
-            <MenuItem onTouchTap={this.handleClose}><a href="/api">API</a></MenuItem>
+            <Subheader style={{color: "#F5F5F5"}}>Go To</Subheader>
+            <Link to="/patientMonitor"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Patient Monitor"/></Link>
+            <Link to="/settings"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="settings"/></Link>
+            <Link to="/credit"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="credit"/></Link>
+            <Link to="/api"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="API"/></Link>
           </Drawer>
         </div>
       </MuiThemeProvider>)
