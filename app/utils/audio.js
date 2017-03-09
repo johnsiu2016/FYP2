@@ -1,5 +1,5 @@
 const audio = {};
-const url = './machine-heart-beep.wav';
+const url = './audio/machine-heart-beep.wav';
 const context = new AudioContext();
 const gainNode = context.createGain();
 gainNode.gain.value = 1;
