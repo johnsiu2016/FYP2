@@ -12,74 +12,76 @@ import Dimensions from 'react-dimensions'
 import styled from 'styled-components';
 
 import color from '../../utils/color.js';
+import {Field, reduxForm} from 'redux-form/immutable';
 import fakeDefaultVitalSignData from '../../utils/fakeDefaultVitalSignData.js';
 
 import {getCommonName} from '../../utils/preferences';
 
 import {vitalSignItemTemplate, requestVitalSignDataInterval} from '../../utils/utililtyFunctions';
 
-const HRWrapper = styled.div`
+// Div style for HR
+const HR = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-flow: row wrap;
   color: ${(props) => props.color};
 `;
-const HRTextAndUpperLowerLimitWrapper = styled.div`
-  flex: 0.3;
+const HRTextAndLimit = styled.div`
+  flex: 0.25;
+  font-size: ${(props) => props.scaleContainerHeight * 0.2}px;
 `;
 const HRText = styled.div`
-  font-size: 2em;
+  font-size: 1.1em;
 `;
-const HRUpperAndLowerLimitWrapper = styled.div`
-  align-self: 'center';
+const HRLimit = styled.div`
+  font-size: 0.8em;
 `;
-const HRUpperLimit = styled.div`
-  font-size: ${(props) => props.scaleContainerHeight * 0.2}px;
-  text-align: center;
-`;
-const HRLowerLimit = styled.div`
-  font-size: ${(props) => props.scaleContainerHeight * 0.2}px;
-  text-align: center;
-`;
-const HRDataWrapper = styled.div`
-  flex: 0.7;
-  text-align: center;
-  font-size: ${(props) => props.scaleContainerHeight * 0.9}px;
+const HRData = styled.div`
+  flex: 0.75;
+  font-size: ${(props) => props.scaleContainerHeight * 0.75}px;
 `;
 
-const BPWrapper = styled.div`
+// Div style for BP
+const BP = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
   color: ${(props) => props.color};
 `;
-const BPTextWrapper = styled.div`
-  flex: 0.15;
+const BPTextAndLimit = styled.div`
+  flex: 0.3;
+  font-size: ${(props) => props.scaleContainerHeight * 0.2}px;
 `;
 const BPText = styled.div`
-  font-size: 2em;
+  font-size: 1.2em;
 `;
-const BPSystolicAndDiastolicWrapper = styled.div`
-  flex: 0.55;
-  font-size: ${(props) => props.scaleContainerHeight * 0.3}px;
+const BPLimit = styled.div`
+  font-size: 0.5em;
+`;
+const BPLimitText = styled.div`
+  text-align: center;
+`;
+const BPData = styled.div`
+  flex: 0.7;
+  font-size: ${(props) => props.scaleContainerHeight * 0.2}px;
   align-self: center;
 `;
-const BPMeanWrapper = styled.div`
-  flex: 0.3;
-  font-size: ${(props) => props.scaleContainerHeight * 0.3}px;
-  align-self: center;
+const BPSysAndDia = styled.div`
+  font-size: 1.2em
+  text-align: center;
+`;
+const BPMean = styled.div`
+  font-size: 0.9em
+  text-align: center;
 `;
 
-import {Field, reduxForm} from 'redux-form/immutable';
-
-const StyledForm = styled.form`
+// Form style
+const ControlForm = styled.form`
   height: 100%;
 `;
-
-const StyledInput = styled.input`
+const ControlInput = styled.input`
   background: none;
   border: 0;
   display: block;
@@ -97,26 +99,13 @@ const StyledInput = styled.input`
     margin: 0; 
   }
 `;
-
-const StyledInputSystolic = styled(StyledInput)`
+const ABPControlInput = styled(ControlInput)`
   width: 45%;
   display: inline-block;
 `;
-
-const StyledInputDiastolic = styled(StyledInput)`
-  width: 45%;
-  display: inline-block;
-`;
-
-const StyledInputMean = styled(StyledInput)`
-  width: 70%;
-  display: inline-block;
-`;
-
-const renderField = ({input, type}) => (<StyledInput {...input} type={type}/>);
-const renderFieldDiastolic = ({input, type}) => (<StyledInputDiastolic {...input} type={type}/>);
-const renderFieldSystolic = ({input, type}) => (<StyledInputSystolic {...input} type={type}/>);
-const renderFieldMean = ({input, type}) => (<StyledInputMean {...input} disabled={true} type={type}/>);
+const renderControlInput = ({input, type}) => (<ControlInput {...input} type={type}/>);
+const renderABPControlInput = ({input, type}) => (<ABPControlInput {...input} type={type}/>);
+const renderABPControlMeanInput = ({input, type}) => (<ABPControlInput {...input} disabled={true} type={type}/>);
 
 class VitalSign extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
@@ -166,143 +155,88 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     let scaleContainerHeight = containerHeight * scaleRatio;
     let element = null;
 
-    if (displayMode === "Simulation mode") {
-      switch (vitalSign) {
-        case "MDC_ECG_HEART_RATE":
-        case "MDC_PULS_OXIM_SAT_O2":
-        case "MDC_PULS_OXIM_PULS_RATE":
-        case "MDC_CO2_RESP_RATE":
-        case "MDC_AWAY_CO2_ET":
-        case "MDC_TTHOR_RESP_RATE":
-          element = (
-            <StyledForm onSubmit={handleSubmit(this.handleHRSubmit)}>
-              <HRWrapper color={color[strokeStyle]}>
-                <HRTextAndUpperLowerLimitWrapper>
-                  <HRText>
-                    {getCommonName(vitalSign)}
-                  </HRText>
-                  <HRUpperAndLowerLimitWrapper>
-                    <HRUpperLimit scaleContainerHeight={scaleContainerHeight}>
-                      <Field name="top" type="number"
-                             component={renderField}/>
-                    </HRUpperLimit>
-                    <HRLowerLimit scaleContainerHeight={scaleContainerHeight}>
-                      <Field name="bottom" type="number"
-                             component={renderField}/>
-                    </HRLowerLimit>
-                  </HRUpperAndLowerLimitWrapper>
-                </HRTextAndUpperLowerLimitWrapper>
-                <HRDataWrapper scaleContainerHeight={scaleContainerHeight}
-                               innerRef={(HRData) => {
-                                 this.HRData = HRData
-                               }}
-                               onClick={this.onClickHRData}>
-                  <Field name="data" type="number"
-                         component={renderField}/>
-                </HRDataWrapper>
-              </HRWrapper>
-              <button type="submit" hidden={true}/>
-            </StyledForm>
-          );
-          break;
-        case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
-        case "PAP":
-        case "NBP":
-          element = (
-            <StyledForm onSubmit={handleSubmit(this.handleABPSubmit)}>
-              <BPWrapper color={color[strokeStyle]}>
-                <BPTextWrapper>
-                  <BPText>
-                    {getCommonName(vitalSign)}
-                  </BPText>
-                </BPTextWrapper>
-                <BPSystolicAndDiastolicWrapper scaleContainerHeight={scaleContainerHeight}>
-                  <Field name="systolic" type="number"
-                         component={renderFieldSystolic}/>
-                  {"/"}
-                  <Field name="diastolic" type="number"
-                         component={renderFieldDiastolic}/>
-                </BPSystolicAndDiastolicWrapper>
-                <BPMeanWrapper scaleContainerHeight={scaleContainerHeight}>
-                  {"("}
-                  <Field name="mean" type="number"
-                         component={renderFieldMean}/>
-                  {")"}
-                </BPMeanWrapper>
-              </BPWrapper>
-              <button type="submit" hidden={true}/>
-            </StyledForm>
-          );
-          break;
-      }
-    } else {
-      switch (vitalSign) {
-        case "MDC_ECG_HEART_RATE":
-        case "MDC_PULS_OXIM_SAT_O2":
-        case "MDC_PULS_OXIM_PULS_RATE":
-        case "MDC_CO2_RESP_RATE":
-        case "MDC_AWAY_CO2_ET":
-        case "MDC_TTHOR_RESP_RATE":
-          element = (
-            <HRWrapper color={color[strokeStyle]}>
-              <HRTextAndUpperLowerLimitWrapper>
+    switch (vitalSign) {
+      case "MDC_ECG_HEART_RATE":
+      case "MDC_PULS_OXIM_SAT_O2":
+      case "MDC_PULS_OXIM_PULS_RATE":
+      case "MDC_CO2_RESP_RATE":
+      case "MDC_AWAY_CO2_ET":
+      case "MDC_TTHOR_RESP_RATE":
+        element = (
+          <ControlForm onSubmit={handleSubmit(this.handleHRSubmit)}>
+            <HR color={color[strokeStyle]}>
+              <HRTextAndLimit scaleContainerHeight={scaleContainerHeight}>
                 <HRText>
                   {getCommonName(vitalSign)}
                 </HRText>
-                <HRUpperAndLowerLimitWrapper>
-                  <HRUpperLimit scaleContainerHeight={scaleContainerHeight}
-                                innerRef={(HRTop) => {
-                                  this.HRTop = HRTop
-                                }}>
-                    {fakeDefaultVitalSignData[vitalSign].top}
-                  </HRUpperLimit>
-                  <HRLowerLimit scaleContainerHeight={scaleContainerHeight}
-                                innerRef={(HRBottom) => {
-                                  this.HRBottom = HRBottom
-                                }}>
-                    {fakeDefaultVitalSignData[vitalSign].bottom}
-                  </HRLowerLimit>
-                </HRUpperAndLowerLimitWrapper>
-              </HRTextAndUpperLowerLimitWrapper>
-              <HRDataWrapper scaleContainerHeight={scaleContainerHeight}
-                             innerRef={(HRData) => {
-                               this.HRData = HRData
-                             }}>
-                {fakeDefaultVitalSignData[vitalSign].data}
-              </HRDataWrapper>
-            </HRWrapper>
-          );
-          break;
-        case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
-        case "PAP":
-        case "NBP":
-          element = (<BPWrapper color={color[strokeStyle]}>
-            <BPTextWrapper>
-              <BPText>
-                {getCommonName(vitalSign)}
-              </BPText>
-            </BPTextWrapper>
-            <BPSystolicAndDiastolicWrapper scaleContainerHeight={scaleContainerHeight}
-                                           innerRef={(BPSystolicAndDiastolic) => {
-                                             this.BPSystolicAndDiastolic = BPSystolicAndDiastolic
-                                           }}>
-              {fakeDefaultVitalSignData[vitalSign].systolic}
-              {"/"}
-              {fakeDefaultVitalSignData[vitalSign].diastolic}
-            </BPSystolicAndDiastolicWrapper>
-            <BPMeanWrapper scaleContainerHeight={scaleContainerHeight}
-                           innerRef={(BPMean) => {
-                             this.BPMean = BPMean
-                           }}>
-              {"("}
-              {fakeDefaultVitalSignData[vitalSign].mean}
-              {")"}
-            </BPMeanWrapper>
-          </BPWrapper>);
-          break;
-      }
+                <HRLimit>
+                  <Field name="top" type="number"
+                         component={renderControlInput}/>
+                  <Field name="bottom" type="number"
+                         component={renderControlInput}/>
+                </HRLimit>
+              </HRTextAndLimit>
+              <HRData scaleContainerHeight={scaleContainerHeight}
+                      innerRef={(HRData) => {
+                        this.HRData = HRData
+                      }}
+                      onClick={this.onClickHRData}>
+                <Field name="data" type="number"
+                       component={renderControlInput}/>
+              </HRData>
+            </HR>
+            <button type="submit" hidden={true}/>
+          </ControlForm>
+        );
+        break;
+      case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
+      case "PAP":
+      case "NBP":
+        element = (
+          <ControlForm onSubmit={handleSubmit(this.handleABPSubmit)}>
+            <BP color={color[strokeStyle]}>
+              <BPTextAndLimit scaleContainerHeight={scaleContainerHeight}>
+                <BPText>
+                  {getCommonName(vitalSign)}
+                </BPText>
+                <BPLimit>
+                  <BPLimitText>
+                    {"Sys."}
+                  </BPLimitText>
+                  <Field name="SysTop" type="number"
+                         component={renderABPControlInput}/>
+                  <Field name="SysBottom" type="number"
+                         component={renderABPControlInput}/>
+                  <BPLimitText>
+                    {"Dia."}
+                  </BPLimitText>
+                  <Field name="DiaTop" type="number"
+                         component={renderABPControlInput}/>
+                  <Field name="DiaButton" type="number"
+                         component={renderABPControlInput}/>
+                </BPLimit>
+              </BPTextAndLimit>
+              <BPData scaleContainerHeight={scaleContainerHeight}>
+                <BPSysAndDia>
+                  <Field name="systolic" type="number"
+                         component={renderABPControlInput}/>
+                  {"/"}
+                  <Field name="diastolic" type="number"
+                         component={renderABPControlInput}/>
+                </BPSysAndDia>
+                <BPMean>
+                  {"("}
+                  <Field name="mean" type="number"
+                         component={renderABPControlMeanInput}/>
+                  {")"}
+                </BPMean>
+              </BPData>
+            </BP>
+            <button type="submit" hidden={true}/>
+          </ControlForm>
+        );
+        break;
     }
-
     return element;
   }
 
@@ -340,7 +274,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
         case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
         case "PAP":
         case "NBP":
-          this.BPSystolicAndDiastolic.innerHTML = `${data.systolic}/${data.diastolic}`;
+          this.BPSysAndDia.innerHTML = `${data.systolic}/${data.diastolic}`;
           this.BPMean.innerHTML = `(${data.mean})`;
           break;
       }
@@ -404,8 +338,6 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       case "RP":
         break;
     }
-    // console.log(values.toObject());
-    // console.log(this.props.vitalSign);
     this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
   };
 
@@ -442,8 +374,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       case "RP":
         break;
     }
-
-    const mean = Math.round((Number(values.get("systolic")) + Number(values.get("diastolic")) * 2)/ 3);
+    const mean = Math.round((Number(values.get("systolic")) + Number(values.get("diastolic")) * 2) / 3);
     this.props.change("mean", mean);
     this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
   };

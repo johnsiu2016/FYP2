@@ -122,72 +122,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       audio.gainNode.gain.value = 0;
     }
 
-    const customMode = (
-      <Grid fluid={true}>
-        <Row>
-          <Col lg={9}
-               style={{height: '95vh', background: grey900, overflow: 'auto'}}
-               className="patientMonitorMobile">
-            <ReactGridLayout
-              cols={12}
-              rowHeight={200}
-              onLayoutChange={changeWaveformLayout}
-              onResizeStop={() => global.dispatchEvent(new Event('resize'))}
-            >
-              {waveformLayout.map(this.createWaveformItem)}
-            </ReactGridLayout>
-            <ECGControlButtonsWrapper>
-              <RestoreFloatingButton onClick={resetWaveformLayout}/>
-              <AddFloatingButton onClick={addWaveformItem}/>
-            </ECGControlButtonsWrapper>
-          </Col >
-          <Col lg={3}
-               style={{height: '95vh', background: grey800, overflow: 'auto'}}
-               className="patientMonitorMobile">
-            <ReactGridLayout
-              cols={12}
-              rowHeight={200}
-              onLayoutChange={changeVitalSignLayout}
-              onResizeStop={() => global.dispatchEvent(new Event('resize'))}
-            >
-              {vitalSignLayout.map(this.createVitalSignItem)}
-            </ReactGridLayout>
-            <ECGControlButtonsWrapper>
-              <RestoreFloatingButton onClick={resetVitalSignLayout}/>
-              <AddFloatingButton onClick={addVitalSignItem}/>
-            </ECGControlButtonsWrapper>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={12} style={{height: '5vh', minHeight: 48, background: grey700}}>
-            <PowerOnIconButton onClick={handlePowerButtonToggle} powerOn={powerOn}/>
-            <DisplayModeDropDownMenu value={displayMode} onChange={handleDisplayModeChange}/>
-            <SoundOnIconButton onClick={handleHeartBeepSoundToggle} soundOn={soundOn}/>
-          </Col>
-        </Row>
-        <WaveformDrawer
-          openWaveformDrawer={isWaveformDrawerOpen}
-          waveformType={waveformType}
-          handleWaveformTypeChange={handleWaveformChange}
-          waveformColor={waveformColor}
-          handleWaveformColorChange={handleWaveformColorChange}
-          waveformScale={waveformScale}
-          handleWaveformScaleChange={handleWaveformScaleChange}
-          handleCloseWaveformDrawer={handleWaveformDrawerClose}
-        />
-        <VitalSignDrawer
-          openVitalSignDrawer={isVitalSignDrawerOpen}
-          vitalSignType={vitalSignType}
-          handleVitalSignTypeChange={handleVitalSignChange}
-          vitalSignColor={vitalSignColor}
-          handleVitalSignColorChange={handleVitalSignColorChange}
-          handleCloseVitalSignDrawer={handleVitalSignDrawerClose}
-        />
-      </Grid>
-    );
-
-    const powerOnMode = (
-      <Grid fluid={true}>
+    return powerOn ? (<Grid fluid={true}>
         <Row>
           <Col lg={9}
                style={{height: '95vh', background: grey900, overflow: 'auto'}}
@@ -221,9 +156,68 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             <SoundOnIconButton onClick={handleHeartBeepSoundToggle} soundOn={soundOn}/>
           </Col>
         </Row>
-      </Grid>
-    );
-    return powerOn ? powerOnMode : customMode;
+      </Grid>) :
+      (<Grid fluid={true}>
+          <Row>
+            <Col lg={9}
+                 style={{height: '95vh', background: grey900, overflow: 'auto'}}
+                 className="patientMonitorMobile">
+              <ReactGridLayout
+                cols={12}
+                rowHeight={200}
+                onLayoutChange={changeWaveformLayout}
+                onResizeStop={() => global.dispatchEvent(new Event('resize'))}
+              >
+                {waveformLayout.map(this.createWaveformItem)}
+              </ReactGridLayout>
+              <ECGControlButtonsWrapper>
+                <RestoreFloatingButton onClick={resetWaveformLayout}/>
+                <AddFloatingButton onClick={addWaveformItem}/>
+              </ECGControlButtonsWrapper>
+            </Col >
+            <Col lg={3}
+                 style={{height: '95vh', background: grey800, overflow: 'auto'}}
+                 className="patientMonitorMobile">
+              <ReactGridLayout
+                cols={12}
+                rowHeight={200}
+                onLayoutChange={changeVitalSignLayout}
+                onResizeStop={() => global.dispatchEvent(new Event('resize'))}
+              >
+                {vitalSignLayout.map(this.createVitalSignItem)}
+              </ReactGridLayout>
+              <ECGControlButtonsWrapper>
+                <RestoreFloatingButton onClick={resetVitalSignLayout}/>
+                <AddFloatingButton onClick={addVitalSignItem}/>
+              </ECGControlButtonsWrapper>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12} style={{height: '5vh', minHeight: 48, background: grey700}}>
+              <PowerOnIconButton onClick={handlePowerButtonToggle} powerOn={powerOn}/>
+              <DisplayModeDropDownMenu value={displayMode} onChange={handleDisplayModeChange}/>
+              <SoundOnIconButton onClick={handleHeartBeepSoundToggle} soundOn={soundOn}/>
+            </Col>
+          </Row>
+          <WaveformDrawer
+            openWaveformDrawer={isWaveformDrawerOpen}
+            waveformType={waveformType}
+            handleWaveformTypeChange={handleWaveformChange}
+            waveformColor={waveformColor}
+            handleWaveformColorChange={handleWaveformColorChange}
+            waveformScale={waveformScale}
+            handleWaveformScaleChange={handleWaveformScaleChange}
+            handleCloseWaveformDrawer={handleWaveformDrawerClose}
+          />
+          <VitalSignDrawer
+            openVitalSignDrawer={isVitalSignDrawerOpen}
+            vitalSignType={vitalSignType}
+            handleVitalSignTypeChange={handleVitalSignChange}
+            vitalSignColor={vitalSignColor}
+            handleVitalSignColorChange={handleVitalSignColorChange}
+            handleCloseVitalSignDrawer={handleVitalSignDrawerClose}
+          />
+        </Grid>);
   }
 
   // waveform
