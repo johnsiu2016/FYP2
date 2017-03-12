@@ -312,10 +312,6 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     }
   };
 
-  onClickHRData = () => {
-    this.props.handleVitalSignEditingChange();
-  };
-
   handleHRSubmit = (values) => {
     const top = values.get("top");
     const bottom = values.get("bottom");
@@ -399,10 +395,6 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     this.props.change("mean", mean);
     this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
   };
-
-  onScroll = (event) => {
-    console.log("Scroll test");
-  }
 }
 
 let InitializeFromStateForm = compose(connect((state, props) => ({form: props.vitalSignItemId})),

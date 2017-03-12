@@ -154,14 +154,6 @@ export function handleDisplayModeChange(displayModeValue) {
   }
 }
 
-export function handleVitalSignEditingChange(i) {
-  return {
-    type: constant.HANDLE_VITAL_SIGN_EDITING_CHANGE,
-    i: i
-  }
-}
-
-
 export function handleVitalSignFormStorageChange(i, formStorage, vitalSign) {
   return {
     type: constant.HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE,

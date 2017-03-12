@@ -130,9 +130,6 @@ function patientMonitorMobileReducer(state = initialState, action) {
     case constant.HANDLE_DISPLAY_MODE_CHANGE:
       return state.set('displayMode', action.value);
 
-    case constant.HANDLE_VITAL_SIGN_EDITING_CHANGE:
-      return state.setIn(['vitalSignItems', action.i, 'isEditing'], true);
-
     case constant.HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE:
       changedState = state.setIn(['vitalSignItems', action.i, 'formStorage'], action.formStorage);
       processVitalSignControlInput(action.vitalSign, action.formStorage);
@@ -235,7 +232,6 @@ export function vitalSignItemTemplate(vitalSign, strokeStyle) {
   return {
     vitalSign: vitalSign || "MDC_ECG_HEART_RATE",
     strokeStyle: strokeStyle || "green",
-    isEditing: false,
     formStorage: defaultVitalSignData[vitalSign]
   }
 }

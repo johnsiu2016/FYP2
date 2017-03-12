@@ -268,7 +268,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   waveformDataCallback = (data) => {
     let self = this;
-    if (self.ecgDataBuffer.length < 10) {
+    if (self.ecgDataBuffer.length <= 3) {
       if (data) {self.ecgDataBuffer.push(data);}
     }
   };
