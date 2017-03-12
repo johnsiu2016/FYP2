@@ -22,8 +22,8 @@ function WaveformDrawer({
   handleWaveformTypeChange,
   waveformColor,
   handleWaveformColorChange,
-  waveformScale,
-  handleWaveformScaleChange,
+  waveformLineWidth,
+  handleWaveformLineWidthChange,
   handleCloseWaveformDrawer
 }) {
   return (
@@ -67,20 +67,20 @@ function WaveformDrawer({
       </List>
       <Divider />
       <List>
-        <Subheader>Scale</Subheader>
+        <Subheader>LineWidth</Subheader>
         <div>
           <ListItem>
-            <div>Scale</div>
+            <div>LineWidth</div>
             <Slider
-              min={0}
-              max={2}
-              step={0.05}
-              defaultValue={waveformScale}
-              value={waveformScale}
-              onChange={handleWaveformScaleChange}
+              min={1}
+              max={5}
+              step={0.5}
+              defaultValue={waveformLineWidth}
+              value={waveformLineWidth}
+              onChange={handleWaveformLineWidthChange}
             />
             <div style={{'textAlign': 'center'}}>
-              {waveformScale}
+              {waveformLineWidth}
             </div>
           </ListItem>
         </div>

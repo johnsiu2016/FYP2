@@ -93,9 +93,9 @@ export function handleWaveformColorChange(value) {
   };
 }
 
-export function handleWaveformScaleChange(value) {
+export function handleWaveformLineWidthChange(value) {
   return {
-    type: constant.HANDLE_WAVEFORM_SCALE_CHANGE,
+    type: constant.HANDLE_WAVEFORM_LINEWIDTH_CHANGE,
     value: value
   };
 }

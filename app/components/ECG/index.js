@@ -235,7 +235,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   emitSound = () => {
     const self = this;
-    if (self.props.waveform === "MDC_ECG_LEAD_II") {
+    if (self.props.waveform === "MDC_ECG_LEAD_I" || self.props.waveform === "MDC_ECG_LEAD_II" || self.props.waveform === "MDC_ECG_LEAD_III") {
       if (!this.beepFlag && self.ecgData[self.dataIndex] < 0.2 && self.ecgData[self.dataIndex] < self.ecgData[self.dataIndex - 1]) {
         audio.beep();
         this.beepFlag = true;
@@ -248,8 +248,9 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   calculateSpeed = () => {
     const self = this;
+    // clear bar move speed: currently 1 second
     self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length; // potential problem: if the data length of different waveform is not the same, the clear bar will be different
-    self.speed = self.ecgData.length / 60 || 2;
+    self.speed = self.ecgData.length / 60 || 2; // consume speed
   };
 
   initialSocket = () => {

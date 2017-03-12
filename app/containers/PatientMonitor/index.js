@@ -62,7 +62,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       resetWaveformLayout,
       handleWaveformChange,
       handleWaveformColorChange,
-      handleWaveformScaleChange,
+      handleWaveformLineWidthChange,
       handleWaveformDrawerClose,
       changeVitalSignLayout,
       resetVitalSignLayout,
@@ -92,7 +92,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
     const waveformItem = waveformItems.get(waveformItemId);
     const waveformType = waveformItem ? waveformItem.get('waveform') : "MDC_ECG_LEAD_II";
     const waveformColor = waveformItem ? waveformItem.get('strokeStyle') : "green";
-    const waveformScale = waveformItem ? waveformItem.get('scale') : 0.8;
+    const waveformLineWidth = waveformItem ? waveformItem.get('lineWidth') : 3;
 
     const vitalSignItemId = vitalSignDrawer.get('i');
     const isVitalSignDrawerOpen = vitalSignDrawer.get('open');
@@ -189,8 +189,8 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             handleWaveformTypeChange={handleWaveformChange}
             waveformColor={waveformColor}
             handleWaveformColorChange={handleWaveformColorChange}
-            waveformScale={waveformScale}
-            handleWaveformScaleChange={handleWaveformScaleChange}
+            waveformLineWidth={waveformLineWidth}
+            handleWaveformLineWidthChange={handleWaveformLineWidthChange}
             handleCloseWaveformDrawer={handleWaveformDrawerClose}
           />
           <VitalSignDrawer
@@ -318,7 +318,7 @@ function mapDispatchToProps(dispatch) {
     handleWaveformDrawerClose: () => dispatch(actions.handleWaveformDrawerClose()),
     handleWaveformChange: (event, index, value) => dispatch(actions.handleWaveformChange(value)),
     handleWaveformColorChange: (event, index, value) => dispatch(actions.handleWaveformColorChange(value)),
-    handleWaveformScaleChange: (event, value) => dispatch(actions.handleWaveformScaleChange(value)),
+    handleWaveformLineWidthChange: (event, value) => dispatch(actions.handleWaveformLineWidthChange(value)),
 
     handleVitalSignDrawerToggle: (i) => dispatch(actions.handleVitalSignDrawerToggle(i)),
     handleVitalSignDrawerClose: () => dispatch(actions.handleVitalSignDrawerClose()),

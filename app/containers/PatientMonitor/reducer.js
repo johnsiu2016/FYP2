@@ -96,8 +96,8 @@ function patientMonitorMobileReducer(state = initialState, action) {
     case constant.HANDLE_WAVEFORM_COLOR_CHANGE:
       return state.setIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'strokeStyle'], action.value);
 
-    case constant.HANDLE_WAVEFORM_SCALE_CHANGE:
-      return state.setIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'scale'], action.value);
+    case constant.HANDLE_WAVEFORM_LINEWIDTH_CHANGE:
+      return state.setIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'lineWidth'], action.value);
 
 
     case constant.HANDLE_RIGHT_DRAWER_TOGGLE:
@@ -211,7 +211,6 @@ export function waveformItemTemplate(waveform, strokeStyle, scale, lineWidth, gr
   return {
     waveform: waveform || "MDC_ECG_LEAD_II",
     strokeStyle: strokeStyle || "green",
-    scale: scale || 0.7,
     lineWidth: lineWidth || 3,
     gridOn: gridOn || false
   }
