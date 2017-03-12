@@ -1,5 +1,5 @@
 import {interpolateArray} from './utililtyFunctions';
-import {rawWaveformDataLookUpTable} from '../containers/PatientMonitor/reducer';
+import {rawWaveformDataLookUpTable} from './simuationData';
 
 let formatZeroPointWaveform = interpolateArray([0], 120);
 let formatWaveformLookUpTable = {};
@@ -15,7 +15,7 @@ for (let waveform in rawWaveformDataLookUpTable) {
   let normalizedWaveform = [];
 
   formatWaveformLookUpTable[waveform] = formatWaveform;
-  for (let i=0, len=formatWaveform.length; i<len; i++) {
+  for (let i = 0, len = formatWaveform.length; i < len; i++) {
     normalizedWaveform.push(1 - ((formatWaveform[i] - min) / dataHeight));
   }
   normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
@@ -42,14 +42,23 @@ function calculateECGArray(type) {
     if (splitPoint >= baseDataLength) splitPoint = splitPoint - baseDataLength;
     let formatResultArray = interpolateArray(resultArray, outputDataLength);
 
-    if (type === "MDC_PRESS_BLD_ART_ABP") {
-      const ABPHeight = window._ABPHeight || 150;
-      const ABPSystolic = window._ABPSystolic || 150;
-      const dc = (150 - ABPSystolic) / 150 ;
+    switch (type) {
+      case "MDC_ECG_LEAD_I":
+      case "MDC_ECG_LEAD_II":
+      case "MDC_ECG_LEAD_III":
+        break;
+      case "MDC_PRESS_BLD_ART_ABP":
+        const ABPHeight = window._ABPHeight || 150;
+        const ABPSystolic = window._ABPSystolic || 150;
+        const dc = (150 - ABPSystolic) / 150;
 
-      return formatResultArray.map((dataPoint) => {
-        return dataPoint * (ABPHeight / 150) + dc;
-      });
+        formatResultArray = formatResultArray.map((dataPoint) => {
+          return dataPoint * (ABPHeight / 150) + dc;
+        });
+        break;
+      case "MDC_PULS_OXIM_PLETH":
+      case "MDC_AWAY_CO2":
+        break;
     }
 
     return formatResultArray;
@@ -69,4 +78,30 @@ export function requestWaveformDataInterval(type, second, cb) {
       cb(waveformData);
     })
   }, second);
+}
+
+export function processVitalSignControlInput(vitalSign, formStorage) {
+  console.log(vitalSign);
+  switch (vitalSign) {
+    case "MDC_ECG_HEART_RATE":
+      window._HR = formStorage.get("data");
+      break;
+    case 'MDC_PULS_OXIM_PULS_RATE':
+    case "MDC_PULS_OXIM_SAT_O2":
+    case 'MDC_AWAY_CO2_ET':
+    case 'MDC_CO2_RESP_RATE':
+    case 'MDC_TTHOR_RESP_RATE':
+    case "RP":
+      break;
+
+    case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
+      const systolic = formStorage.get("systolic");
+      const diastolic = formStorage.get("diastolic");
+      window._ABPHeight = Number(systolic) - Number(diastolic);
+      window._ABPSystolic = Number(systolic);
+      break;
+    case "PAP":
+    case "NBP":
+      break;
+  }
 }

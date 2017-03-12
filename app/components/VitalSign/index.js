@@ -22,11 +22,11 @@ import {Card} from 'material-ui/Card';
 import BuildFontIcon from 'components/BuildFontIcon';
 import CloseFontIcon from 'components/CloseFontIcon';
 
-const VitalSignToolbarWrapper = styled.div`
+const VitalSignToolbar = styled.div`
   height: 15%;
   width: 100%;
 `;
-const VitalSignWrapperForPowerOnElement = styled.div`
+const PowerOnVitalSign = styled.div`
   height: 85%;
   width: 100%;
 `;
@@ -255,17 +255,17 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
     return powerOn ? (
         <div style={{height: '100%', width: '100%'}}>
-          <VitalSignToolbarWrapper/>
-          <VitalSignWrapperForPowerOnElement>
+          <VitalSignToolbar/>
+          <PowerOnVitalSign>
             {element}
-          </VitalSignWrapperForPowerOnElement>
+          </PowerOnVitalSign>
         </div>
       ) : (
         <div style={{height: '100%', width: '100%'}}>
-          <VitalSignToolbarWrapper>
+          <VitalSignToolbar>
             <BuildFontIcon onTouchTap={handleVitalSignDrawerToggle}/>
             <CloseFontIcon onClick={removeVitalSignItem}/>
-          </VitalSignToolbarWrapper>
+          </VitalSignToolbar>
           <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
             {element}
           </Card>
@@ -291,7 +291,6 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     if (data.data) {
       switch (this.props.vitalSign) {
         case "MDC_ECG_HEART_RATE":
-          window._HR = data.data;
         case 'MDC_PULS_OXIM_PULS_RATE':
         case "MDC_PULS_OXIM_SAT_O2":
         case 'MDC_AWAY_CO2_ET':

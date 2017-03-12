@@ -9,7 +9,7 @@ import React from 'react';
 import Dimensions from 'react-dimensions';
 import color from '../../utils/color.js';
 import {waveformItemTemplate} from '../../containers/PatientMonitor/reducer';
-import {requestWaveformDataInterval} from '../../utils/waveformSimulationEmitter';
+import {requestWaveformDataInterval} from '../../utils/simulationService';
 import audio from '../../utils/audio';
 import {getCommonName} from '../../utils/preferences';
 
@@ -270,7 +270,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     let self = this;
     if (self.ecgDataBuffer.length < 10) {
       if (data) {self.ecgDataBuffer.push(data);}
-      console.log(self.ecgDataBuffer.length)
     }
   };
 

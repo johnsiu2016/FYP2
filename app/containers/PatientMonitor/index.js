@@ -5,18 +5,15 @@
  */
 
 // basic import
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 
 // third part import
 import {Grid, Row, Col} from 'react-bootstrap';
 import ReactGrid, {WidthProvider} from 'react-grid-layout';
 const ReactGridLayout = WidthProvider(ReactGrid);
-
 import styled from 'styled-components';
-
 import {grey900, grey800, grey700} from 'material-ui/styles/colors';
-
 import {createStructuredSelector} from 'reselect';
 
 // my custom import
@@ -31,7 +28,7 @@ import {
   selectPatientMonitor
 } from 'containers/Settings/selectors';
 
-import {defaultVitalSignData} from './reducer';
+import {defaultVitalSignData} from '../../utils/simuationData';
 
 import ECG from 'components/ECG';
 import VitalSign from 'components/VitalSign';
