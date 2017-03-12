@@ -16,13 +16,11 @@ const ReactGridLayout = WidthProvider(ReactGrid);
 import styled from 'styled-components';
 
 import {grey900, grey800, grey700} from 'material-ui/styles/colors';
-import {Card} from 'material-ui/Card';
 
 import {createStructuredSelector} from 'reselect';
 
 // my custom import
 import audio from '../../utils/audio';
-import color from '../../utils/color';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
@@ -37,9 +35,6 @@ import fakeDefaultVitalSignData from 'utils/fakeDefaultVitalSignData';
 
 import ECG from 'components/ECG';
 import VitalSign from 'components/VitalSign';
-import BuildFontIcon from 'components/BuildFontIcon';
-import CloseFontIcon from 'components/CloseFontIcon';
-import CustomFontIcon from 'components/CustomFontIcon';
 import RestoreFloatingButton from 'components/RestoreFloatingButton';
 import AddFloatingButton from 'components/AddFloatingButton';
 import PowerOnIconButton from 'components/PowerOnIconButton';
@@ -52,14 +47,6 @@ const ECGControlButtonsWrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-end;
-`;
-const VitalSignToolbarWrapper = styled.div`
-  height: 15%;
-  width: 100%;
-`;
-const VitalSignWrapperForPowerOnElement = styled.div`
-  height: 85%;
-  width: 100%;
 `;
 
 export class PatientMonitorMobile extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
@@ -289,46 +276,22 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       // console.log(el.toString());
     }
 
-    const customVitalSignItem = (
+    return (
       <div key={vitalSignItemId} data-grid={el.toObject()}>
-        <VitalSignToolbarWrapper>
-          <BuildFontIcon onTouchTap={handleVitalSignDrawerToggle.bind(this, vitalSignItemId)}/>
-          <CloseFontIcon onClick={removeVitalSignItem.bind(this, vitalSignItemId)}/>
-        </VitalSignToolbarWrapper>
-        <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
-          <VitalSign
-            socket={this.props.socket}
-            i={vitalSignItemId}
-            vitalSign={vitalSign}
-            strokeStyle={strokeStyle}
-            w={w}
-            displayMode={displayMode}
-            handleVitalSignEditingChange={handleVitalSignEditingChange.bind(this, vitalSignItemId)}
-            handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
-            initialValues={formStorage || fakeDefaultVitalSignData[vitalSign]}/>
-        </Card>
-      </div>
-    );
-
-    const powerOnVitalSignItem = (
-      <div key={vitalSignItemId} data-grid={el.toObject()}>
-        <VitalSignToolbarWrapper/>
-        <VitalSignWrapperForPowerOnElement>
-          <VitalSign
-            socket={this.props.socket}
-            i={vitalSignItemId}
-            vitalSign={vitalSign}
-            strokeStyle={strokeStyle}
-            w={w}
-            displayMode={displayMode}
-            handleVitalSignEditingChange={handleVitalSignEditingChange.bind(this, vitalSignItemId)}
-            handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
-            initialValues={formStorage || fakeDefaultVitalSignData[vitalSign]}/>
-        </VitalSignWrapperForPowerOnElement>
-      </div>
-    );
-
-    return powerOn ? powerOnVitalSignItem : customVitalSignItem;
+        <VitalSign
+          socket={this.props.socket}
+          vitalSignItemId={vitalSignItemId}
+          vitalSign={vitalSign}
+          strokeStyle={strokeStyle}
+          w={w}
+          displayMode={displayMode}
+          handleVitalSignEditingChange={handleVitalSignEditingChange.bind(this, vitalSignItemId)}
+          handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
+          initialValues={formStorage || fakeDefaultVitalSignData[vitalSign]}
+          powerOn={powerOn}
+          handleVitalSignDrawerToggle={handleVitalSignDrawerToggle.bind(this, vitalSignItemId)}
+          removeVitalSignItem={removeVitalSignItem.bind(this, vitalSignItemId)}/>
+      </div>);
   };
 }
 

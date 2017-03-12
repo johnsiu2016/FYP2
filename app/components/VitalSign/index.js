@@ -19,6 +19,19 @@ import {getCommonName} from '../../utils/preferences';
 
 import {vitalSignItemTemplate, requestVitalSignDataInterval} from '../../utils/utililtyFunctions';
 
+import {Card} from 'material-ui/Card';
+import BuildFontIcon from 'components/BuildFontIcon';
+import CloseFontIcon from 'components/CloseFontIcon';
+
+const VitalSignToolbarWrapper = styled.div`
+  height: 15%;
+  width: 100%;
+`;
+const VitalSignWrapperForPowerOnElement = styled.div`
+  height: 85%;
+  width: 100%;
+`;
+
 // Div style for HR
 const HR = styled.div`
   width: 100%;
@@ -55,10 +68,10 @@ const BPTextAndLimit = styled.div`
   font-size: ${(props) => props.scaleContainerHeight * 0.2}px;
 `;
 const BPText = styled.div`
-  font-size: 1.2em;
+  font-size: 1.1em;
 `;
 const BPLimit = styled.div`
-  font-size: 0.5em;
+  font-size: 0.4em;
 `;
 const BPLimitText = styled.div`
   text-align: center;
@@ -125,8 +138,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   componentDidMount() {
     // console.log(`componentDidMount ${this.props.vitalSign}`);
     let self = this;
-    if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
-    else self.initialSocket();
+    if (self.props.displayMode === "Real-time mode") self.initialSocket();
     this.props.handleVitalSignFormStorageChange(this.props.initialValues, this.props.vitalSign);
     global.dispatchEvent(new Event('resize'));
   }
@@ -134,22 +146,26 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   componentWillUnmount() {
     // console.log(`componentWillUnmount ${this.props.vitalSign}`);
     let self = this;
-    self.requestVitalSignDataClearInterval();
     self.clearUpSocket();
   }
 
   componentDidUpdate() {
     // console.log(`componentDidUpdate ${this.props.vitalSign}`);
     let self = this;
-    self.requestVitalSignDataClearInterval();
     self.clearUpSocket();
-    if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
-    else self.initialSocket();
+    if (self.props.displayMode === "Real-time mode") self.initialSocket();
   }
 
   render() {
     // console.log(`render ${this.props.vitalSign}`);
-    let {containerHeight, w, strokeStyle, vitalSign, displayMode} = this.props;
+    let {
+      containerHeight,
+      w,
+      strokeStyle,
+      vitalSign,
+      powerOn,
+      handleVitalSignDrawerToggle,
+      removeVitalSignItem} = this.props;
     const {handleSubmit} = this.props; // redux form
     let scaleRatio = w / 12;
     let scaleContainerHeight = containerHeight * scaleRatio;
@@ -237,7 +253,24 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
         );
         break;
     }
-    return element;
+
+    return powerOn ? (
+        <div style={{height: '100%', width: '100%'}}>
+          <VitalSignToolbarWrapper/>
+          <VitalSignWrapperForPowerOnElement>
+            {element}
+          </VitalSignWrapperForPowerOnElement>
+        </div>
+      ) : (
+        <div style={{height: '100%', width: '100%'}}>
+          <VitalSignToolbarWrapper>
+            <BuildFontIcon onTouchTap={handleVitalSignDrawerToggle}/>
+            <CloseFontIcon onClick={removeVitalSignItem}/>
+          </VitalSignToolbarWrapper>
+          <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
+            {element}
+          </Card>
+        </div>);
   }
 
   initialSocket = () => {
@@ -279,16 +312,6 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
           break;
       }
     }
-  };
-
-  initialSimulationMode = () => {
-    let self = this;
-    // self.intervalId = requestVitalSignDataInterval(self.props.vitalSign, 3000, self.vitalSignDataCallback);
-  };
-
-  requestVitalSignDataClearInterval = () => {
-    let self = this;
-    clearInterval(self.intervalId);
   };
 
   onClickHRData = () => {
@@ -384,7 +407,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   }
 }
 
-let InitializeFromStateForm = compose(connect((state, props) => ({form: props.i})),
+let InitializeFromStateForm = compose(connect((state, props) => ({form: props.vitalSignItemId})),
   reduxForm({destroyOnUnmount: true}))(Dimensions()(VitalSign));
 
 export default InitializeFromStateForm
