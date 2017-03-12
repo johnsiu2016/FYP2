@@ -31,7 +31,7 @@ import {
   selectPatientMonitor
 } from 'containers/Settings/selectors';
 
-import fakeDefaultVitalSignData from 'utils/fakeDefaultVitalSignData';
+import {defaultVitalSignData} from './reducer';
 
 import ECG from 'components/ECG';
 import VitalSign from 'components/VitalSign';
@@ -287,7 +287,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
           displayMode={displayMode}
           handleVitalSignEditingChange={handleVitalSignEditingChange.bind(this, vitalSignItemId)}
           handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
-          initialValues={formStorage || fakeDefaultVitalSignData[vitalSign]}
+          initialValues={formStorage || defaultVitalSignData[vitalSign]}
           powerOn={powerOn}
           handleVitalSignDrawerToggle={handleVitalSignDrawerToggle.bind(this, vitalSignItemId)}
           removeVitalSignItem={removeVitalSignItem.bind(this, vitalSignItemId)}/>

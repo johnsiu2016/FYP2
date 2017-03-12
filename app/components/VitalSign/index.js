@@ -11,13 +11,12 @@ import {connect} from 'react-redux';
 import Dimensions from 'react-dimensions'
 import styled from 'styled-components';
 
+import {vitalSignItemTemplate} from '../../containers/PatientMonitor/reducer';
+
 import color from '../../utils/color.js';
 import {Field, reduxForm} from 'redux-form/immutable';
-import fakeDefaultVitalSignData from '../../utils/fakeDefaultVitalSignData.js';
 
 import {getCommonName} from '../../utils/preferences';
-
-import {vitalSignItemTemplate, requestVitalSignDataInterval} from '../../utils/utililtyFunctions';
 
 import {Card} from 'material-ui/Card';
 import BuildFontIcon from 'components/BuildFontIcon';

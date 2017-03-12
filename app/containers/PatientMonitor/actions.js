@@ -4,7 +4,7 @@
  *
  */
 import uuid from 'node-uuid';
-import {waveformItemTemplate, vitalSignItemTemplate, waveformLayoutTemplate, vitalSignLayoutTemplate} from '../../utils/utililtyFunctions';
+import {waveformItemTemplate, vitalSignItemTemplate, waveformLayoutTemplate, vitalSignLayoutTemplate} from './reducer';
 
 import * as constant from './constants';
 

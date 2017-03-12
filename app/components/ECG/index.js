@@ -8,7 +8,8 @@ import React from 'react';
 
 import Dimensions from 'react-dimensions';
 import color from '../../utils/color.js';
-import {waveformItemTemplate, requestWaveformDataInterval} from '../../utils/utililtyFunctions';
+import {waveformItemTemplate} from '../../containers/PatientMonitor/reducer';
+import {requestWaveformDataInterval} from '../../utils/waveformSimulationEmitter';
 import audio from '../../utils/audio';
 import {getCommonName} from '../../utils/preferences';
 
