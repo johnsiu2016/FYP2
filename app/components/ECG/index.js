@@ -332,24 +332,28 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   };
 
   drawScale = () => {
-    if (this.props.waveform !== "MDC_PRESS_BLD_ART_ABP") return;
     let self = this;
-    let ctx = self.backgroundCanvas.getContext('2d');
+    const {scaleLine} = this.props;
+    if (!scaleLine.get('scaleLineOn')) return;
 
+    let ctx = self.backgroundCanvas.getContext('2d');
     const ECGWidth = ctx.canvas.width;
     const ECGHeight = ctx.canvas.height;
+    const topLevel = scaleLine.get('topLevel');
+    const bottomLevel = scaleLine.get('bottomLevel');
+    const middleLevel = Math.round((topLevel + bottomLevel) / 2);
 
     ctx.font="25px Comic Sans MS";
     ctx.fillStyle = color[self.props.strokeStyle];
     ctx.textAlign = "right";
-    ctx.fillText("150", 110, 20);
-    ctx.fillText("75", 110, 10 + ECGHeight/2);
-    ctx.fillText("0", 110, ECGHeight);
+    ctx.fillText(topLevel.toString(), 110, 20);
+    ctx.fillText(middleLevel.toString(), 110, 10 + ECGHeight/2);
+    ctx.fillText(bottomLevel.toString(), 110, ECGHeight);
 
     ctx.lineWidth = self.props.lineWidth * 0.25;
     ctx.strokeStyle = color[self.props.strokeStyle];
     ctx.beginPath();
-    ctx.moveTo(125, 0);
+    ctx.moveTo(125, 0); // initial drawing point in x-axis
     ctx.lineTo(ECGWidth, 0);
     ctx.closePath();
     ctx.stroke();

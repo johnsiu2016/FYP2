@@ -168,3 +168,23 @@ export function handleHeartBeepSoundToggle() {
     type: constant.HANDLE_HEART_BEEP_SOUND_TOGGLE,
   }
 }
+
+export function handleWaveformScaleLineToggle() {
+  return {
+    type: constant.HANDLE_WAVEFORM_SCALELINE_TOGGLE,
+  };
+}
+
+export function handleWaveformScaleLineTopLevelChange(value) {
+  return {
+    type: constant.HANDLE_WAVEFORM_SCALELINE_TOPLEVEL_CHANGE,
+    value: value
+  };
+}
+
+export function handleWaveformScaleLineBottomLevelChange(value) {
+  return {
+    type: constant.HANDLE_WAVEFORM_SCALELINE_BOTTOMLEVEL_CHANGE,
+    value: value
+  };
+}

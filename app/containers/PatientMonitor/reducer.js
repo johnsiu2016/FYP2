@@ -139,6 +139,15 @@ function patientMonitorMobileReducer(state = initialState, action) {
     case constant.HANDLE_HEART_BEEP_SOUND_TOGGLE:
       return state.set('soundOn', !state.get('soundOn'));
 
+    case constant.HANDLE_WAVEFORM_SCALELINE_TOGGLE:
+      return state.setIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'scaleLine', 'scaleLineOn'], !state.getIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'scaleLine', 'scaleLineOn']));
+
+    case constant.HANDLE_WAVEFORM_SCALELINE_TOPLEVEL_CHANGE:
+      return state.setIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'scaleLine', 'topLevel'], action.value);
+
+    case constant.HANDLE_WAVEFORM_SCALELINE_BOTTOMLEVEL_CHANGE:
+      return state.setIn(['waveformItems', state.getIn(['waveformDrawer', 'i']), 'scaleLine', 'bottomLevel'], action.value);
+
     default:
       return state;
   }
@@ -162,12 +171,12 @@ export function initialWaveformLayoutAndItems() {
       waveformLayoutTemplate(i6, 0, 5, 12, 1)
     ],
     waveformItems: {
-      [i1]: waveformItemTemplate("MDC_ECG_LEAD_I", "green", 0.7, 3, false),
-      [i2]: waveformItemTemplate("MDC_ECG_LEAD_II", "green", 0.7, 3, false),
-      [i3]: waveformItemTemplate("MDC_ECG_LEAD_III", "green", 0.7, 3, false),
-      [i4]: waveformItemTemplate("MDC_PRESS_BLD_ART_ABP", "red", 0.7, 3, false),
-      [i5]: waveformItemTemplate("MDC_PULS_OXIM_PLETH", "yellow", 0.7, 3, false),
-      [i6]: waveformItemTemplate("MDC_AWAY_CO2", "blue", 0.7, 3, false),
+      [i1]: waveformItemTemplate("MDC_ECG_LEAD_I", "green", 3, true, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
+      [i2]: waveformItemTemplate("MDC_ECG_LEAD_II", "green", 3, true, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
+      [i3]: waveformItemTemplate("MDC_ECG_LEAD_III", "green", 3, true, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
+      [i4]: waveformItemTemplate("MDC_PRESS_BLD_ART_ABP", "red", 3, false, {scaleLineOn: true, topLevel: 150, bottomLevel: 0}),
+      [i5]: waveformItemTemplate("MDC_PULS_OXIM_PLETH", "yellow", 3, false, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
+      [i6]: waveformItemTemplate("MDC_AWAY_CO2", "blue", 3, false, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
     }
   }
 }
@@ -207,12 +216,17 @@ export function waveformLayoutTemplate(i, x, y, w, h) {
   }
 }
 
-export function waveformItemTemplate(waveform, strokeStyle, scale, lineWidth, gridOn) {
+export function waveformItemTemplate(waveform, strokeStyle, lineWidth, gridOn, scaleLine) {
   return {
     waveform: waveform || "MDC_ECG_LEAD_II",
     strokeStyle: strokeStyle || "green",
     lineWidth: lineWidth || 3,
-    gridOn: gridOn || false
+    gridOn: gridOn || false,
+    scaleLine: scaleLine || {
+      scaleLineOn: false,
+      topLevel: 150,
+      bottomLevel: 0
+    }
   }
 }
 

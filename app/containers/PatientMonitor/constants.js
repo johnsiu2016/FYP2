@@ -4,6 +4,8 @@
  *
  */
 
+
+// pattern: one action to one state, two action to one state, no state but have action
 export const CHANGE_WAVEFORM_LAYOUT = 'app/PatientMonitor/CHANGE_WAVEFORM_LAYOUT';
 export const RESET_WAVEFORM_LAYOUT = 'app/PatientMonitor/RESET_WAVEFORM_LAYOUT';
 export const ADD_WAVEFORM_ITEM = 'app/PatientMonitor/ADD_WAVEFORM_ITEM';
@@ -27,4 +29,6 @@ export const HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE = 'app/PatientMonitor
 export const HANDLE_DISPLAY_MODE_CHANGE = 'app/PatientMonitor/HANDLE_DISPLAY_MODE_CHANGE';
 export const HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE = 'app/PatientMonitor/HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE';
 export const HANDLE_HEART_BEEP_SOUND_TOGGLE = 'app/PatientMonitor/HANDLE_HEART_BEEP_SOUND_TOGGLE';
-
+export const HANDLE_WAVEFORM_SCALELINE_TOGGLE = 'app/PatientMonitor/HANDLE_WAVEFORM_SCALELINE_TOGGLE';
+export const HANDLE_WAVEFORM_SCALELINE_TOPLEVEL_CHANGE = 'app/PatientMonitor/HANDLE_WAVEFORM_SCALELINE_TOPLEVEL_CHANGE';
+export const HANDLE_WAVEFORM_SCALELINE_BOTTOMLEVEL_CHANGE = 'app/PatientMonitor/HANDLE_WAVEFORM_SCALELINE_BOTTOMLEVEL_CHANGE';

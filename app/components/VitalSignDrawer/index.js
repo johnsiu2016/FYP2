@@ -13,15 +13,19 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
 import {getCommonName} from '../../utils/preferences';
+import {vitalSignItemTemplate} from '../../containers/PatientMonitor/reducer';
 
 function VitalSignDrawer({
+  vitalSignItem,
   openVitalSignDrawer,
-  vitalSignType,
   handleVitalSignTypeChange,
-  vitalSignColor,
   handleVitalSignColorChange,
   handleCloseVitalSignDrawer
 }) {
+  const defaultVitalSignItem = vitalSignItemTemplate();
+  const vitalSignType = vitalSignItem ? vitalSignItem.get('vitalSign') : defaultVitalSignItem.vitalSign;
+  const vitalSignColor = vitalSignItem ? vitalSignItem.get('strokeStyle') : defaultVitalSignItem.vitalSign;
+
   return (
     <Drawer
       width={300}
