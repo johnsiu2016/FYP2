@@ -228,7 +228,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
                   </BPLimitText>
                   <Field name="DiaTop" type="number"
                          component={renderABPControlInput}/>
-                  <Field name="DiaButton" type="number"
+                  <Field name="DiaBottom" type="number"
                          component={renderABPControlInput}/>
                 </BPLimit>
               </BPTextAndLimit>

@@ -114,17 +114,29 @@ const defaultVitalSignData = {
   "MDC_PRESS_BLD_ART_ABP_NUMERIC": {
     'systolic': 122,
     'diastolic': 82,
-    'mean': 93
+    'mean': 93,
+    'SysTop': 150,
+    'SysBottom': 50,
+    'DiaTop': 150,
+    'DiaBottom': 50
   },
   'PAP': {
     'systolic': 32,
     'diastolic': 18,
-    'mean': 23
+    'mean': 23,
+    'SysTop': 150,
+    'SysBottom': 50,
+    'DiaTop': 150,
+    'DiaBottom': 50
   },
   'NBP': {
     'systolic': 125,
     'diastolic': 84,
-    'mean': 92
+    'mean': 92,
+    'SysTop': 150,
+    'SysBottom': 50,
+    'DiaTop': 150,
+    'DiaBottom': 50
   },
   'MDC_AWAY_CO2_ET': {
     'top': 65,
