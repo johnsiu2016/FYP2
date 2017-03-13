@@ -81,9 +81,9 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     console.log(`componentDidUpdate ${this.props.waveform} ${this.props.displayMode}`);
     let self = this;
     self.initial();
+    self.clearGrid();
     if (self.props.gridOn) self.drawGrid();
-    else self.clearGrid();
-    self.drawScale();
+    if (self.props.scaleLine.get('scaleLineOn')) self.drawScale();
     self.restartAnimation();
     self.requestWaveformDataClearInterval();
     self.clearUpSocket();

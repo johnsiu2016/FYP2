@@ -50,7 +50,7 @@ function calculateECGArray(type) {
       case "MDC_PRESS_BLD_ART_ABP":
         const ABPHeight = window._ABPHeight || 150;
         const ABPSystolic = window._ABPSystolic || 150;
-        const dc = (150 - ABPSystolic) / 150;
+        const dc = 1 - ABPSystolic / 150;
 
         formatResultArray = formatResultArray.map((dataPoint) => {
           return dataPoint * (ABPHeight / 150) + dc;

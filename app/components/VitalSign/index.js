@@ -22,6 +22,7 @@ import {Card} from 'material-ui/Card';
 import BuildFontIcon from 'components/BuildFontIcon';
 import CloseFontIcon from 'components/CloseFontIcon';
 
+// Div style for other component in vital sign
 const VitalSignToolbar = styled.div`
   height: 15%;
   width: 100%;
