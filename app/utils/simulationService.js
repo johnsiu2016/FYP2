@@ -81,7 +81,6 @@ export function requestWaveformDataInterval(type, second, cb) {
 }
 
 export function processVitalSignControlInput(vitalSign, formStorage) {
-  console.log(vitalSign);
   switch (vitalSign) {
     case "MDC_ECG_HEART_RATE":
       window._HR = formStorage.get("data");

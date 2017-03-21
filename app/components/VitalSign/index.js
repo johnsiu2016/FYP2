@@ -165,7 +165,8 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       vitalSign,
       powerOn,
       handleVitalSignDrawerToggle,
-      removeVitalSignItem} = this.props;
+      removeVitalSignItem
+    } = this.props;
     const {handleSubmit} = this.props; // redux form
     let scaleRatio = w / 12;
     let scaleContainerHeight = containerHeight * scaleRatio;
@@ -196,7 +197,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
                       innerRef={(HRData) => {
                         this.HRData = HRData
                       }}
-                      onClick={this.onClickHRData}>
+              >
                 <Field name="data" type="number"
                        component={renderControlInput}/>
               </HRData>
@@ -232,7 +233,11 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
                          component={renderABPControlInput}/>
                 </BPLimit>
               </BPTextAndLimit>
-              <BPData scaleContainerHeight={scaleContainerHeight}>
+              <BPData scaleContainerHeight={scaleContainerHeight}
+                      innerRef={(HRData) => {
+                        this.BPData = BPData
+                      }}
+              >
                 <BPSysAndDia>
                   <Field name="systolic" type="number"
                          component={renderABPControlInput}/>
@@ -298,25 +303,24 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
         case 'MDC_CO2_RESP_RATE':
         case 'MDC_TTHOR_RESP_RATE':
         case "RP":
-          this.HRTop.innerHTML = data.top || this.HRTop.innerHTML;
-          this.HRBottom.innerHTML = data.bottom || this.HRBottom.innerHTML;
-          this.HRData.innerHTML = data.data;
+          this.HRData.childNodes[0].value = data.data;
           break;
 
         case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
         case "PAP":
         case "NBP":
-          this.BPSysAndDia.innerHTML = `${data.systolic}/${data.diastolic}`;
-          this.BPMean.innerHTML = `(${data.mean})`;
+          this.BPData.childNodes[0].childNodes[0].value =  data.systolic;
+          this.BPData.childNodes[0].childNodes[1].value =  data.diastolic;
+          this.BPData.childNodes[0].value = data.mean;
           break;
       }
     }
   };
 
   handleHRSubmit = (values) => {
-    const top = values.get("top");
-    const bottom = values.get("bottom");
-    const data = values.get("data");
+    const top = Number(values.get("top"));
+    const bottom = Number(values.get("bottom"));
+    const data = Number(values.get("data"));
 
     if (top < 0) {
       this.props.change("top", 0);
@@ -360,8 +364,8 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   };
 
   handleABPSubmit = (values) => {
-    let systolic = values.get("systolic");
-    let diastolic = values.get("diastolic");
+    let systolic = Number(values.get("systolic"));
+    let diastolic = Number(values.get("diastolic"));
 
     if (systolic < 0) {
       this.props.change("systolic", 0);

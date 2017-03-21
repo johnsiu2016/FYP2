@@ -1,7 +1,9 @@
+const stringify = require('json-stringify-safe');
+
 export function saveToLS(key, value) {
   if (localStorage) {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(key, stringify(value));
     } catch (e) {
       console.log(e);
     }
@@ -36,4 +38,26 @@ export function interpolateArray(data, fitCount) {
   }
   newData[fitCount - 1] = data[data.length - 1]; // for new allocation
   return newData;
+}
+
+export function isCyclic (obj) {
+  let seenObjects = [];
+
+  function detect (obj) {
+    if (obj && typeof obj === 'object') {
+      if (seenObjects.indexOf(obj) !== -1) {
+        return true;
+      }
+      seenObjects.push(obj);
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key) && detect(obj[key])) {
+          console.log(obj, 'cycle at ' + key);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  return detect(obj);
 }

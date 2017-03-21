@@ -221,6 +221,7 @@
     "intl": "1.2.5",
     "invariant": "2.2.2",
     "ip": "1.1.4",
+    "json-stringify-safe": "^5.0.1",
     "lodash": "4.17.2",
     "material-ui": "^0.16.7",
     "minimist": "1.2.0",
