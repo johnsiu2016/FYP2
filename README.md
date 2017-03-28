@@ -9,10 +9,10 @@ Todo
 
 ## Screanshots
 <p align="center">
-<img src="./screenshots/fyp&#32;screenshot&#32;1.png" width="800" height="500"/>
+<img src="./screenshots/fyp&#32;screenshot&#32;1.png" width="1000" height="500"/>
 </p>
 <p align="center">
-<img src="./screenshots/fyp&#32;screenshot&#32;2.png" width="800" height="500"/>
+<img src="./screenshots/fyp&#32;screenshot&#32;2.png" width="1000" height="500"/>
 </p>
 
 
