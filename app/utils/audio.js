@@ -1,6 +1,6 @@
 const audio = {};
 const url = './audio/machine-heart-beep.wav';
-const context = new AudioContext();
+const context = new (window.AudioContext || window.webkitAudioContext)();
 const gainNode = context.createGain();
 gainNode.gain.value = 1;
 const req = new XMLHttpRequest();

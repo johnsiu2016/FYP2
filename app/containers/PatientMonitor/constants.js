@@ -1,10 +1,3 @@
-/*
- *
- * PatientMonitorMobile constants
- *
- */
-
-
 // pattern: one action to one state, two action to one state, no state but have action
 export const CHANGE_WAVEFORM_LAYOUT = 'app/PatientMonitor/CHANGE_WAVEFORM_LAYOUT';
 export const RESET_WAVEFORM_LAYOUT = 'app/PatientMonitor/RESET_WAVEFORM_LAYOUT';

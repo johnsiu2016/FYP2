@@ -1,9 +1,3 @@
-/*
- *
- * PatientMonitorMobile
- *
- */
-
 // basic import
 import React from 'react';
 import {connect} from 'react-redux';
@@ -20,14 +14,12 @@ import {createStructuredSelector} from 'reselect';
 import audio from '../../utils/audio';
 import * as actions from './actions';
 import * as selectors from './selectors';
-
 import {
   selectIP,
   selectPort,
   selectProtocol,
   selectPatientMonitor
 } from 'containers/Settings/selectors';
-
 import {defaultVitalSignData} from '../../utils/simuationData';
 
 import ECG from 'components/ECG';
@@ -39,7 +31,6 @@ import WaveformDrawer from 'components/WaveformDrawer';
 import VitalSignDrawer from 'components/VitalSignDrawer';
 import DisplayModeDropDownMenu from 'components/DisplayModeDropDownMenu';
 import SoundOnIconButton from 'components/SoundOnIconButton';
-
 const ECGControlButtonsWrapper = styled.div`
   display: flex;
   flex-flow: row wrap;

@@ -1,9 +1,3 @@
-/**
- *
- * Ecg
- *
- */
-
 import React from 'react';
 
 import Dimensions from 'react-dimensions';
@@ -164,7 +158,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     ctx.lineWidth = self.props.lineWidth;
 
     let speedCount = self.speed || 1;
-
     function animate() {
       while (speedCount > 0) {
         self.py = self.getDataPoint();
@@ -235,7 +228,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   emitSound = () => {
     const self = this;
-    if (self.props.waveform === "MDC_ECG_LEAD_I" || self.props.waveform === "MDC_ECG_LEAD_II" || self.props.waveform === "MDC_ECG_LEAD_III") {
+    if (self.props.waveform === "MDC_ECG_LEAD_II") {
       if (!this.beepFlag && self.ecgData[self.dataIndex] < 0.2 && self.ecgData[self.dataIndex] < self.ecgData[self.dataIndex - 1]) {
         audio.beep();
         this.beepFlag = true;

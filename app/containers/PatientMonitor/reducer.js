@@ -1,9 +1,3 @@
-/*
- *
- * PatientMonitorMobile reducer
- *
- */
-
 import {fromJS} from 'immutable';
 import * as constant from './constants';
 
@@ -19,7 +13,7 @@ import {defaultVitalSignData} from '../../utils/simuationData';
 const initWaveformLayoutAndItems = initialWaveformLayoutAndItems();
 const initVitalSignLayoutAndItems = initialVitalSignLayoutAndItems();
 
-const initialState = fromJS(getFromLS('patientMonitorMobile')) || fromJS({
+const initialState = fromJS(getFromLS('patientMonitor')) || fromJS({
     waveformLayout: initWaveformLayoutAndItems.waveformLayout,
     waveformItems: initWaveformLayoutAndItems.waveformItems,
     vitalSignLayout: initVitalSignLayoutAndItems.vitalSignLayout,
@@ -45,7 +39,7 @@ function patientMonitorMobileReducer(state = initialState, action) {
   switch (action.type) {
     case constant.CHANGE_WAVEFORM_LAYOUT:
       changedState = state.set('waveformLayout', fromJS(action.waveformLayout));
-      saveToLS('patientMonitorMobile', changedState);
+      saveToLS('patientMonitor', changedState);
       return changedState;
 
     case constant.RESET_WAVEFORM_LAYOUT:
@@ -64,7 +58,7 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case constant.CHANGE_VITAL_SIGN_LAYOUT:
       changedState = state.set('vitalSignLayout', fromJS(action.vitalSignLayout));
-      saveToLS('patientMonitorMobile', changedState);
+      saveToLS('patientMonitor', changedState);
       return changedState;
 
     case constant.RESET_VITAL_SIGN_LAYOUT:
@@ -87,7 +81,7 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case constant.HANDLE_WAVEFORM_DRAWER_CLOSE:
       changedState = state.setIn(['waveformDrawer', 'i'], '').setIn(['waveformDrawer', 'open'], false);
-      saveToLS('patientMonitorMobile', changedState);
+      saveToLS('patientMonitor', changedState);
       return changedState;
 
     case constant.HANDLE_WAVEFORM_CHANGE:
@@ -106,7 +100,7 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case constant.HANDLE_RIGHT_DRAWER_CLOSE:
       changedState = state.setIn(['vitalSignDrawer', 'i'], '').setIn(['vitalSignDrawer', 'open'], false);
-      saveToLS('patientMonitorMobile', changedState);
+      saveToLS('patientMonitor', changedState);
       return changedState;
 
     case constant.HANDLE_VITAL_SIGN_CHANGE:
@@ -124,16 +118,18 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case constant.HANDLE_WAVEFORM_TOOLBAR_GRID_ON_BUTTON_TOGGLE:
       changedState = state.setIn(['waveformItems', action.waveformItemId, "gridOn"], !state.getIn(['waveformItems', action.waveformItemId, "gridOn"]));
-      saveToLS('patientMonitorMobile', changedState);
+      saveToLS('patientMonitor', changedState);
       return changedState;
 
     case constant.HANDLE_DISPLAY_MODE_CHANGE:
-      return state.set('displayMode', action.value);
+      changedState = state.set('displayMode', action.value);
+      saveToLS('patientMonitor', changedState);
+      return changedState;
 
     case constant.HANDLE_VITAL_SIGN_FORMSTORAGE_CHANGE:
       changedState = state.setIn(['vitalSignItems', action.i, 'formStorage'], action.formStorage);
       processVitalSignControlInput(action.vitalSign, action.formStorage);
-      saveToLS('patientMonitorMobile', changedState);
+      saveToLS('patientMonitor', changedState);
       return changedState;
 
     case constant.HANDLE_HEART_BEEP_SOUND_TOGGLE:

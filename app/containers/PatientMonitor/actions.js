@@ -1,8 +1,3 @@
-/*
- *
- * PatientMonitorMobile actions
- *
- */
 import uuid from 'node-uuid';
 import {waveformItemTemplate, vitalSignItemTemplate, waveformLayoutTemplate, vitalSignLayoutTemplate} from './reducer';
 
