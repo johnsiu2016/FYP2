@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Dimensions from 'react-dimensions';
+import ResizeDimension from 'components/ResizeDimensions';
 import color from '../../utils/color.js';
 import {waveformItemTemplate} from '../../containers/PatientMonitor/reducer';
 import {requestWaveformDataInterval} from '../../utils/simulationService';
@@ -389,4 +389,4 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   };
 }
 
-export default Dimensions()(ECG) // Enhanced component
+export default ResizeDimension()(ECG) // Enhanced component

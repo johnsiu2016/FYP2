@@ -2,7 +2,7 @@ import React from 'react';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
 
-import Dimensions from 'react-dimensions'
+import ResizeDimension from 'components/ResizeDimensions';
 import styled from 'styled-components';
 
 import {vitalSignItemTemplate} from '../../containers/PatientMonitor/reducer';
@@ -397,6 +397,6 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 }
 
 let InitializeFromStateForm = compose(connect((state, props) => ({form: props.vitalSignItemId})),
-  reduxForm({destroyOnUnmount: true}))(Dimensions()(VitalSign));
+  reduxForm({destroyOnUnmount: true}))(ResizeDimension()(VitalSign));
 
 export default InitializeFromStateForm
