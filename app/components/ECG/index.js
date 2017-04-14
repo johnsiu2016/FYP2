@@ -35,7 +35,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   constructor(props) {
     super(props);
-    console.log("constructor")
+
     this.ecgDataBuffer = [];
     this.ecgData = null;
     this.dataIndex = 0;
@@ -47,40 +47,41 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     this.px = 0;
 
     this.intervalId = null;
-    this.bufferLength = 0;
     this.beepFlag = false;
     this.animation = null;
   }
 
   componentDidMount() {
     let self = this;
-    self.initial();
-    if (self.props.gridOn) self.drawGrid();
-    self.drawScale();
+    self.initialBackgroundCanvas();
+    self.drawBackgroundGrid();
+    self.drawBackgroundScale();
     self.startAnimation();
     if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
     else self.initialSocket();
+
     global.dispatchEvent(new Event('resize'));
   }
 
   componentWillUnmount() {
-    console.log(`componentWillUnmount ${this.props.waveform} ${this.dataIndex}`);
+    // console.log(`componentWillUnmount ${this.props.waveform} ${this.dataIndex}`);
     let self = this;
     self.requestWaveformDataClearInterval();
     self.clearUpSocket();
+    self.clearBackgroundCanvas();
     self.animation.cancel(); // animation need to clear, although canvas destroyed, the animation is still running
   }
 
   componentDidUpdate() {
-    console.log(`componentDidUpdate ${this.props.waveform} ${this.props.displayMode}`);
+    // console.log(`componentDidUpdate ${this.props.waveform} ${this.props.displayMode}`);
     let self = this;
-    self.initial();
-    self.clearGrid();
-    if (self.props.gridOn) self.drawGrid();
-    if (self.props.scaleLine.get('scaleLineOn')) self.drawScale();
-    self.restartAnimation();
     self.requestWaveformDataClearInterval();
     self.clearUpSocket();
+    self.clearBackgroundCanvas();
+    self.initialBackgroundCanvas();
+    self.drawBackgroundGrid();
+    self.drawBackgroundScale();
+    self.restartAnimation();
     if (self.props.displayMode === "Simulation mode") self.initialSimulationMode();
     else self.initialSocket();
   }
@@ -140,6 +141,21 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       </div>);
   }
 
+  startAnimation = () => {
+    let self = this;
+    self.animation = self.draw();
+    self.animation.start();
+  };
+
+  restartAnimation = () => {
+    let self = this;
+    if (self.animation) {
+      self.animation.cancel();
+      self.animation = self.draw();
+      self.animation.start();
+    }
+  };
+
   draw = () => {
     let self = this;
 
@@ -158,6 +174,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     ctx.lineWidth = self.props.lineWidth;
 
     let speedCount = self.speed || 1;
+
     function animate() {
       while (speedCount > 0) {
         self.py = self.getDataPoint();
@@ -191,59 +208,14 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     }
   };
 
-  getDataPoint = () => {
+  initialSimulationMode = () => {
     let self = this;
-    let py;
-    if (self.ecgData) {
-      py = self.ecgData[self.dataIndex] * self.h;
-      self.emitSound();
-      self.dataIndex = self.dataIndex + 1;
-      if (self.dataIndex >= self.ecgData.length) {
-        self.dataIndex = 0;
-        self.ecgData = null;
-        if (self.ecgDataBuffer.length > 0) {
-          self.getData();
-        }
-      }
-      return py;
-
-    } else { // initial
-      if (self.props.displayMode === "Simulation mode") {
-        self.bufferLength = 0;
-      } else if (self.props.displayMode === "Real-time mode") {
-        self.bufferLength = 2;
-      }
-      if (self.ecgDataBuffer.length > self.bufferLength) {
-        self.getData();
-      }
-      return self.h / 2;
-    }
+    self.intervalId = requestWaveformDataInterval(self.props.waveform, 1000, self.waveformDataCallback);
   };
 
-  getData = () => {
-    const self = this;
-    self.ecgData = self.ecgDataBuffer.shift();
-    self.calculateSpeed();
-  };
-
-  emitSound = () => {
-    const self = this;
-    if (self.props.waveform === "MDC_ECG_LEAD_II") {
-      if (!this.beepFlag && self.ecgData[self.dataIndex] < 0.2 && self.ecgData[self.dataIndex] < self.ecgData[self.dataIndex - 1]) {
-        audio.beep();
-        this.beepFlag = true;
-      }
-      if (this.beepFlag && self.ecgData[self.dataIndex] > 0.2 && self.ecgData[self.dataIndex] > self.ecgData[self.dataIndex - 1]) {
-        this.beepFlag = false;
-      }
-    }
-  };
-
-  calculateSpeed = () => {
-    const self = this;
-    // clear bar move speed: currently 1 second
-    self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length; // potential problem: if the data length of different waveform is not the same, the clear bar will be different
-    self.speed = self.ecgData.length / 60 || 2; // consume speed
+  requestWaveformDataClearInterval = () => {
+    let self = this;
+    clearInterval(self.intervalId);
   };
 
   initialSocket = () => {
@@ -262,38 +234,100 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   waveformDataCallback = (data) => {
     let self = this;
-    if (self.ecgDataBuffer.length <= 3) {
-      if (data) {self.ecgDataBuffer.push(data);}
+
+    if (!data) return;
+    if (self.props.displayMode === "Real-time mode" && self.ecgDataBuffer.length <= 3) {
+      self.ecgDataBuffer.push(data);
+    } else if (self.props.displayMode === "Simulation mode" && self.ecgDataBuffer.length <= 1) {
+      self.ecgDataBuffer.push(data);
     }
   };
 
-  startAnimation = () => {
+  getData = () => {
     let self = this;
-    self.animation = self.draw();
-    self.animation.start();
-  };
 
-  restartAnimation = () => {
-    let self = this;
-    if (self.animation) {
-      self.animation.cancel();
-      self.animation = self.draw();
-      self.animation.start();
+    if (self.ecgDataBuffer.length > 0) {
+      self.ecgData = self.ecgDataBuffer.shift();
+      // clear bar move speed: currently 1 second
+      // potential problem: if the data length of different waveform is not the same, the clear bar will be different
+      self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length;
+      // consume speed
+      self.speed = self.ecgData.length / 60 || 2;
     }
   };
 
-  drawGrid = () => {
+  getDataPoint = () => {
+    let self = this;
+    let py;
+    if (self.ecgData) {
+      py = self.ecgData[self.dataIndex] * self.h;
+      self.emitSound();
+
+      self.dataIndex = self.dataIndex + 1;
+      if (self.dataIndex >= self.ecgData.length) {
+        self.dataIndex = 0;
+        self.ecgData = null;
+
+        if (self.ecgDataBuffer.length > 0) {
+          self.getData();
+        }
+      }
+
+      return py;
+
+    } else { // initialBackgroundCanvas
+      if (self.props.displayMode === "Simulation mode") {
+        self.getData();
+      } else if (self.props.displayMode === "Real-time mode") {
+        if (self.ecgDataBuffer.length > 2) {
+          self.getData();
+        }
+      }
+
+      return self.h / 2;
+    }
+  };
+
+  emitSound = () => {
+    let self = this;
+    if (self.props.waveform === "MDC_ECG_LEAD_II") {
+      if (!this.beepFlag && self.ecgData[self.dataIndex] < 0.2 && self.ecgData[self.dataIndex] < self.ecgData[self.dataIndex - 1]) {
+        audio.beep();
+        this.beepFlag = true;
+      }
+      if (this.beepFlag && self.ecgData[self.dataIndex] > 0.2 && self.ecgData[self.dataIndex] > self.ecgData[self.dataIndex - 1]) {
+        this.beepFlag = false;
+      }
+    }
+  };
+
+  initialBackgroundCanvas = () => {
     let self = this;
     let ctx = self.backgroundCanvas.getContext('2d');
 
-    self.renderGrid(ctx, self.majorGridPixelSize, "#757575", 0.6, true);
-    self.renderGrid(ctx, self.minorGridPixelSize, "#546E7A", 0.3);
+    self.majorGridPixelSize = (ctx.canvas.width / 30);
+    self.minorGridPixelSize = (self.majorGridPixelSize / 5);
+  };
+
+  clearBackgroundCanvas = () => {
+    let self = this;
+    let ctx = self.backgroundCanvas.getContext('2d');
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  };
+
+  drawBackgroundGrid = () => {
+    let self = this;
+    if (!self.props.gridOn) return;
+
+    let ctx = self.backgroundCanvas.getContext('2d');
+    self.renderBackgroundGrid(ctx, self.majorGridPixelSize, "#757575", 0.6, true);
+    self.renderBackgroundGrid(ctx, self.minorGridPixelSize, "#546E7A", 0.3);
   };
 
   // Render Major Grid
-  renderGrid = (ctx, majorGridPixelSize, color, lineWidth, major) => {
-    const ECGWidth = ctx.canvas.width;
-    const ECGHeight = ctx.canvas.height;
+  renderBackgroundGrid = (ctx, majorGridPixelSize, color, lineWidth, major) => {
+    let ECGWidth = ctx.canvas.width;
+    let ECGHeight = ctx.canvas.height;
     ctx.lineWidth = lineWidth;
     ctx.strokeStyle = color;
 
@@ -318,35 +352,29 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     }
   };
 
-  clearGrid = () => {
+  drawBackgroundScale = () => {
     let self = this;
-    let ctx = self.backgroundCanvas.getContext('2d');
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  };
-
-  drawScale = () => {
-    let self = this;
-    const {scaleLine} = this.props;
+    let {scaleLine} = this.props;
     if (!scaleLine.get('scaleLineOn')) return;
 
     let ctx = self.backgroundCanvas.getContext('2d');
-    const ECGWidth = ctx.canvas.width;
-    const ECGHeight = ctx.canvas.height;
-    const topLevel = scaleLine.get('topLevel');
-    const bottomLevel = scaleLine.get('bottomLevel');
-    const middleLevel = Math.round((topLevel + bottomLevel) / 2);
+    let ECGWidth = ctx.canvas.width;
+    let ECGHeight = ctx.canvas.height;
+    let topLevel = scaleLine.get('topLevel');
+    let bottomLevel = scaleLine.get('bottomLevel');
+    let middleLevel = Math.round((topLevel + bottomLevel) / 2);
 
-    ctx.font="25px Comic Sans MS";
+    ctx.font = "25px Comic Sans MS";
     ctx.fillStyle = color[self.props.strokeStyle];
     ctx.textAlign = "right";
     ctx.fillText(topLevel.toString(), 110, 20);
-    ctx.fillText(middleLevel.toString(), 110, 10 + ECGHeight/2);
+    ctx.fillText(middleLevel.toString(), 110, 10 + ECGHeight / 2);
     ctx.fillText(bottomLevel.toString(), 110, ECGHeight);
 
     ctx.lineWidth = self.props.lineWidth * 0.25;
     ctx.strokeStyle = color[self.props.strokeStyle];
     ctx.beginPath();
-    ctx.moveTo(125, 0); // initial drawing point in x-axis
+    ctx.moveTo(125, 0); // initialBackgroundCanvas drawing point in x-axis
     ctx.lineTo(ECGWidth, 0);
     ctx.closePath();
     ctx.stroke();
@@ -367,25 +395,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     ctx.closePath();
     ctx.stroke();
 
-  };
-
-  initial = () => {
-    let self = this;
-    let ctx = self.backgroundCanvas.getContext('2d');
-
-    self.majorGridPixelSize = (ctx.canvas.width / 30);
-    self.minorGridPixelSize = (self.majorGridPixelSize / 5);
-  };
-
-  initialSimulationMode = () => {
-    let self = this;
-    self.intervalId = requestWaveformDataInterval(self.props.waveform, 1000, self.waveformDataCallback);
-
-  };
-
-  requestWaveformDataClearInterval = () => {
-    let self = this;
-    clearInterval(self.intervalId);
   };
 }
 
