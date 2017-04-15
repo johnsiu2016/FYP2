@@ -1,7 +1,7 @@
 import {interpolateArray} from './utililtyFunctions';
 import {rawWaveformDataLookUpTable} from './simuationData';
 
-let formatZeroPointWaveform = interpolateArray([0], 120);
+let formatZeroPointWaveform = interpolateArray([0.5], 120);
 let formatWaveformLookUpTable = {};
 let normalizedWaveformLookUpTable = {};
 let repeatNormalizedWaveformLookUpTable = {};
@@ -29,7 +29,7 @@ function calculateECGArray(type) {
 
   let splitPoint = 0;
   return (HR) => {
-    if (HR === 0) {
+    if (Number(HR) === 0) {
       return formatZeroPointWaveform;
     }
 
@@ -48,8 +48,8 @@ function calculateECGArray(type) {
       case "MDC_ECG_LEAD_III":
         break;
       case "MDC_PRESS_BLD_ART_ABP":
-        const ABPHeight = window._ABPHeight || 150;
-        const ABPSystolic = window._ABPSystolic || 150;
+        const ABPHeight = window._ABPHeight || 1;
+        const ABPSystolic = window._ABPSystolic || 1;
         const dc = 1 - ABPSystolic / 150;
 
         formatResultArray = formatResultArray.map((dataPoint) => {
@@ -67,7 +67,7 @@ function calculateECGArray(type) {
 
 function requestSimulationModeWaveformData(execCalculateECGArray) {
   return new Promise((resolve) => {
-    return resolve(execCalculateECGArray(window._HR || 120));
+    return resolve(execCalculateECGArray(window._HR));
   });
 }
 

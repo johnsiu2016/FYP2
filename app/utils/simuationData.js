@@ -115,28 +115,28 @@ const defaultVitalSignData = {
     'systolic': 122,
     'diastolic': 82,
     'mean': 93,
-    'SysTop': 150,
-    'SysBottom': 50,
-    'DiaTop': 150,
-    'DiaBottom': 50
+    'sysTop': 150,
+    'sysBottom': 50,
+    'diaTop': 150,
+    'diaBottom': 50
   },
   'PAP': {
     'systolic': 32,
     'diastolic': 18,
     'mean': 23,
-    'SysTop': 150,
-    'SysBottom': 50,
-    'DiaTop': 150,
-    'DiaBottom': 50
+    'sysTop': 150,
+    'sysBottom': 50,
+    'diaTop': 150,
+    'diaBottom': 50
   },
   'NBP': {
     'systolic': 125,
     'diastolic': 84,
     'mean': 92,
-    'SysTop': 150,
-    'SysBottom': 50,
-    'DiaTop': 150,
-    'DiaBottom': 50
+    'sysTop': 150,
+    'sysBottom': 50,
+    'diaTop': 150,
+    'diaBottom': 50
   },
   'MDC_AWAY_CO2_ET': {
     'top': 65,

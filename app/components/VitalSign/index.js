@@ -214,16 +214,16 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
                   <BPLimitText>
                     {"Sys."}
                   </BPLimitText>
-                  <Field name="SysTop" type="number"
+                  <Field name="sysTop" type="number"
                          component={renderABPControlInput}/>
-                  <Field name="SysBottom" type="number"
+                  <Field name="sysBottom" type="number"
                          component={renderABPControlInput}/>
                   <BPLimitText>
                     {"Dia."}
                   </BPLimitText>
-                  <Field name="DiaTop" type="number"
+                  <Field name="diaTop" type="number"
                          component={renderABPControlInput}/>
-                  <Field name="DiaBottom" type="number"
+                  <Field name="diaBottom" type="number"
                          component={renderABPControlInput}/>
                 </BPLimit>
               </BPTextAndLimit>
@@ -315,43 +315,39 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   };
 
   handleHRSubmit = (values) => {
-    const top = Number(values.get("top"));
-    const bottom = Number(values.get("bottom"));
-    const data = Number(values.get("data"));
+    let top = Number(values.get("top"));
+    let bottom = Number(values.get("bottom"));
+    let data = Number(values.get("data"));
 
     if (top < 0) {
       this.props.change("top", 0);
       values = values.set("top", 0);
-      alert("The value should not be negative");
+      //alert("The value should not be negative");
     }
     if (bottom < 0) {
       this.props.change("bottom", 0);
       values = values.set("bottom", 0);
-      alert("The value should not be negative");
+      //alert("The value should not be negative");
     }
     if (data < 0) {
       this.props.change("data", 0);
       values = values.set("data", 0);
-      alert("The value should not be negative");
+      //alert("The value should not be negative");
     }
 
     switch (this.props.vitalSign) {
       case "MDC_ECG_HEART_RATE":
-        if (data < 20) {
-          this.props.change("data", 20);
-          values = values.set("data", 20);
-          alert("The value should not be less than 20");
-        }
-        if (data > 240) {
-          this.props.change("data", 240);
-          values = values.set("data", 240);
-          alert("The value should not be greater than 240");
+        if (data > 999) {
+          this.props.change("data", 999);
+          values = values.set("data", 999);
+          //alert("The value is too large");
         }
         break;
       case "MDC_PULS_OXIM_SAT_O2":
         if (top > 100) {
           this.props.change("top", 100);
-          alert("The value should not be greater than 100");
+          values = values.set("top", 100);
+          //alert("The value should not be greater than 100");
         }
         break;
       case "RP":
@@ -363,16 +359,40 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   handleABPSubmit = (values) => {
     let systolic = Number(values.get("systolic"));
     let diastolic = Number(values.get("diastolic"));
+    let sysTop = Number(values.get("sysTop"));
+    let sysBottom = Number(values.get("sysBottom"));
+    let diaTop = Number(values.get("diaTop"));
+    let diaBottom = Number(values.get("diaBottom"));
 
     if (systolic < 0) {
       this.props.change("systolic", 0);
       values = values.set("systolic", 0);
-      alert("The value should not be negative");
+      //alert("The value should not be negative");
     }
     if (diastolic < 0) {
       this.props.change("diastolic", 0);
       values = values.set("diastolic", 0);
-      alert("The value should not be negative");
+      //alert("The value should not be negative");
+    }
+    if (sysTop < 0) {
+      this.props.change("sysTop", 0);
+      values = values.set("sysTop", 0);
+      //alert("The value should not be negative");
+    }
+    if (sysBottom < 0) {
+      this.props.change("sysBottom", 0);
+      values = values.set("sysBottom", 0);
+      //alert("The value should not be negative");
+    }
+    if (diaTop < 0) {
+      this.props.change("diaTop", 0);
+      values = values.set("diaTop", 0);
+      //alert("The value should not be negative");
+    }
+    if (diaBottom < 0) {
+      this.props.change("diaBottom", 0);
+      values = values.set("diaBottom", 0);
+      //alert("The value should not be negative");
     }
 
     switch (this.props.vitalSign) {
@@ -380,12 +400,12 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
         if (systolic > 150) {
           this.props.change("systolic", 150);
           values = values.set("systolic", 150);
-          alert("The value should not be greater than or equal to 150");
+          //alert("The value should not be greater than or equal to 150");
         }
-        if (diastolic > 140) {
-          this.props.change("diastolic", 140);
-          values = values.set("diastolic", 140);
-          alert("The value should not be greater than 140");
+        if (diastolic > systolic) {
+          this.props.change("diastolic", systolic);
+          values = values.set("diastolic", systolic);
+          //alert("Diastolic should not be greater than systolic");
         }
         break;
       case "MDC_PULS_OXIM_SAT_O2":
@@ -393,7 +413,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       case "RP":
         break;
     }
-    const mean = Math.round((Number(values.get("systolic")) + Number(values.get("diastolic")) * 2) / 3);
+    let mean = Math.round((Number(values.get("systolic")) + Number(values.get("diastolic")) * 2) / 3);
     this.props.change("mean", mean);
     this.props.handleVitalSignFormStorageChange(values, this.props.vitalSign);
   };
