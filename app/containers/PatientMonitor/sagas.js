@@ -11,13 +11,13 @@ export function* getSocket() {
 
   if (powerOn) {
     const settings = yield select(selectSettingsDomain());
-    const items1 = yield select(makeSelectWaveformItems());
-    const items2 = yield select(makeSelectVitalSignItems());
+    const waveformItems = yield select(makeSelectWaveformItems());
+    const vitalSignItems = yield select(makeSelectVitalSignItems());
 
     let socketio = io('http://localhost:5000');
     socketio.emit('initial', {
-      waveformItems: items1,
-      vitalSignItems: items2,
+      waveformItems: waveformItems,
+      vitalSignItems: vitalSignItems,
       ip: settings.get('ip'),
       port: settings.get('port'),
       protocol: settings.get('protocol'),

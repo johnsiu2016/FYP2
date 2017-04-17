@@ -243,7 +243,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     }
   };
 
-  getData = () => {
+  getECGData = () => {
     let self = this;
 
     if (self.ecgDataBuffer.length > 0) {
@@ -267,20 +267,17 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       if (self.dataIndex >= self.ecgData.length) {
         self.dataIndex = 0;
         self.ecgData = null;
-
-        if (self.ecgDataBuffer.length > 0) {
-          self.getData();
-        }
+        self.getECGData();
       }
 
       return py;
 
-    } else { // initialBackgroundCanvas
+    } else { // initial or no ecgData
       if (self.props.displayMode === "Simulation mode") {
-        self.getData();
+        self.getECGData();
       } else if (self.props.displayMode === "Real-time mode") {
-        if (self.ecgDataBuffer.length > 2) {
-          self.getData();
+        if (self.ecgDataBuffer.length > 2) { // real time buffer
+          self.getECGData();
         }
       }
 

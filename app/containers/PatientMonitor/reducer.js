@@ -13,7 +13,7 @@ import {defaultVitalSignData} from '../../utils/simuationData';
 const initWaveformLayoutAndItems = initialWaveformLayoutAndItems();
 const initVitalSignLayoutAndItems = initialVitalSignLayoutAndItems();
 
-const initialState = fromJS(getFromLS('patientMonitor')) || fromJS({
+let initialState = fromJS(getFromLS('patientMonitor')) || fromJS({
     waveformLayout: initWaveformLayoutAndItems.waveformLayout,
     waveformItems: initWaveformLayoutAndItems.waveformItems,
     vitalSignLayout: initVitalSignLayoutAndItems.vitalSignLayout,
@@ -32,7 +32,8 @@ const initialState = fromJS(getFromLS('patientMonitor')) || fromJS({
     soundOn: false,
     audioSource: null
   });
-
+initialState = initialState.set('powerOn', false);
+initialState = initialState.set('socket', null);
 
 function patientMonitorMobileReducer(state = initialState, action) {
   let changedState = null;
