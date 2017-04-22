@@ -11,102 +11,187 @@ import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import Checkbox from 'material-ui/Checkbox';
 import Toggle from 'material-ui/Toggle';
-import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
+import {GridList, GridTile} from 'material-ui/GridList';
 import {Grid} from 'react-bootstrap';
+import FontIcon from 'material-ui/FontIcon';
 
 import {createStructuredSelector} from 'reselect';
 
-import {
-  handleSettingsConnectionIP,
-  handleSettingsConnectionPort,
-  handleSettingsConnectionProtocol,
-  handleSettingsConnectionPatientMonitor,
-  handleSettingsSave
-} from './actions';
+import * as actions from './actions';
 
-import {
-  selectIP,
-  selectPort,
-  selectProtocol,
-  selectPatientMonitor
-} from './selectors';
+import * as selectors from './selectors';
+
+const styles = {
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+  },
+  gridList: {
+    width: 900,
+    height: 400,
+    overflowY: 'auto',
+  },
+  titleStyle: {
+    color: 'white',
+  }
+};
+
+const tilesData = [
+  {
+    img: 'img/mx600_mx700_gallery7_1.jpg',
+    title: 'Breakfast1',
+    author: 'jill111',
+  },
+  {
+    img: 'img/mx600_mx700_gallery7_1.jpg',
+    title: 'Breakfast2',
+    author: 'jill111',
+  },
+  {
+    img: 'img/mx600_mx700_gallery7_1.jpg',
+    title: 'Breakfast3',
+    author: 'jill111',
+  },
+  {
+    img: 'img/mx600_mx700_gallery7_1.jpg',
+    title: 'Breakfast4',
+    author: 'jill111',
+  },
+  {
+    img: 'img/mx600_mx700_gallery7_1.jpg',
+    title: 'Breakfast5',
+    author: 'jill111',
+  },
+  {
+    img: 'img/mx600_mx700_gallery7_1.jpg',
+    title: 'Breakfast6',
+    author: 'jill111',
+  },
+  {
+    img: 'img/mx600_mx700_gallery7_1.jpg',
+    title: 'Breakfast7',
+    author: 'jill111',
+  },
+];
+
 
 export class Settings extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  componentDidMount() {
+    this.props.loadDevices();
+  }
+
+  componentWillUnmount() {
+
+  }
+
+  reload = () => {
+    this.props.loadDevices();
+  };
+
+
   render() {
     let {
-      handleSettingsConnectionIP,
-      handleSettingsConnectionPort,
-      handleSettingsConnectionProtocol,
-      handleSettingsConnectionPatientMonitor,
-      handleSettingsSave,
-      ip,
-      port,
-      protocol,
-      patientMonitor
+      devicesData,
+      connectingDevice,
+      loading,
+      error
     } = this.props;
+
+    let {
+      handleSettingsSave,
+      handleSettingsConnectingDevice
+    } = this.props;
+
+    let info;
+    let deviceName;
+    if (loading) {
+      info = 'Loading';
+    } else if (error) {
+      info = 'Cannot reach host';
+    } else if (!Object.keys(devicesData).length) {
+      info = 'No devices connected to server';
+    } else if (!connectingDevice) {
+      info = 'Please select a device';
+    }
+
+    if (devicesData && devicesData[connectingDevice]) {
+      if (devicesData[connectingDevice]['deviceIdentity']) {
+        deviceName = devicesData[connectingDevice]['deviceIdentity'].model;
+      } else {
+        deviceName = `No name available ${connectingDevice}`;
+      }
+    }
+
+    console.log('loading', loading);
+    console.log('error', error);
 
     return (
       <div style={{background: '#212121', height: '100vh'}}>
         <Grid>
           <Paper>
             <List>
-              <Subheader>Connection</Subheader>
-              <ListItem disabled={true}>
-                <div>IP</div>
-                <TextField
-                  defaultValue={ip}
-                  onChange={handleSettingsConnectionIP}
-                />
-              </ListItem>
-              <ListItem disabled={true}>
-                <div>Port</div>
-                <TextField
-                  defaultValue={port}
-                  onChange={handleSettingsConnectionPort}
-                />
-              </ListItem>
-              <ListItem disabled={true}>
-                <div>Protocol</div>
-                <SelectField
-                  floatingLabelText="Protocol"
-                  value={protocol}
-                  onChange={handleSettingsConnectionProtocol}
-                >
-                  <MenuItem value="TCP" primaryText="TCP"/>
-                  <MenuItem value="UDP" primaryText="UDP"/>
-                </SelectField>
-              </ListItem>
-              <ListItem disabled={true}>
-                <div>Patient Monitor</div>
-                <SelectField
-                  floatingLabelText="Patient Monitor"
-                  value={patientMonitor}
-                  onChange={handleSettingsConnectionPatientMonitor}
-                >
-                  <MenuItem value="Infinity Vista" primaryText="Infinity Vista"/>
-                  <MenuItem value="Infinity Delta" primaryText="Infinity Delta"/>
-                  <MenuItem value="Philips" primaryText="Philips"/>
-                </SelectField>
-              </ListItem>
+              <Subheader>
+                Connected Devices
+                <FontIcon className="material-icons"
+                          onClick={this.reload}>
+                  {'refresh'}
+                </FontIcon>
+              </Subheader>
+
+              <div style={{
+                fontSize: '20px',
+                textAlign: 'center',
+                marginBottom: '20px'
+              }}>
+                {info}
+              </div>
+
+              <div style={{
+                fontSize: '20px',
+                textAlign: 'center',
+                marginBottom: '20px'
+              }}>
+                {deviceName}
+              </div>
+
+              {(
+                <div style={styles.root}>
+                  <GridList
+                    cols={3}
+                    cellHeight={200}
+                    padding={1}
+                    style={styles.gridList}
+                  >
+                    {devicesData && Object.keys(devicesData).map((id) => (
+                      <GridTile
+                        key={id}
+                        onClick={handleSettingsConnectingDevice.bind(this, id)}
+                        title={devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.model || `${id}`}
+                        titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
+                        titleStyle={styles.titleStyle}
+                      >
+                        <img
+                          src={devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
+                      </GridTile>
+                    ))}
+                  </GridList>
+                </div>
+              )}
+
             </List>
             <Divider />
             <List>
               <Subheader>Logging</Subheader>
-              <ListItem primaryText="Alert Time Log" rightToggle={<Toggle />}/>
+              <ListItem primaryText="Alarm Time" rightToggle={<Toggle />}/>
             </List>
             <Divider />
             <List>
-              <Subheader>Notifications</Subheader>
-              <ListItem
-                leftCheckbox={<Checkbox />}
-                primaryText="Sounds"
-                secondaryText="Hangouts message"
-              />
+              <Subheader>Alarm</Subheader>
+              <ListItem primaryText="Alarm when vital signs exceed limits" rightToggle={<Toggle />}/>
             </List>
             <MenuItem onTouchTap={handleSettingsSave}>Save</MenuItem>
           </Paper>
@@ -117,20 +202,19 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
 }
 
 const mapStateToProps = createStructuredSelector({
-  ip: selectIP(),
-  port: selectPort(),
-  protocol: selectProtocol(),
-  patientMonitor: selectPatientMonitor()
+  connectingDevice: selectors.selectConnectingDevice(),
+  loading: selectors.selectLoading(),
+  error: selectors.selectError(),
+  devicesData: selectors.selectDevicesData(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleSettingsConnectionIP: (event) => dispatch(handleSettingsConnectionIP(event.target.value)),
-    handleSettingsConnectionPort: (event) => dispatch(handleSettingsConnectionPort(event.target.value)),
-    handleSettingsConnectionProtocol: (event, index, value) => dispatch(handleSettingsConnectionProtocol(value)),
-    handleSettingsConnectionPatientMonitor: (event, index, value) => dispatch(handleSettingsConnectionPatientMonitor(value)),
-    handleSettingsSave: () => dispatch(handleSettingsSave()),
+    loadDevices: () => dispatch(actions.loadDevices()),
+    handleSettingsSave: () => dispatch(actions.handleSettingsSave()),
+    handleSettingsConnectingDevice: (id) => dispatch(actions.handleSettingsConnectingDevice(id))
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
+

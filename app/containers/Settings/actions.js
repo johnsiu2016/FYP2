@@ -1,41 +1,34 @@
-import {
-  HANDLE_SETTINGS_CONNECTION_IP,
-  HANDLE_SETTINGS_CONNECTION_PORT,
-  HANDLE_SETTINGS_CONNECTION_PROTOCOL,
-  HANDLE_SETTINGS_CONNECTION_PATIENT_MONITOR,
-  HANDLE_SETTINGS_SAVE
-} from './constants';
+import * as constant from './constants';
 
-export function handleSettingsConnectionIP(value) {
+export function handleSettingsConnectingDevice(deviceId) {
   return {
-    type: HANDLE_SETTINGS_CONNECTION_IP,
-    value: value
-  };
-}
-
-export function handleSettingsConnectionPort(value) {
-  return {
-    type: HANDLE_SETTINGS_CONNECTION_PORT,
-    value: value
-  };
-}
-
-export function handleSettingsConnectionProtocol(value) {
-  return {
-    type: HANDLE_SETTINGS_CONNECTION_PROTOCOL,
-    value: value
-  };
-}
-
-export function handleSettingsConnectionPatientMonitor(value) {
-  return {
-    type: HANDLE_SETTINGS_CONNECTION_PATIENT_MONITOR,
-    value: value
+    type: constant.HANDLE_SETTINGS_CONNECTING_DEVICE,
+    deviceId
   };
 }
 
 export function handleSettingsSave() {
   return {
-    type: HANDLE_SETTINGS_SAVE,
+    type: constant.HANDLE_SETTINGS_SAVE,
+  };
+}
+
+export function loadDevices() {
+  return {
+    type: constant.LOAD_DEVICES,
+  };
+}
+
+export function devicesLoaded(devices) {
+  return {
+    type: constant.LOAD_DEVICES_SUCCESS,
+    devices
+  };
+}
+
+export function devicesLoadingError(error) {
+  return {
+    type: constant.LOAD_DEVICES_ERROR,
+    error,
   };
 }

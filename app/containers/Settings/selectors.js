@@ -2,30 +2,31 @@ import { createSelector } from 'reselect';
 
 const selectSettingsDomain = () => state => state.get('settings');
 
-const selectIP = () => createSelector(
+const selectLoading = () => createSelector(
   selectSettingsDomain(),
-  (settingsState) => settingsState.get('ip')
+  (settingsState) => settingsState.get('loading')
 );
 
-const selectPort = () => createSelector(
+const selectError = () => createSelector(
   selectSettingsDomain(),
-  (settingsState) => settingsState.get('port')
+  (settingsState) => settingsState.get('error')
 );
 
-const selectProtocol = () => createSelector(
+const selectConnectingDevice = () => createSelector(
   selectSettingsDomain(),
-  (settingsState) => settingsState.get('protocol')
+  (settingsState) => settingsState.get('connectingDevice')
 );
 
-const selectPatientMonitor = () => createSelector(
+const selectDevicesData = () => createSelector(
   selectSettingsDomain(),
-  (settingsState) => settingsState.get('patientMonitor')
+  (settingsState) => settingsState.get('devicesData')
 );
+
 
 export {
   selectSettingsDomain,
-  selectIP,
-  selectPort,
-  selectProtocol,
-  selectPatientMonitor
+  selectLoading,
+  selectError,
+  selectConnectingDevice,
+  selectDevicesData
 };

@@ -14,12 +14,7 @@ import {createStructuredSelector} from 'reselect';
 import audio from '../../utils/audio';
 import * as actions from './actions';
 import * as selectors from './selectors';
-import {
-  selectIP,
-  selectPort,
-  selectProtocol,
-  selectPatientMonitor
-} from 'containers/Settings/selectors';
+
 import {defaultVitalSignData} from '../../utils/simuationData';
 
 import ECG from 'components/ECG';
@@ -284,10 +279,6 @@ const mapStateToProps = createStructuredSelector({
   audioSource: selectors.makeSelectAudioSource(),
   soundOn: selectors.makeSelectSoundOn(),
 
-  ip: selectIP(),
-  port: selectPort(),
-  protocol: selectProtocol(),
-  patientMonitor: selectPatientMonitor()
 });
 
 function mapDispatchToProps(dispatch) {

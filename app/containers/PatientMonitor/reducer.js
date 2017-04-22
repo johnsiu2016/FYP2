@@ -112,7 +112,6 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case constant.HANDLE_POWER_BUTTON_TOGGLE:
       return state.set('powerOn', !state.get('powerOn'));
-
     case constant.SOCKET_CONNECTED:
       console.log(`SOCKET_CONNECTED ${action.socket}`);
       return state.set('socket', action.socket);
