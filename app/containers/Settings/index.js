@@ -40,45 +40,6 @@ const styles = {
   }
 };
 
-const tilesData = [
-  {
-    img: 'img/mx600_mx700_gallery7_1.jpg',
-    title: 'Breakfast1',
-    author: 'jill111',
-  },
-  {
-    img: 'img/mx600_mx700_gallery7_1.jpg',
-    title: 'Breakfast2',
-    author: 'jill111',
-  },
-  {
-    img: 'img/mx600_mx700_gallery7_1.jpg',
-    title: 'Breakfast3',
-    author: 'jill111',
-  },
-  {
-    img: 'img/mx600_mx700_gallery7_1.jpg',
-    title: 'Breakfast4',
-    author: 'jill111',
-  },
-  {
-    img: 'img/mx600_mx700_gallery7_1.jpg',
-    title: 'Breakfast5',
-    author: 'jill111',
-  },
-  {
-    img: 'img/mx600_mx700_gallery7_1.jpg',
-    title: 'Breakfast6',
-    author: 'jill111',
-  },
-  {
-    img: 'img/mx600_mx700_gallery7_1.jpg',
-    title: 'Breakfast7',
-    author: 'jill111',
-  },
-];
-
-
 export class Settings extends React.Component { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
     this.props.loadDevices();
@@ -106,16 +67,18 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
       handleSettingsConnectingDevice
     } = this.props;
 
-    let info;
-    let deviceName;
+    let info = '';
+    let deviceName = 'Device Name';
     if (loading) {
       info = 'Loading';
     } else if (error) {
       info = 'Cannot reach host';
-    } else if (!Object.keys(devicesData).length) {
+    } else if (Object.keys(devicesData).length === 0) {
       info = 'No devices connected to server';
     } else if (!connectingDevice) {
       info = 'Please select a device';
+    } else if (connectingDevice) {
+      info = 'Current device request:'
     }
 
     if (devicesData && devicesData[connectingDevice]) {
@@ -125,9 +88,6 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
         deviceName = `No name available ${connectingDevice}`;
       }
     }
-
-    console.log('loading', loading);
-    console.log('error', error);
 
     return (
       <div style={{background: '#212121', height: '100vh'}}>
@@ -170,12 +130,12 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
                       <GridTile
                         key={id}
                         onClick={handleSettingsConnectingDevice.bind(this, id)}
-                        title={devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.model || `${id}`}
+                        title={devicesData[id] && devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.model || `${id}`}
                         titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
                         titleStyle={styles.titleStyle}
                       >
                         <img
-                          src={devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
+                          src={devicesData[id] && devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
                       </GridTile>
                     ))}
                   </GridList>

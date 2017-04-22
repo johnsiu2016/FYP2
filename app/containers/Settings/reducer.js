@@ -10,17 +10,18 @@ import * as constants from './constants';
 let initialState = fromJS(getFromLS('settings')) || fromJS({
     loading: false,
     error: false,
-    connectingDevice: null,
-    devicesData: null
+    connectingDevice: '',
+    devicesData: {}
   });
-initialState = initialState.set('connectingDevice', null);
-initialState = initialState.set('devicesData', null);
+initialState = initialState.set('connectingDevice', '');
+initialState = initialState.set('devicesData', {});
+initialState = initialState.set('loading', false);
+initialState = initialState.set('error', false);
+
 
 function settingsReducer(state = initialState, action) {
   switch (action.type) {
     case constants.HANDLE_SETTINGS_CONNECTING_DEVICE:
-      console.log(action.deviceId);
-      //return state;
       return state.set('connectingDevice', action.deviceId);
 
     case constants.LOAD_DEVICES:
