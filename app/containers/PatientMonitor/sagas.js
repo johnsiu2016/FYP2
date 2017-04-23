@@ -1,7 +1,7 @@
 import {take, call, put, select, fork, cancel} from 'redux-saga/effects';
 import {LOCATION_CHANGE} from 'react-router-redux';
 import {HANDLE_POWER_BUTTON_TOGGLE} from './constants';
-import {makeSelectPowerOn, makeSelectSocket} from './selectors';
+import {makeSelectPowerOn, makeSelectSocket, makeSelectDisplayMode} from './selectors';
 import {selectSettingsDomain} from 'containers/Settings/selectors';
 import {socketConnected} from './actions';
 
@@ -10,22 +10,25 @@ import * as settingSelectors from '../Settings/selectors';
 export function* getSocket() {
   const powerOn = yield select(makeSelectPowerOn());
   const socket = yield select(makeSelectSocket());
+  const displayMode = yield select(makeSelectDisplayMode());
 
-  if (powerOn) {
-    const connectingDevice = yield select(settingSelectors.selectConnectingDevice());
+  if (displayMode === 'Real-time mode') {
+    if (powerOn) {
+      const connectingDevice = yield select(settingSelectors.selectConnectingDevice());
 
-    let socketio = io('http://localhost:5000');
-    socketio.emit('initial', connectingDevice);
-    socketio.on('initialAck', () => {
-      console.log('connected');
-    });
-    yield put(socketConnected(socketio));
+      let socketio = io('http://localhost:5000');
+      socketio.emit('initial', connectingDevice);
+      socketio.on('initialAck', () => {
+        console.log('connected');
+      });
+      yield put(socketConnected(socketio));
 
-  } else {
+    } else {
       if (socket) {
         socket.disconnect();
       }
-    yield put(socketConnected(null));
+      yield put(socketConnected(null));
+    }
   }
 }
 

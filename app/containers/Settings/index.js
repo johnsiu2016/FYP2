@@ -68,9 +68,9 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
     } = this.props;
 
     let info = '';
-    let deviceName = 'Device Name';
+    let deviceName = '\< Device Name \>';
     if (loading) {
-      info = 'Loading';
+      info = 'Loading...';
     } else if (error) {
       info = 'Cannot reach host';
     } else if (Object.keys(devicesData).length === 0) {
@@ -78,7 +78,7 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
     } else if (!connectingDevice) {
       info = 'Please select a device';
     } else if (connectingDevice) {
-      info = 'Current device request:'
+      info = 'Device Request:'
     }
 
     if (devicesData && devicesData[connectingDevice]) {
