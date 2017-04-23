@@ -125,7 +125,10 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
             <SoundOnIconButton onClick={handleHeartBeepSoundToggle} soundOn={soundOn}/>
           </Col>
         </Row>
-      </Grid>) :
+      </Grid>)
+
+      :
+
       (<Grid fluid={true}>
         <Row>
           <Col lg={9}
