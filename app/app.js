@@ -124,7 +124,7 @@ import 'react-resizable/css/styles.css';
 import FontFaceObserver from 'fontfaceobserver';
 const openSansObserver = new FontFaceObserver('Open Sans', {});
 
-// When Open Sans is loaded, add a font-family using Open Sans to the body
+// When Open Sans is loaded, add a fonts-family using Open Sans to the body
 openSansObserver.load().then(() => {
   document.body.classList.add('fontLoaded');
 }, () => {

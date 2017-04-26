@@ -29,9 +29,10 @@ import MenuItem from 'material-ui/MenuItem';
 
 import {Link} from 'react-router';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardHeader, CardMedia} from 'material-ui/Card';
 import Subheader from 'material-ui/Subheader';
-import FlatButton from 'material-ui/FlatButton';
+
+import {grey600} from 'material-ui/styles/colors';
 
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -48,16 +49,20 @@ export default class App extends React.Component { // eslint-disable-line react/
   handleClose = () => this.setState({open: false});
 
   render() {
-    let container = {
-      'transformOrigin': '100% center 0',
-      'transformStyle': 'preserve-3d',
-      'transition': 'all 0.5s',
-      'transform': 'perspective(1500px) translate3d(0px,0px,-300px)'
+    let containerStyle = {
+      transformOrigin: '100% center 0',
+      transformStyle: 'preserve-3d',
+      transition: 'all 0.5s',
+      transform: 'perspective(1500px) translate3d(0px,0px,-300px)',
+      marginLeft: '100px'
     };
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <div>
+        <div style={{
+          height: '100%',
+          background: grey600
+        }}>
           <Helmet
             titleTemplate="%s - Patient Monitor"
             defaultTitle="Patient Monitor"
@@ -66,14 +71,13 @@ export default class App extends React.Component { // eslint-disable-line react/
             ]}
           />
 
-          <div style={this.state.open ? container : {}}>
+          <div style={this.state.open ? containerStyle : {height: '100%'}}>
             <AppBar
-              style={this.state.open ? {display: 'none'}:{}}
+              style={this.state.open ? {display: 'none'}:{zIndex: 10}}
               title="Patient Monitor"
               iconElementLeft={
-                <IconButton>
-                  <FontIcon className="material-icons"
-                            onClick={this.handleToggle}>
+                <IconButton onClick={this.handleToggle}>
+                  <FontIcon className="material-icons">
                     menu
                   </FontIcon>
                 </IconButton>
@@ -100,8 +104,8 @@ export default class App extends React.Component { // eslint-disable-line react/
             <Subheader style={{color: "#F5F5F5"}}>Go To</Subheader>
             <Link to="/patientMonitor"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Patient Monitor"/></Link>
             <Link to="/settings"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Settings"/></Link>
+            <Link to="/admin"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Admin"/></Link>
             <Link to="/credit"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Credit"/></Link>
-            <Link to="/api"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="API"/></Link>
           </Drawer>
         </div>
       </MuiThemeProvider>)

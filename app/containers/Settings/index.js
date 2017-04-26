@@ -1,9 +1,3 @@
-/*
- *
- * Settings
- *
- */
-
 import React from 'react';
 import {connect} from 'react-redux';
 
@@ -21,7 +15,6 @@ import FontIcon from 'material-ui/FontIcon';
 import {createStructuredSelector} from 'reselect';
 
 import * as actions from './actions';
-
 import * as selectors from './selectors';
 
 const styles = {
