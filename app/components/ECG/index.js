@@ -224,7 +224,6 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   initialSocket = () => {
     let self = this;
     if (self.props.socket) {
-      console.log('inside')
       self.props.socket.on(self.props.waveform, self.waveformDataCallback);
     }
   };
@@ -238,11 +237,8 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   waveformDataCallback = (data) => {
     let self = this;
-    console.log('test')
-    console.log('data',data);
     if (!data) return;
     if (self.props.displayMode === "Real-time mode" && self.ecgDataBuffer.length <= 3) {
-      console.log('data',data);
       self.ecgDataBuffer.push(data.normalizedWaveform);
       self.frequency = data.frequency;
     } else if (self.props.displayMode === "Simulation mode" && self.ecgDataBuffer.length <= 1) {
