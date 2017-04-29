@@ -39,6 +39,9 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     this.ecgDataBuffer = [];
     this.ecgData = null;
     this.dataIndex = 0;
+    this.pxSyncWithHR = 2;
+    this.speed = 1;
+    this.frequency = 60;
 
     this.canvas = null;
     this.w = 0;
@@ -173,12 +176,12 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
     ctx.strokeStyle = color[self.props.strokeStyle];
     ctx.lineWidth = self.props.lineWidth;
 
-    let speedCount = self.speed || 1;
+    let speedCount = self.speed;
 
     function animate() {
       while (speedCount > 0) {
         self.py = self.getDataPoint();
-        self.px += self.pxSyncWithHR || 2;
+        self.px += self.pxSyncWithHR;
 
         ctx.clearRect(self.px, 0, scanBarWidth, self.h);
         ctx.beginPath();
@@ -190,11 +193,11 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
         opy = self.py;
 
         if (opx > self.w) {
-          self.px = opx = -(self.pxSyncWithHR || 2);
+          self.px = opx = -(self.pxSyncWithHR);
         }
         speedCount = speedCount - 1;
       }
-      speedCount = self.speed || 1;
+      speedCount = self.speed;
       animationID = requestAnimationFrame(animate);
     }
 
@@ -221,6 +224,7 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
   initialSocket = () => {
     let self = this;
     if (self.props.socket) {
+      console.log('inside')
       self.props.socket.on(self.props.waveform, self.waveformDataCallback);
     }
   };
@@ -234,12 +238,16 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   waveformDataCallback = (data) => {
     let self = this;
-
+    console.log('test')
+    console.log('data',data);
     if (!data) return;
     if (self.props.displayMode === "Real-time mode" && self.ecgDataBuffer.length <= 3) {
-      self.ecgDataBuffer.push(data);
+      console.log('data',data);
+      self.ecgDataBuffer.push(data.normalizedWaveform);
+      self.frequency = data.frequency;
     } else if (self.props.displayMode === "Simulation mode" && self.ecgDataBuffer.length <= 1) {
       self.ecgDataBuffer.push(data);
+      self.frequency = data.length;
     }
   };
 
@@ -250,9 +258,9 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       self.ecgData = self.ecgDataBuffer.shift();
       // clear bar move speed: currently 1 second
       // potential problem: if the data length of different waveform is not the same, the clear bar will be different
-      self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.ecgData.length;
+      self.pxSyncWithHR = 1 / 6 * self.props.containerWidth / self.frequency;
       // consume speed
-      self.speed = self.ecgData.length / 60 || 2;
+      self.speed = self.frequency / 60;
     }
   };
 

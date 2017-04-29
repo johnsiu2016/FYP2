@@ -275,13 +275,13 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    getSimulationWaveformList: (postData) => dispatch(actions.getSimulationWaveformList()),
+    getSimulationWaveformList: () => dispatch(actions.getSimulationWaveformList()),
     postSimulationWaveform: (postData) => dispatch(actions.postSimulationWaveform(postData)),
     getSimulationWaveform: (_id) => dispatch(actions.getSimulationWaveform(_id)),
     patchSimulationWaveform: (_id, postData) => dispatch(actions.patchSimulationWaveform(_id, postData)),
     deleteSimulationWaveform: (_id) => dispatch(actions.deleteSimulationWaveform(_id)),
 
-    getSimulationVitalSignList: (postData) => dispatch(actions.getSimulationVitalSignList()),
+    getSimulationVitalSignList: () => dispatch(actions.getSimulationVitalSignList()),
     postSimulationVitalSign: (postData) => dispatch(actions.postSimulationVitalSign(postData)),
     getSimulationVitalSign: (_id) => dispatch(actions.getSimulationVitalSign(_id)),
     patchSimulationVitalSign: (_id, postData) => dispatch(actions.patchSimulationVitalSign(_id, postData)),

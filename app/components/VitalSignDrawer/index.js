@@ -16,6 +16,7 @@ import {getCommonName} from '../../utils/preferences';
 import {vitalSignItemTemplate} from '../../containers/PatientMonitor/reducer';
 
 function VitalSignDrawer({
+  simulationVitalSignList,
   vitalSignItem,
   openVitalSignDrawer,
   handleVitalSignTypeChange,

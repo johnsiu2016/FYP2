@@ -14,6 +14,8 @@ import {createStructuredSelector} from 'reselect';
 import audio from '../../utils/audio';
 import * as actions from './actions';
 import * as selectors from './selectors';
+import * as adminSelectors from '../Admin/selectors';
+import * as adminActions from '../Admin/actions';
 
 import {defaultVitalSignData} from '../../utils/simuationData';
 
@@ -35,6 +37,8 @@ const ECGControlButtonsWrapper = styled.div`
 export class PatientMonitorMobile extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
     window.addEventListener("keyup", this.props.onPowerOnModeKeyUp);
+    this.props.getSimulationWaveformList();
+    this.props.getSimulationVitalSignList();
   }
 
   componentWillUnmount() {
@@ -73,8 +77,14 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       vitalSignDrawer,
       powerOn,
       displayMode,
-      soundOn
+      soundOn,
+
+      simulationWaveformList,
+      simulationVitalSignList
     } = this.props;
+
+    console.log('simulationWaveformList',simulationWaveformList);
+    console.log('simulationVitalSignList',simulationVitalSignList);
 
     const waveformItemId = waveformDrawer.get('i');
     const isWaveformDrawerOpen = waveformDrawer.get('open');
@@ -172,6 +182,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
           </Col>
         </Row>
         <WaveformDrawer
+          simulationWaveformList={simulationWaveformList}
           waveformItem={waveformItem}
           openWaveformDrawer={isWaveformDrawerOpen}
           handleWaveformTypeChange={handleWaveformChange}
@@ -183,6 +194,7 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
           handleWaveformScaleLineBottomLevelChange={handleWaveformScaleLineBottomLevelChange}
         />
         <VitalSignDrawer
+          simulationVitalSignList={simulationVitalSignList}
           vitalSignItem={vitalSignItem}
           openVitalSignDrawer={isVitalSignDrawerOpen}
           handleVitalSignTypeChange={handleVitalSignChange}
@@ -282,6 +294,8 @@ const mapStateToProps = createStructuredSelector({
   audioSource: selectors.makeSelectAudioSource(),
   soundOn: selectors.makeSelectSoundOn(),
 
+  simulationWaveformList: adminSelectors.selectSimulationWaveformList(),
+  simulationVitalSignList: adminSelectors.selectSimulationVitalSignList()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -320,6 +334,9 @@ function mapDispatchToProps(dispatch) {
     handleWaveformScaleLineToggle: () => dispatch(actions.handleWaveformScaleLineToggle()),
     handleWaveformScaleLineTopLevelChange: (event, value) => dispatch(actions.handleWaveformScaleLineTopLevelChange(value)),
     handleWaveformScaleLineBottomLevelChange: (event, value) => dispatch(actions.handleWaveformScaleLineBottomLevelChange(value)),
+
+    getSimulationWaveformList: () => dispatch(adminActions.getSimulationWaveformList()),
+    getSimulationVitalSignList: () => dispatch(adminActions.getSimulationVitalSignList()),
   };
 }
 
