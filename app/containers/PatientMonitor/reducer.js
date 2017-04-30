@@ -7,8 +7,7 @@ import {
 } from '../../utils/utililtyFunctions';
 
 import uuid from 'node-uuid';
-import {processVitalSignControlInput} from '../../utils/simulationService';
-import {defaultVitalSignData} from '../../utils/simuationData';
+import {processVitalSignControlInput, getSimulationVitalSignData} from '../../utils/simulationService';
 
 const initWaveformLayoutAndItems = initialWaveformLayoutAndItems();
 const initVitalSignLayoutAndItems = initialVitalSignLayoutAndItems();
@@ -59,6 +58,7 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
 
     case constant.CHANGE_VITAL_SIGN_LAYOUT:
+      if (!state.get('vitalSignItems').get(action.vitalSignLayout[0].i)) return state; // add this line only because the module has some problem.
       changedState = state.set('vitalSignLayout', fromJS(action.vitalSignLayout));
       saveToLS('patientMonitor', changedState);
       return changedState;
@@ -106,7 +106,8 @@ function patientMonitorMobileReducer(state = initialState, action) {
       return changedState;
 
     case constant.HANDLE_VITAL_SIGN_CHANGE:
-      return state.setIn(['vitalSignItems', state.getIn(['vitalSignDrawer', 'i']), 'vitalSign'], action.value);
+      return state.setIn(['vitalSignItems', state.getIn(['vitalSignDrawer', 'i']), 'vitalSign'], action.value)
+        .setIn(['vitalSignItems', state.getIn(['vitalSignDrawer', 'i']), 'formStorage'], getSimulationVitalSignData(action.value));
 
     case constant.HANDLE_VITAL_SIGN_COLOR_CHANGE:
       return state.setIn(['vitalSignItems', state.getIn(['vitalSignDrawer', 'i']), 'strokeStyle'], action.value);
@@ -242,7 +243,7 @@ export function vitalSignItemTemplate(vitalSign, strokeStyle) {
   return {
     vitalSign: vitalSign || "MDC_ECG_HEART_RATE",
     strokeStyle: strokeStyle || "green",
-    formStorage: defaultVitalSignData[vitalSign]
+    formStorage: getSimulationVitalSignData(vitalSign)
   }
 }
 

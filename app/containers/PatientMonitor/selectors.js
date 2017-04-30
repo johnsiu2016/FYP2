@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 /**
  * Direct selector to the patientMonitor state domain
  */
-const selectPatientMonitorMobile = () => state => state.get('patientMonitor');
+const selectPatientMonitor = () => state => state.get('patientMonitor');
 
 /**
  * Other specific selectors
@@ -15,62 +15,62 @@ const selectPatientMonitorMobile = () => state => state.get('patientMonitor');
  */
 
 const makeSelectWaveformLayout = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('waveformLayout')
 );
 
 const makeSelectWaveformItems = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('waveformItems')
 );
 
 const makeSelectVitalSignLayout = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('vitalSignLayout')
 );
 
 const makeSelectVitalSignItems = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('vitalSignItems')
 );
 
 const makeSelectWaveformDrawer = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('waveformDrawer')
 );
 
 const makeSelectVitalSignDrawer = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('vitalSignDrawer')
 );
 
 const makeSelectPowerOn = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('powerOn')
 );
 
 const makeSelectSocket = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('socket')
 );
 
 const makeSelectDisplayMode = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('displayMode')
 );
 
 const makeSelectAudioSource = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('audioSource')
 );
 
 const makeSelectSoundOn = () => createSelector(
-  selectPatientMonitorMobile(),
+  selectPatientMonitor(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('soundOn')
 );
 
 export {
-  selectPatientMonitorMobile,
+  selectPatientMonitor,
   makeSelectWaveformLayout,
   makeSelectWaveformItems,
   makeSelectVitalSignLayout,

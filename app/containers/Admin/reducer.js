@@ -6,6 +6,7 @@ import {
 
 import {
   updateSimulationWaveformData,
+  updateSimulationVitalSignData,
 } from '../../utils/simulationService';
 
 import * as constants from './constants';
@@ -46,6 +47,7 @@ function adminReducer(state = initialState, action) {
         .set('simulationVitalSignError', false)
         .set('simulationVitalSignList', null);
     case constants.LOAD_SIMULATION_VITAL_SIGN_SUCCESS:
+      updateSimulationVitalSignData(action.simulationVitalSignList);
       return state
         .set('simulationVitalSignLoading', false)
         .set('simulationVitalSignList', action.simulationVitalSignList);

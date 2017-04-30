@@ -17,8 +17,6 @@ import * as selectors from './selectors';
 import * as adminSelectors from '../Admin/selectors';
 import * as adminActions from '../Admin/actions';
 
-import {defaultVitalSignData} from '../../utils/simuationData';
-
 import ECG from 'components/ECG';
 import VitalSign from 'components/VitalSign';
 import RestoreFloatingButton from 'components/RestoreFloatingButton';
@@ -250,7 +248,7 @@ export class PatientMonitor extends React.PureComponent { // eslint-disable-line
       vitalSignItems,
       powerOn,
       displayMode,
-      handleVitalSignFormStorageChange,
+      handleVitalSignFormStorageChange
     } = this.props;
 
     const vitalSignItemId = el.get('i');
@@ -270,7 +268,7 @@ export class PatientMonitor extends React.PureComponent { // eslint-disable-line
           w={w}
           displayMode={displayMode}
           handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
-          initialValues={formStorage || defaultVitalSignData[vitalSign]}
+          initialValues={formStorage}
           powerOn={powerOn}
           handleVitalSignDrawerToggle={handleVitalSignDrawerToggle.bind(this, vitalSignItemId)}
           removeVitalSignItem={removeVitalSignItem.bind(this, vitalSignItemId)}/>

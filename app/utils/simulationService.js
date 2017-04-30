@@ -1,11 +1,11 @@
 import {interpolateArray} from './utililtyFunctions';
-import {rawWaveformDataLookUpTable} from './simuationData';
-
+import {rawWaveformDataLookUpTable, defaultVitalSignData} from './simuationData';
 let formatZeroPointWaveform = interpolateArray([0.5], 120);
 let formatWaveformLookUpTable;
+
 let normalizedWaveformLookUpTable;
 let repeatNormalizedWaveformLookUpTable;
-normalizeWaveform(rawWaveformDataLookUpTable);
+updateSimulationWaveformData(rawWaveformDataLookUpTable);
 
 function normalizeWaveform(rawWaveformDataLookUpTable) {
   formatWaveformLookUpTable = {};
@@ -80,14 +80,13 @@ function requestSimulationModeWaveformData(execCalculateECGArray) {
   });
 }
 
+export function updateSimulationWaveformData(waveformData) {
+  if (!waveformData) return;
 
-export function updateSimulationWaveformData(waveformList) {
-  if (!waveformList) return;
-
-  let waveformLookUpTable = waveformList;
+  let waveformLookUpTable = waveformData;
   if (Array.isArray(waveformLookUpTable)) {
     waveformLookUpTable = {};
-    for (let ele of waveformList) {
+    for (let ele of waveformData) {
       waveformLookUpTable[ele.type] = ele.value;
     }
   }
@@ -103,6 +102,12 @@ export function requestWaveformDataInterval(type, second, cb) {
     })
   }, second);
 }
+
+
+
+
+
+
 
 export function processVitalSignControlInput(vitalSign, formStorage) {
   switch (vitalSign) {
@@ -127,4 +132,24 @@ export function processVitalSignControlInput(vitalSign, formStorage) {
     case "NBP":
       break;
   }
+}
+
+let simulationVitalSignData;
+updateSimulationVitalSignData(defaultVitalSignData);
+
+export function updateSimulationVitalSignData(vitalSignData) {
+  if (!vitalSignData) return;
+
+  let vitalSignLookUpTable = vitalSignData;
+  if (Array.isArray(vitalSignLookUpTable)) {
+    vitalSignLookUpTable = {};
+    for (let ele of vitalSignData) {
+      vitalSignLookUpTable[ele.type] = ele.value;
+    }
+  }
+  simulationVitalSignData = vitalSignLookUpTable;
+}
+
+export function getSimulationVitalSignData(type) {
+  return simulationVitalSignData[type];
 }

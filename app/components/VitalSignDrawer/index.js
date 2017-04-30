@@ -41,13 +41,9 @@ function VitalSignDrawer({
             value={vitalSignType}
             onChange={handleVitalSignTypeChange}
           >
-            <MenuItem value="MDC_ECG_HEART_RATE" primaryText={getCommonName("MDC_ECG_HEART_RATE")}/>
-            <MenuItem value="MDC_TTHOR_RESP_RATE" primaryText={getCommonName("MDC_TTHOR_RESP_RATE")}/>
-            <MenuItem value="MDC_PULS_OXIM_PULS_RATE" primaryText={getCommonName("MDC_PULS_OXIM_PULS_RATE")}/>
-            <MenuItem value="MDC_PULS_OXIM_SAT_O2" primaryText={getCommonName("MDC_PULS_OXIM_SAT_O2")}/>
-            <MenuItem value="MDC_CO2_RESP_RATE" primaryText={getCommonName("MDC_CO2_RESP_RATE")}/>
-            <MenuItem value="MDC_AWAY_CO2_ET" primaryText={getCommonName("MDC_AWAY_CO2_ET")}/>
-            <MenuItem value="MDC_PRESS_BLD_ART_ABP_NUMERIC" primaryText={getCommonName("MDC_PRESS_BLD_ART_ABP_NUMERIC")}/>
+            {simulationVitalSignList && simulationVitalSignList.map(ele => (
+              <MenuItem key={ele.type} value={ele.type} primaryText={getCommonName(ele.type)}/>
+            ))}
           </SelectField>
         </ListItem>
         <ListItem>
