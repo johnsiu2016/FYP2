@@ -34,10 +34,10 @@ function calculateECGArray(type) {
   if (!normalizedWaveformLookUpTable[type]) return () => formatZeroPointWaveform;
   const normalizedWaveform = normalizedWaveformLookUpTable[type];
   const repeatNormalizedWaveform = repeatNormalizedWaveformLookUpTable[type];
-  const baseDataLength = repeatNormalizedWaveform.length || 240;
+  const baseDataLength = repeatNormalizedWaveform.length;
 
   let splitPoint = 0;
-  return (HR) => {
+  return (HR = 60) => {
     if (Number(HR) === 0) {
       return formatZeroPointWaveform;
     }
