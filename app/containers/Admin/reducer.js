@@ -4,6 +4,10 @@ import {
   getFromLS,
 } from '../../utils/utililtyFunctions';
 
+import {
+  updateSimulationWaveformData,
+} from '../../utils/simulationService';
+
 import * as constants from './constants';
 
 let initialState = fromJS(getFromLS('admin')) || fromJS({
@@ -27,6 +31,7 @@ function adminReducer(state = initialState, action) {
         .set('simulationWaveformError', false)
         .set('simulationWaveformList', null);
     case constants.LOAD_SIMULATION_WAVEFORM_SUCCESS:
+      updateSimulationWaveformData(action.simulationWaveformList);
       return state
         .set('simulationWaveformLoading', false)
         .set('simulationWaveformList', action.simulationWaveformList);

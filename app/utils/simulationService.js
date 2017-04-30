@@ -2,30 +2,39 @@ import {interpolateArray} from './utililtyFunctions';
 import {rawWaveformDataLookUpTable} from './simuationData';
 
 let formatZeroPointWaveform = interpolateArray([0.5], 120);
-let formatWaveformLookUpTable = {};
-let normalizedWaveformLookUpTable = {};
-let repeatNormalizedWaveformLookUpTable = {};
-for (let waveform in rawWaveformDataLookUpTable) {
-  let cur = rawWaveformDataLookUpTable[waveform];
-  let formatLength = 120 * Math.ceil(cur.length / 120);
-  let formatWaveform = interpolateArray(cur, formatLength);
-  const max = Math.max(...cur);
-  const min = Math.min(...cur);
-  const dataHeight = max - min;
-  let normalizedWaveform = [];
+let formatWaveformLookUpTable;
+let normalizedWaveformLookUpTable;
+let repeatNormalizedWaveformLookUpTable;
+normalizeWaveform(rawWaveformDataLookUpTable);
 
-  formatWaveformLookUpTable[waveform] = formatWaveform;
-  for (let i = 0, len = formatWaveform.length; i < len; i++) {
-    normalizedWaveform.push(1 - ((formatWaveform[i] - min) / dataHeight));
+function normalizeWaveform(rawWaveformDataLookUpTable) {
+  formatWaveformLookUpTable = {};
+  normalizedWaveformLookUpTable = {};
+  repeatNormalizedWaveformLookUpTable = {};
+
+  for (let waveform in rawWaveformDataLookUpTable) {
+    let cur = rawWaveformDataLookUpTable[waveform];
+    let formatLength = 120 * Math.ceil(cur.length / 120);
+    let formatWaveform = interpolateArray(cur, formatLength);
+    const max = Math.max(...cur);
+    const min = Math.min(...cur);
+    const dataHeight = max - min;
+    let normalizedWaveform = [];
+
+    formatWaveformLookUpTable[waveform] = formatWaveform;
+    for (let i = 0, len = formatWaveform.length; i < len; i++) {
+      normalizedWaveform.push(1 - ((formatWaveform[i] - min) / dataHeight));
+    }
+    normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
+    repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform.concat(normalizedWaveform);
   }
-  normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
-  repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform.concat(normalizedWaveform).concat(normalizedWaveform).concat(normalizedWaveform);
 }
 
 function calculateECGArray(type) {
+  if (!normalizedWaveformLookUpTable[type]) return () => formatZeroPointWaveform;
   const normalizedWaveform = normalizedWaveformLookUpTable[type];
   const repeatNormalizedWaveform = repeatNormalizedWaveformLookUpTable[type];
-  const baseDataLength = repeatNormalizedWaveform.length;
+  const baseDataLength = repeatNormalizedWaveform.length || 240;
 
   let splitPoint = 0;
   return (HR) => {
@@ -70,6 +79,21 @@ function requestSimulationModeWaveformData(execCalculateECGArray) {
     return resolve(execCalculateECGArray(window._HR));
   });
 }
+
+
+export function updateSimulationWaveformData(waveformList) {
+  if (!waveformList) return;
+
+  let waveformLookUpTable = waveformList;
+  if (Array.isArray(waveformLookUpTable)) {
+    waveformLookUpTable = {};
+    for (let ele of waveformList) {
+      waveformLookUpTable[ele.type] = ele.value;
+    }
+  }
+  normalizeWaveform(waveformLookUpTable);
+}
+
 
 export function requestWaveformDataInterval(type, second, cb) {
   const execCalculateECGArray = calculateECGArray(type);

@@ -34,7 +34,7 @@ const ECGControlButtonsWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-export class PatientMonitorMobile extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class PatientMonitor extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
     window.addEventListener("keyup", this.props.onPowerOnModeKeyUp);
     this.props.getSimulationWaveformList();
@@ -82,9 +82,6 @@ export class PatientMonitorMobile extends React.PureComponent { // eslint-disabl
       simulationWaveformList,
       simulationVitalSignList
     } = this.props;
-
-    console.log('simulationWaveformList',simulationWaveformList);
-    console.log('simulationVitalSignList',simulationVitalSignList);
 
     const waveformItemId = waveformDrawer.get('i');
     const isWaveformDrawerOpen = waveformDrawer.get('open');
@@ -300,12 +297,12 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    changeWaveformLayout: (layout1) => dispatch(actions.changeWaveformLayout(layout1)),
+    changeWaveformLayout: (layout) => dispatch(actions.changeWaveformLayout(layout)),
     resetWaveformLayout: () => dispatch(actions.resetWaveformLayout()),
     addWaveformItem: () => dispatch(actions.addWaveformItem()),
     removeWaveformItem: (i) => dispatch(actions.removeWaveformItem(i)),
 
-    changeVitalSignLayout: (layout2) => dispatch(actions.changeVitalSignLayout(layout2)),
+    changeVitalSignLayout: (layout) => dispatch(actions.changeVitalSignLayout(layout)),
     resetVitalSignLayout: () => dispatch(actions.resetVitalSignLayout()),
     addVitalSignItem: () => dispatch(actions.addVitalSignItem()),
     removeVitalSignItem: (i) => dispatch(actions.removeVitalSignItem(i)),
@@ -340,4 +337,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PatientMonitorMobile);
+export default connect(mapStateToProps, mapDispatchToProps)(PatientMonitor);

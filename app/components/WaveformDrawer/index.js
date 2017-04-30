@@ -61,13 +61,9 @@ function WaveformDrawer({
             value={waveformType}
             onChange={handleWaveformTypeChange}
           >
-            <MenuItem value="MDC_ECG_LEAD_I" primaryText={getCommonName("MDC_ECG_LEAD_I")}/>
-            <MenuItem value="MDC_ECG_LEAD_II" primaryText={getCommonName("MDC_ECG_LEAD_II")}/>
-            <MenuItem value="MDC_ECG_LEAD_III" primaryText={getCommonName("MDC_ECG_LEAD_III")}/>
-            <MenuItem value="MDC_PRESS_BLD_ART_ABP" primaryText={getCommonName("MDC_PRESS_BLD_ART_ABP")}/>
-            <MenuItem value="MDC_PULS_OXIM_PLETH" primaryText={getCommonName("MDC_PULS_OXIM_PLETH")}/>
-            <MenuItem value="MDC_AWAY_CO2" primaryText={getCommonName("MDC_AWAY_CO2")}/>
-            <MenuItem value="MDC_IMPED_TTHOR" primaryText={getCommonName("MDC_IMPED_TTHOR")}/>
+            {simulationWaveformList && simulationWaveformList.map(ele => (
+              <MenuItem key={ele.type} value={ele.type} primaryText={getCommonName(ele.type)}/>
+            ))}
           </SelectField>
         </ListItem>
         <ListItem>

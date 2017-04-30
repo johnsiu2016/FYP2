@@ -39,6 +39,7 @@ function patientMonitorMobileReducer(state = initialState, action) {
   let changedState = null;
   switch (action.type) {
     case constant.CHANGE_WAVEFORM_LAYOUT:
+      if (!state.get('waveformItems').get(action.waveformLayout[0].i)) return state; // add this line only because the module has some problem.
       changedState = state.set('waveformLayout', fromJS(action.waveformLayout));
       saveToLS('patientMonitor', changedState);
       return changedState;

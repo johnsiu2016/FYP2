@@ -8,10 +8,10 @@ import React from 'react';
 import ReactDOM from 'react-dom'
 
 function defaultGetWidth(element) {
-  return ReactDOM.findDOMNode(element).getBoundingClientRect().width
+  return element.getBoundingClientRect().width
 }
 function defaultGetHeight(element) {
-  return ReactDOM.findDOMNode(element).getBoundingClientRect().height
+  return element.getBoundingClientRect().height
 }
 
 function ResizeDimensions({getWidth = defaultGetWidth, getHeight = defaultGetHeight} = {}) {
@@ -39,9 +39,10 @@ function ResizeDimensions({getWidth = defaultGetWidth, getHeight = defaultGetHei
       }
 
       onResize() {
+        if (!this.ele) return;
         this.setState({
-          containerWidth: getWidth(this),
-          containerHeight: getHeight(this)
+          containerWidth: getWidth(this.ele),
+          containerHeight: getHeight(this.ele)
         });
       }
 
@@ -70,7 +71,9 @@ function ResizeDimensions({getWidth = defaultGetWidth, getHeight = defaultGetHei
 
       render() {
         return (
-          <div style={{
+          <div
+            ref={(ele) => this.ele = ele}
+            style={{
             width: '100%',
             height: '100%',
             padding: 0,
