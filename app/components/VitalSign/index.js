@@ -337,9 +337,9 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
 
     switch (this.props.vitalSign) {
       case "MDC_ECG_HEART_RATE":
-        if (data > 999) {
-          this.props.change("data", 999);
-          values = values.set("data", 999);
+        if (data > 300) {
+          this.props.change("data", 300);
+          values = values.set("data", 300);
           //alert("The value is too large");
         }
         break;

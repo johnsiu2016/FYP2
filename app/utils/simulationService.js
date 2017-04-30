@@ -26,7 +26,9 @@ function normalizeWaveform(rawWaveformDataLookUpTable) {
       normalizedWaveform.push(1 - ((formatWaveform[i] - min) / dataHeight));
     }
     normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
-    repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform.concat(normalizedWaveform);
+    repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform // related to HR limit
+      .concat(normalizedWaveform).concat(normalizedWaveform)
+      .concat(normalizedWaveform);
   }
 }
 
