@@ -11,6 +11,7 @@ import {grey900, grey800, grey700} from 'material-ui/styles/colors';
 import {createStructuredSelector} from 'reselect';
 
 // my custom import
+import {getSimulationVitalSignData} from '../../utils/simulationService';
 import audio from '../../utils/audio';
 import * as actions from './actions';
 import * as selectors from './selectors';
@@ -268,7 +269,7 @@ export class PatientMonitor extends React.PureComponent { // eslint-disable-line
           w={w}
           displayMode={displayMode}
           handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
-          initialValues={formStorage}
+          initialValues={formStorage || getSimulationVitalSignData(vitalSign)}
           powerOn={powerOn}
           handleVitalSignDrawerToggle={handleVitalSignDrawerToggle.bind(this, vitalSignItemId)}
           removeVitalSignItem={removeVitalSignItem.bind(this, vitalSignItemId)}/>
