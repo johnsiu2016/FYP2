@@ -163,7 +163,7 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
                     textAlign: 'center'
                   }}>
                     <img
-                      style={{cursor: 'pointer'}}
+                      style={{maxWidth: '200px'}}
                       src={devicesData[connectingDevice] && devicesData[connectingDevice].deviceIdentity && devicesData[connectingDevice].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
 
                   </Col>
