@@ -2,14 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 import Paper from 'material-ui/Paper';
-import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
-import Toggle from 'material-ui/Toggle';
-import MenuItem from 'material-ui/MenuItem';
+import {Card, CardTitle, CardText} from 'material-ui/Card';
 
 import {GridList, GridTile} from 'material-ui/GridList';
-import {Grid} from 'react-bootstrap';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import FontIcon from 'material-ui/FontIcon';
 
 import {createStructuredSelector} from 'reselect';
@@ -56,7 +53,6 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
     } = this.props;
 
     let {
-      handleSettingsSave,
       handleSettingsConnectingDevice
     } = this.props;
 
@@ -71,7 +67,7 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
     } else if (!connectingDevice) {
       info = 'Please select a device';
     } else if (connectingDevice) {
-      info = 'Device Request:'
+      info = 'Selected Device:'
     }
 
     if (devicesData && devicesData[connectingDevice]) {
@@ -83,22 +79,22 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
     }
 
     return (
-      <div style={{background: '#212121', height: '100vh'}}>
-        <Grid>
-          <Paper>
-            <List>
+      <Grid fluid={true} style={{background: '#212121', height: '100%', overflow: 'scroll'}}>
+        <Row>
+          <Col>
+            <Paper>
               <Subheader>
                 Connected Devices
-                  <FontIcon
-                    style={{
-                      display: 'inline-block',
-                      padding: '10px',
-                      cursor: 'pointer'
-                    }}
-                    className="material-icons"
-                    onClick={this.reload}>
-                    {'refresh'}
-                  </FontIcon>
+                <FontIcon
+                  style={{
+                    display: 'inline-block',
+                    padding: '10px',
+                    cursor: 'pointer'
+                  }}
+                  className="material-icons"
+                  onClick={this.reload}>
+                  {'refresh'}
+                </FontIcon>
               </Subheader>
 
               <div style={{
@@ -133,29 +129,85 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
                         titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
                         titleStyle={styles.titleStyle}
                       >
-                        <img style={{cursor: 'pointer'}}
-                             src={devicesData[id] && devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
+                        <img
+                          style={{cursor: 'pointer'}}
+                          src={devicesData[id] && devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
                       </GridTile>
                     ))}
                   </GridList>
                 </div>
               )}
 
-            </List>
-            <Divider />
-            <List>
-              <Subheader>Logging</Subheader>
-              <ListItem primaryText="Alarm Time" rightToggle={<Toggle />}/>
-            </List>
-            <Divider />
-            <List>
-              <Subheader>Alarm</Subheader>
-              <ListItem primaryText="Alarm when vital signs exceed limits" rightToggle={<Toggle />}/>
-            </List>
-            <MenuItem onTouchTap={handleSettingsSave}>Save</MenuItem>
-          </Paper>
-        </Grid>
-      </div>
+            </Paper>
+          </Col>
+        </Row>
+        {devicesData && Object.keys(devicesData).length !== 0 && connectingDevice && (
+          <Row style={{
+            marginTop: '10px'
+          }}>
+            <Col md={3}>
+              <Paper>
+                <Row>
+                  <Col style={{
+                    fontSize: '20px',
+                    textAlign: 'center',
+                    marginBottom: '20px',
+                    color: 'white'
+                  }}>
+                    {deviceName}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col style={{
+                    padding: '20px',
+                    textAlign: 'center'
+                  }}>
+                    <img
+                      style={{cursor: 'pointer'}}
+                      src={devicesData[connectingDevice] && devicesData[connectingDevice].deviceIdentity && devicesData[connectingDevice].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
+
+                  </Col>
+                </Row>
+              </Paper>
+            </Col>
+            <Col md={9}>
+              <Card>
+                <CardTitle title="Device Connectivity"/>
+                <CardText>
+                  <div>
+                    {`State: ${devicesData[connectingDevice] && devicesData[connectingDevice].deviceConnectivity && devicesData[connectingDevice].deviceConnectivity.state}`}
+                  </div>
+                  <div>
+                    {`Information: ${devicesData[connectingDevice] && devicesData[connectingDevice].deviceConnectivity && devicesData[connectingDevice].deviceConnectivity.info}`}
+                  </div>
+                </CardText>
+                <CardTitle title="Received Data Metric"/>
+                <CardText>
+                  {`Sample Array:`}
+                  <ul>
+                    {devicesData[connectingDevice] && devicesData[connectingDevice].sampleArray
+                    && Object.keys(devicesData[connectingDevice].sampleArray).map(metric => (
+                      <li key={metric}>
+                        {metric}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {`Numeric:`}
+                  <ul>
+                    {devicesData[connectingDevice] && devicesData[connectingDevice].numeric
+                    && Object.keys(devicesData[connectingDevice].numeric).map(metric => (
+                      <li key={metric}>
+                        {metric}
+                      </li>
+                    ))}
+                  </ul>
+                </CardText>
+              </Card>
+            </Col>
+          </Row>
+        )}
+      </Grid>
     );
   }
 }
@@ -170,7 +222,6 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     loadDevices: () => dispatch(actions.loadDevices()),
-    handleSettingsSave: () => dispatch(actions.handleSettingsSave()),
     handleSettingsConnectingDevice: (id) => dispatch(actions.handleSettingsConnectingDevice(id))
   };
 }
