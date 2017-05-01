@@ -89,10 +89,16 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
             <List>
               <Subheader>
                 Connected Devices
-                <FontIcon className="material-icons"
-                          onClick={this.reload}>
-                  {'refresh'}
-                </FontIcon>
+                  <FontIcon
+                    style={{
+                      display: 'inline-block',
+                      padding: '10px',
+                      cursor: 'pointer'
+                    }}
+                    className="material-icons"
+                    onClick={this.reload}>
+                    {'refresh'}
+                  </FontIcon>
               </Subheader>
 
               <div style={{
@@ -127,8 +133,8 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
                         titleBackground="linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
                         titleStyle={styles.titleStyle}
                       >
-                        <img
-                          src={devicesData[id] && devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
+                        <img style={{cursor: 'pointer'}}
+                             src={devicesData[id] && devicesData[id].deviceIdentity && devicesData[id].deviceIdentity.icon.image || '/img/Placeholder.png'}/>
                       </GridTile>
                     ))}
                   </GridList>

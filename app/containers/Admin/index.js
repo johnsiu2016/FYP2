@@ -79,7 +79,8 @@ export class Admin extends React.PureComponent { // eslint-disable-line react/pr
               {
                 <FontIcon
                   style={{
-                    padding: '10px'
+                    padding: '10px',
+                    cursor: 'pointer'
                   }}
                   color='black'
                   className="material-icons"
