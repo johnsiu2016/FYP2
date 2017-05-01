@@ -4,8 +4,9 @@ import * as constants from './constants';
 import * as actions from './actions';
 
 import requests from '../../utils/requests';
+import config from '../../config.json';
 
-const host = 'http://localhost:4000';
+const host = config.apiEndPoint;
 const endPoint = '/api/simulation';
 
 export function* loadSimulationWaveform(action) {

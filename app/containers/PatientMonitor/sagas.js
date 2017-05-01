@@ -11,6 +11,7 @@ import * as constant from './constants'
 
 import {initialize} from 'redux-form/lib/actions';
 import {getSimulationVitalSignData} from '../../utils/simulationService';
+import config from '../../config.json';
 
 export function* getSocket() {
   const powerOn = yield select(makeSelectPowerOn());
@@ -21,7 +22,7 @@ export function* getSocket() {
     if (powerOn) {
       const connectingDevice = yield select(settingSelectors.selectConnectingDevice());
 
-      let socketio = io('http://localhost:5000');
+      let socketio = io(config.socketEndPoint);
       socketio.emit('initial', connectingDevice);
       socketio.on('initialAck', () => {
         console.log('connected');

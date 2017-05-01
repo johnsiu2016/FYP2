@@ -141,7 +141,7 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
             </Paper>
           </Col>
         </Row>
-        {devicesData && Object.keys(devicesData).length !== 0 && connectingDevice && (
+        {devicesData && Object.keys(devicesData).length !== 0 && connectingDevice && devicesData[connectingDevice] && (
           <Row style={{
             marginTop: '10px'
           }}>
