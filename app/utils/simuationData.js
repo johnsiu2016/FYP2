@@ -87,61 +87,87 @@ const rawWaveformDataLookUpTable = {
 
 const defaultVitalSignData = {
   "MDC_ECG_HEART_RATE": {
-    'top': 120,
-    'bottom': 50,
-    'data': 90
+    value: {
+      'top': 120,
+      'bottom': 50,
+      'data': 90
+    },
+    template: 'HR'
   },
   "MDC_PULS_OXIM_PULS_RATE": {
-    'top': 120,
-    'bottom': 50,
-    'data': 90
+    value: {
+      'top': 120,
+      'bottom': 50,
+      'data': 90
+    },
+    template: 'HR'
   },
   "MDC_PULS_OXIM_SAT_O2": {
-    'top': 100,
-    'bottom': 90,
-    'data': 98
+    value: {
+      'top': 100,
+      'bottom': 90,
+      'data': 98
+    },
+    template: 'HR'
   },
   'MDC_CO2_RESP_RATE': {
-    'top': 45,
-    'bottom': 8,
-    'data': 36
+    value: {
+      'top': 45,
+      'bottom': 8,
+      'data': 36
+    },
+    template: 'HR'
   },
   "MDC_TTHOR_RESP_RATE": {
-    'top': 45,
-    'bottom': 8,
-    'data': 36
+    value: {
+      'top': 45,
+      'bottom': 8,
+      'data': 36
+    }
   },
   "MDC_PRESS_BLD_ART_ABP_NUMERIC": {
-    'systolic': 122,
-    'diastolic': 82,
-    'mean': 93,
-    'sysTop': 150,
-    'sysBottom': 50,
-    'diaTop': 150,
-    'diaBottom': 50
+    value: {
+      'systolic': 122,
+      'diastolic': 82,
+      'mean': 93,
+      'sysTop': 150,
+      'sysBottom': 50,
+      'diaTop': 150,
+      'diaBottom': 50
+    },
+    template: 'BP'
   },
   'PAP': {
-    'systolic': 32,
-    'diastolic': 18,
-    'mean': 23,
-    'sysTop': 150,
-    'sysBottom': 50,
-    'diaTop': 150,
-    'diaBottom': 50
+    value: {
+      'systolic': 32,
+      'diastolic': 18,
+      'mean': 23,
+      'sysTop': 150,
+      'sysBottom': 50,
+      'diaTop': 150,
+      'diaBottom': 50
+    },
+    template: 'BP'
   },
   'NBP': {
-    'systolic': 125,
-    'diastolic': 84,
-    'mean': 92,
-    'sysTop': 150,
-    'sysBottom': 50,
-    'diaTop': 150,
-    'diaBottom': 50
+    value: {
+      'systolic': 125,
+      'diastolic': 84,
+      'mean': 92,
+      'sysTop': 150,
+      'sysBottom': 50,
+      'diaTop': 150,
+      'diaBottom': 50
+    },
+    template: 'BP'
   },
   'MDC_AWAY_CO2_ET': {
-    'top': 65,
-    'bottom': 25,
-    'data': 34
+    value: {
+      'top': 65,
+      'bottom': 25,
+      'data': 34
+    },
+    template: 'BP'
   }
 };
 

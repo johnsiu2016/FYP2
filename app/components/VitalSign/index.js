@@ -157,6 +157,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
       w,
       strokeStyle,
       vitalSign,
+      template,
       powerOn,
       handleVitalSignDrawerToggle,
       removeVitalSignItem
@@ -166,13 +167,8 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
     let scaleContainerHeight = containerHeight * scaleRatio;
     let element = null;
 
-    switch (vitalSign) {
-      case "MDC_ECG_HEART_RATE":
-      case "MDC_PULS_OXIM_SAT_O2":
-      case "MDC_PULS_OXIM_PULS_RATE":
-      case "MDC_CO2_RESP_RATE":
-      case "MDC_AWAY_CO2_ET":
-      case "MDC_TTHOR_RESP_RATE":
+    switch (template) {
+      case "HR":
         element = (
           <ControlForm onSubmit={handleSubmit(this.handleHRSubmit)}>
             <HR color={color[strokeStyle]}>
@@ -200,9 +196,7 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
           </ControlForm>
         );
         break;
-      case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
-      case "PAP":
-      case "NBP":
+      case "BP":
         element = (
           <ControlForm onSubmit={handleSubmit(this.handleABPSubmit)}>
             <BP color={color[strokeStyle]}>
@@ -288,22 +282,14 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   vitalSignDataCallback = (data) => {
     // console.log(`test ${JSON.stringify(data)}}`);
 
-    switch (this.props.vitalSign) {
-      case "MDC_ECG_HEART_RATE":
-      case 'MDC_PULS_OXIM_PULS_RATE':
-      case "MDC_PULS_OXIM_SAT_O2":
-      case 'MDC_AWAY_CO2_ET':
-      case 'MDC_CO2_RESP_RATE':
-      case 'MDC_TTHOR_RESP_RATE':
-      case "RP":
+    switch (this.props.template) {
+      case "HR":
         if (data.data) {
           this.HRData.childNodes[0].value = data.data;
         }
         break;
 
-      case "MDC_PRESS_BLD_ART_ABP_NUMERIC":
-      case "PAP":
-      case "NBP":
+      case "BP":
         if (data.systolic) {
           this.BPData.childNodes[0].querySelectorAll('[name="systolic"]')[0].value = data.systolic;
           this.BPData.childNodes[0].querySelectorAll('[name="diastolic"]')[0].value = data.diastolic;

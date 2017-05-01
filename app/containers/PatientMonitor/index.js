@@ -257,6 +257,7 @@ export class PatientMonitor extends React.PureComponent { // eslint-disable-line
     const vitalSign = vitalSignItem.get('vitalSign');
     const strokeStyle = vitalSignItem.get('strokeStyle');
     const formStorage = vitalSignItem.get('formStorage');
+    const template = vitalSignItem.get('template');
     const w = el.get('w');
 
     return (
@@ -265,6 +266,7 @@ export class PatientMonitor extends React.PureComponent { // eslint-disable-line
           socket={this.props.socket}
           vitalSignItemId={vitalSignItemId}
           vitalSign={vitalSign}
+          template={template}
           strokeStyle={strokeStyle}
           w={w}
           displayMode={displayMode}

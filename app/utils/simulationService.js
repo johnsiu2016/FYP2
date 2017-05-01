@@ -146,12 +146,21 @@ export function updateSimulationVitalSignData(vitalSignData) {
   if (Array.isArray(vitalSignLookUpTable)) {
     vitalSignLookUpTable = {};
     for (let ele of vitalSignData) {
-      vitalSignLookUpTable[ele.type] = ele.value;
+      vitalSignLookUpTable[ele.type] = {
+        value: ele.value,
+        template: ele.template
+      };
     }
   }
   simulationVitalSignData = vitalSignLookUpTable;
 }
 
 export function getSimulationVitalSignData(type) {
-  return simulationVitalSignData[type];
+  if (!simulationVitalSignData[type]) return;
+  return simulationVitalSignData[type].value;
+}
+
+export function getSimulationVitalSignDataTemplate(type) {
+  if (!simulationVitalSignData[type]) return;
+  return simulationVitalSignData[type].template;
 }
