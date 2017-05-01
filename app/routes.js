@@ -96,6 +96,22 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/credit',
+      name: 'credit',
+      getComponent(location, cb) {
+        import('containers/Credit')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
+      path: 'apidoc',
+      name: 'apidoc',
+      getComponent(location, cb) {
+        import('containers/Apidoc')
+          .then(loadModule(cb))
+          .catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

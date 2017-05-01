@@ -58,7 +58,7 @@ export class Admin extends React.PureComponent { // eslint-disable-line react/pr
     return (
       <Grid fluid={true} style={{height: 'calc(100% - 64px)'}}>
         <Row style={{height: '100%'}}>
-          <Col lg={2} style={{height: '100%'}}>
+          <Col md={2} style={{height: '100%'}}>
             <Row style={{height: '100%'}}>
               <Sidebar bsStyle="pills" stacked activeKey={this.state.sideBarKey} onSelect={this.handleSelect}>
                 <SidebarItem eventKey={1} title='Simulation Waveform Resource'>Simulation Waveform</SidebarItem>
@@ -66,7 +66,7 @@ export class Admin extends React.PureComponent { // eslint-disable-line react/pr
               </Sidebar>
             </Row>
           </Col>
-          <Col lg={10} style={{
+          <Col md={10} style={{
             height: '100%',
             background: '#ecf0f5'
           }}>

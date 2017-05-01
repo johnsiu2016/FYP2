@@ -79,7 +79,7 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
     }
 
     return (
-      <Grid fluid={true} style={{background: '#212121', height: '100%', overflow: 'scroll'}}>
+      <Grid fluid={true} style={{background: '#212121', height: '100%', overflow: 'auto'}}>
         <Row>
           <Col>
             <Paper>
