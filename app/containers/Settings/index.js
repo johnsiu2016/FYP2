@@ -6,7 +6,7 @@ import Subheader from 'material-ui/Subheader';
 import {Card, CardTitle, CardText} from 'material-ui/Card';
 
 import {GridList, GridTile} from 'material-ui/GridList';
-import {Grid, Row, Col, Table} from 'react-bootstrap';
+import {Grid, Row, Col} from 'react-bootstrap';
 import FontIcon from 'material-ui/FontIcon';
 
 import {createStructuredSelector} from 'reselect';

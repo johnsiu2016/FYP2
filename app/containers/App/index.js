@@ -105,7 +105,7 @@ export default class App extends React.Component { // eslint-disable-line react/
             <Link to="/patientMonitor"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Patient Monitor"/></Link>
             <Link to="/settings"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Settings"/></Link>
             <Link to="/admin"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Admin"/></Link>
-            <Link to="/apidoc"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="API Doc"/></Link>
+            <a href="http://localhost:4000/apidoc"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="API Doc"/></a>
             <Link to="/credit"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Credit"/></Link>
           </Drawer>
         </div>
