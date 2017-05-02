@@ -34,6 +34,8 @@ import Subheader from 'material-ui/Subheader';
 
 import {grey600} from 'material-ui/styles/colors';
 
+import config from '../../config.json';
+
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     children: React.PropTypes.node,
@@ -105,7 +107,7 @@ export default class App extends React.Component { // eslint-disable-line react/
             <Link to="/patientMonitor"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Patient Monitor"/></Link>
             <Link to="/settings"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Settings"/></Link>
             <Link to="/admin"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Admin"/></Link>
-            <a href="http://localhost:4000/apidoc"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="API Doc"/></a>
+            <a href={`${config.apiEndPoint}/apidoc`}><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="API Doc"/></a>
             <Link to="/credit"><MenuItem style={{color: "#03A9F4"}} onTouchTap={this.handleClose} primaryText="Credit"/></Link>
           </Drawer>
         </div>
