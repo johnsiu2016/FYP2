@@ -1,34 +1,54 @@
 import {interpolateArray} from './utililtyFunctions';
 import {rawWaveformDataLookUpTable, defaultVitalSignData} from './simuationData';
 let formatZeroPointWaveform = interpolateArray([0.5], 120);
-let formatWaveformLookUpTable;
 
 let normalizedWaveformLookUpTable;
 let repeatNormalizedWaveformLookUpTable;
 updateSimulationWaveformData(rawWaveformDataLookUpTable);
 
 function normalizeWaveform(rawWaveformDataLookUpTable) {
-  formatWaveformLookUpTable = {};
   normalizedWaveformLookUpTable = {};
   repeatNormalizedWaveformLookUpTable = {};
 
   for (let waveform in rawWaveformDataLookUpTable) {
-    let cur = rawWaveformDataLookUpTable[waveform];
-    let formatLength = 120 * Math.ceil(cur.length / 120);
-    let formatWaveform = interpolateArray(cur, formatLength);
-    const max = Math.max(...cur);
-    const min = Math.min(...cur);
-    const dataHeight = max - min;
-    let normalizedWaveform = [];
+    if (/record_/.test(waveform)) {
+      let cur = rawWaveformDataLookUpTable[waveform];
+      let frequency = waveform.match(/record_(\d*)_.*/)[1];
 
-    formatWaveformLookUpTable[waveform] = formatWaveform;
-    for (let i = 0, len = formatWaveform.length; i < len; i++) {
-      normalizedWaveform.push(1 - ((formatWaveform[i] - min) / dataHeight));
+      let normalizedFrequency = Math.ceil(frequency / 60) * 60;
+      let time = Math.floor((cur.length / frequency));
+      let formatLength = normalizedFrequency * time;
+      let formatWaveform = interpolateArray(cur, formatLength);
+
+      const max = Math.max(...cur);
+      const min = Math.min(...cur);
+      const dataHeight = max - min;
+      let normalizedWaveform = [];
+      for (let i = 0, len = formatWaveform.length; i < len; i++) {
+        normalizedWaveform.push(1 - ((formatWaveform[i] - min) / dataHeight));
+      }
+      normalizedWaveformLookUpTable[waveform] = {
+        normalizedWaveform: normalizedWaveform,
+        frequency: normalizedFrequency
+      };
+
+    } else {
+      let cur = rawWaveformDataLookUpTable[waveform];
+      let formatLength = 120 * Math.ceil(cur.length / 120);
+      let formatWaveform = interpolateArray(cur, formatLength);
+
+      const max = Math.max(...cur);
+      const min = Math.min(...cur);
+      const dataHeight = max - min;
+      let normalizedWaveform = [];
+      for (let i = 0, len = formatWaveform.length; i < len; i++) {
+        normalizedWaveform.push(1 - ((formatWaveform[i] - min) / dataHeight));
+      }
+      normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
+      repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform // no. of concat is related to HR limit
+        .concat(normalizedWaveform).concat(normalizedWaveform)
+        .concat(normalizedWaveform);
     }
-    normalizedWaveformLookUpTable[waveform] = normalizedWaveform;
-    repeatNormalizedWaveformLookUpTable[waveform] = normalizedWaveform // related to HR limit
-      .concat(normalizedWaveform).concat(normalizedWaveform)
-      .concat(normalizedWaveform);
   }
 }
 
@@ -86,7 +106,7 @@ export function updateSimulationWaveformData(waveformData) {
   if (!waveformData) return;
 
   let waveformLookUpTable = waveformData;
-  if (Array.isArray(waveformLookUpTable)) {
+  if (Array.isArray(waveformLookUpTable)) { // result from api is array, format to object
     waveformLookUpTable = {};
     for (let ele of waveformData) {
       waveformLookUpTable[ele.type] = ele.value;
@@ -105,7 +125,9 @@ export function requestWaveformDataInterval(type, second, cb) {
   }, second);
 }
 
-
+export function requestRecordingWaveformData(type, cb) {
+  return cb(normalizedWaveformLookUpTable[type]);
+}
 
 
 

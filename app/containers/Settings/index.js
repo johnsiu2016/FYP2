@@ -1,4 +1,5 @@
 import React from 'react';
+import {compose} from 'redux';
 import {connect} from 'react-redux';
 
 import Paper from 'material-ui/Paper';
@@ -6,10 +7,16 @@ import Subheader from 'material-ui/Subheader';
 import {Card, CardTitle, CardText} from 'material-ui/Card';
 
 import {GridList, GridTile} from 'material-ui/GridList';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Grid, Row, Col, Table} from 'react-bootstrap';
 import FontIcon from 'material-ui/FontIcon';
+import Divider from 'material-ui/Divider';
 
 import {createStructuredSelector} from 'reselect';
+import requests from '../../utils/requests';
+import config from '../../config.json';
+
+import {Field, reduxForm} from 'redux-form/immutable';
+import {getCommonName} from '../../utils/preferences';
 
 import * as actions from './actions';
 import * as selectors from './selectors';
@@ -181,27 +188,78 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
                     {`Information: ${devicesData[connectingDevice] && devicesData[connectingDevice].deviceConnectivity && devicesData[connectingDevice].deviceConnectivity.info}`}
                   </div>
                 </CardText>
-                <CardTitle title="Received Data Metric"/>
-                <CardText>
-                  {`Sample Array:`}
-                  <ul>
-                    {devicesData[connectingDevice] && devicesData[connectingDevice].sampleArray
-                    && Object.keys(devicesData[connectingDevice].sampleArray).map(metric => (
-                      <li key={metric}>
-                        {metric}
-                      </li>
-                    ))}
-                  </ul>
 
-                  {`Numeric:`}
-                  <ul>
-                    {devicesData[connectingDevice] && devicesData[connectingDevice].numeric
-                    && Object.keys(devicesData[connectingDevice].numeric).map(metric => (
-                      <li key={metric}>
-                        {metric}
-                      </li>
+                <CardTitle title="Recording metric"/>
+                <CardText style={{
+                  background: '#ecf0f5',
+                  color: 'black'
+                }}>
+                  <div style={{
+                    fontSize: '20px',
+                    textAlign: 'center',
+                  }}>
+                    Sample Array
+                  </div>
+                  <Table>
+                    <thead>
+                    <tr>
+                      <th>metric name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {devicesData[connectingDevice] && devicesData[connectingDevice].recording
+                    && Object.keys(devicesData[connectingDevice].recording.sampleArray).length !== 0
+                    && Object.keys(devicesData[connectingDevice].recording.sampleArray).map(metric => (
+                      <tr key={metric}>
+                        <td>{metric}</td>
+                      </tr>
                     ))}
-                  </ul>
+                    </tbody>
+                  </Table>
+                </CardText>
+
+
+                <CardTitle title="Received Data Metric"/>
+                <CardText style={{
+                  background: '#ecf0f5',
+                  color: 'black'
+                }}>
+
+                  <div style={{
+                    fontSize: '20px',
+                    textAlign: 'center',
+                  }}>
+                    Sample Array
+                  </div>
+                  <SampleArrayForm
+                    initialValues={Object.keys(devicesData[connectingDevice].sampleArray).reduce((acc, metric) => {
+                      acc[`${metric}_record_name`] = getCommonName(metric);
+                      acc[`${metric}_duration`] = 1;
+                      return acc
+                    }, {
+                      device_id: connectingDevice
+                    })}
+                    connectingDevice={connectingDevice}
+                    devicesData={devicesData}/>
+
+                  <Divider style={{background: 'black', marginTop: '20px', marginBottom: '20px'}}/>
+
+                  <div style={{
+                    fontSize: '20px',
+                    textAlign: 'center',
+                  }}>
+                    Numeric
+                  </div>
+                  <NumericForm
+                    initialValues={Object.keys(devicesData[connectingDevice].numeric).reduce((acc, metric) => {
+                      acc[`${metric}_record_name`] = getCommonName(metric);
+                      acc[`${metric}_duration`] = 1;
+                      return acc
+                    }, {
+                      device_id: connectingDevice
+                    })}
+                    connectingDevice={connectingDevice}
+                    devicesData={devicesData}/>
                 </CardText>
               </Card>
             </Col>
@@ -228,3 +286,111 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
 
+
+let SampleArrayForm = (props) => {
+  const {
+    devicesData,
+    connectingDevice,
+    handleSubmit,
+  } = props;
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Table>
+        <thead>
+        <tr>
+          <th>metric name</th>
+          <th>is record</th>
+          <th>record name</th>
+          <th>duration (mins)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {devicesData[connectingDevice] && devicesData[connectingDevice].sampleArray
+        && Object.keys(devicesData[connectingDevice].sampleArray).map(metric => (
+          <tr key={metric}>
+            <td>{metric}</td>
+            <td><Field name={`${metric}_is_record`} component="input" type="checkbox"/></td>
+            <td><Field name={`${metric}_record_name`} component="input" type="text"/></td>
+            <td><Field name={`${metric}_duration`} component="input" type="number"/></td>
+          </tr>
+        ))}
+        </tbody>
+      </Table>
+      <input type="text" name="device_id" hidden={true}/>
+      <button type="submit" style={{color: '#ecf0f5', background: '#212121'}}>Submit</button>
+    </form>
+  );
+};
+SampleArrayForm = compose(connect((state, props) => ({form: `${props.connectingDevice}_sample_array`})),
+  reduxForm({
+    destroyOnUnmount: true,
+    onSubmit: (values) => {
+      let host = config.apiEndPoint;
+      let endPoint = '/api';
+      let resource = '/waveforms/recording';
+      let data = values.toObject();
+      let deviceId = data.device_id;
+      let postData = JSON.stringify({
+        device_id: deviceId,
+        sample_array: data
+      });
+      let requestURL = `${host}${endPoint}${resource}`;
+      let myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json");
+      let options = {
+        method: 'POST',
+        headers: myHeaders,
+        body: postData
+      };
+      requests(requestURL, options)
+      alert(`Submited Numeric form: \n${JSON.stringify(values.toObject(), null, 2)}`);
+
+    }
+  }))(SampleArrayForm);
+
+
+let NumericForm = (props) => {
+  const {
+    devicesData,
+    connectingDevice,
+    handleSubmit
+  } = props;
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Table>
+        <thead>
+        <tr>
+          <th>metric name</th>
+          <th>is record</th>
+          <th>record name</th>
+          <th>duration (mins)</th>
+        </tr>
+        </thead>
+        <tbody>
+        {devicesData[connectingDevice] && devicesData[connectingDevice].numeric
+        && Object.keys(devicesData[connectingDevice].numeric).map(metric => (
+          <tr key={metric}>
+            <td>{metric}</td>
+            <td><Field name={`${metric}_is_record`} component="input" type="checkbox"/></td>
+            <td><Field name={`${metric}_record_name`} component="input" type="text"/></td>
+            <td><Field name={`${metric}_duration`} component="input" type="number"/></td>
+          </tr>
+        ))}
+        </tbody>
+      </Table>
+      <input type="text" name="device_id" hidden={true}/>
+      <button type="submit" style={{color: '#ecf0f5', background: '#212121'}}>Submit</button>
+    </form>
+  );
+};
+NumericForm = compose(connect((state, props) => ({form: `${props.connectingDevice}_numeric`})),
+  reduxForm({
+    destroyOnUnmount: true,
+    onSubmit: (values) => {
+      alert(`Submited Numeric form: \n${JSON.stringify(values.toObject(), null, 2)}`);
+
+
+    }
+  }))(NumericForm);

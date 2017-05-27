@@ -47,9 +47,11 @@ export class Credit extends React.PureComponent { // eslint-disable-line react/p
                 <p>
                   Supervisor: Kevin Hung
                 </p>
-
                 <p>
-                  Technical Consultants: Tham, Thomas
+                  Scientific Officer: Mr. YH Tam
+                </p>
+                <p>
+                  Technical Developer: Thomas Lo
                 </p>
               </div>
               <div style={{

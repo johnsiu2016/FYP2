@@ -271,6 +271,9 @@ export class PatientMonitor extends React.PureComponent { // eslint-disable-line
           w={w}
           displayMode={displayMode}
           handleVitalSignFormStorageChange={handleVitalSignFormStorageChange.bind(this, vitalSignItemId)}
+
+          // save version first (local storage),
+          // if not then in app version (file: simulationData) / database version (if have internet connection)
           initialValues={formStorage || getSimulationVitalSignData(vitalSign)}
           powerOn={powerOn}
           handleVitalSignDrawerToggle={handleVitalSignDrawerToggle.bind(this, vitalSignItemId)}

@@ -3,7 +3,7 @@ import React from 'react';
 import ResizeDimension from 'components/ResizeDimensions';
 import color from '../../utils/color.js';
 import {waveformItemTemplate} from '../../containers/PatientMonitor/reducer';
-import {requestWaveformDataInterval} from '../../utils/simulationService';
+import {requestWaveformDataInterval, requestRecordingWaveformData} from '../../utils/simulationService';
 import audio from '../../utils/audio';
 import {getCommonName} from '../../utils/preferences';
 
@@ -213,7 +213,11 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
 
   initialSimulationMode = () => {
     let self = this;
-    self.intervalId = requestWaveformDataInterval(self.props.waveform, 1000, self.waveformDataCallback);
+    if (/record_/.test(self.props.waveform)) {
+      requestRecordingWaveformData(self.props.waveform, self.waveformDataCallback);
+    } else {
+      self.intervalId = requestWaveformDataInterval(self.props.waveform, 1000, self.waveformDataCallback);
+    }
   };
 
   requestWaveformDataClearInterval = () => {
@@ -242,8 +246,13 @@ class ECG extends React.PureComponent { // eslint-disable-line react/prefer-stat
       self.ecgDataBuffer.push(data.normalizedWaveform);
       self.frequency = data.frequency;
     } else if (self.props.displayMode === "Simulation mode" && self.ecgDataBuffer.length <= 1) {
-      self.ecgDataBuffer.push(data);
-      self.frequency = data.length;
+      if (/record_/.test(self.props.waveform)) {
+        self.ecgDataBuffer.push(data.normalizedWaveform);
+        self.frequency = data.frequency;
+      } else {
+        self.ecgDataBuffer.push(data);
+        self.frequency = data.length;
+      }
     }
   };
 

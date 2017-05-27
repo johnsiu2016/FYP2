@@ -51,14 +51,6 @@ export default class App extends React.Component { // eslint-disable-line react/
   handleClose = () => this.setState({open: false});
 
   render() {
-    let containerStyle = {
-      transformOrigin: '100% center 0',
-      transformStyle: 'preserve-3d',
-      transition: 'all 0.5s',
-      transform: 'perspective(1500px) translate3d(0px,0px,-300px)',
-      marginLeft: '100px'
-    };
-
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
         <div style={{
@@ -73,9 +65,9 @@ export default class App extends React.Component { // eslint-disable-line react/
             ]}
           />
 
-          <div style={this.state.open ? containerStyle : {height: '100%'}}>
+          <div style={{height: '100%'}}>
             <AppBar
-              style={this.state.open ? {display: 'none'}:{zIndex: 10}}
+              style={{zIndex: 10}}
               title="Patient Monitor"
               iconElementLeft={
                 <IconButton onClick={this.handleToggle}>

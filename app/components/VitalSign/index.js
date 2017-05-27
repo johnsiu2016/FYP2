@@ -405,6 +405,8 @@ class VitalSign extends React.PureComponent { // eslint-disable-line react/prefe
   };
 }
 
+// each vital sign is a form
+// form needs an id to be recognized in redux store
 let InitializeFromStateForm = compose(connect((state, props) => ({form: props.vitalSignItemId})),
   reduxForm({destroyOnUnmount: true}))(ResizeDimension()(VitalSign));
 
