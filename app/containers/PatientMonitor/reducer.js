@@ -38,7 +38,7 @@ function patientMonitorMobileReducer(state = initialState, action) {
   let changedState = null;
   switch (action.type) {
     case constant.CHANGE_WAVEFORM_LAYOUT:
-      if (!state.get('waveformItems').get(action.waveformLayout[0].i)) return state; // add this line only because the module has some problem.
+      //if (!state.get('waveformItems').get(action.waveformLayout.length && action.waveformLayout[0].i)) return state; // add this line only because the module has some problem.
       changedState = state.set('waveformLayout', fromJS(action.waveformLayout));
       saveToLS('patientMonitor', changedState);
       return changedState;
@@ -53,12 +53,12 @@ function patientMonitorMobileReducer(state = initialState, action) {
         .update('waveformItems', waveformItems => waveformItems.merge(action.waveformItems));
 
     case constant.REMOVE_WAVEFORM_ITEM:
-      return state.set('waveformLayout', state.get('waveformLayout').filter((el) => el.get('i') != action.i))
+      return state.set('waveformLayout', state.get('waveformLayout').filter((el) => el.get('i') !== action.i))
         .set('waveformItems', state.get('waveformItems').delete(action.i));
 
 
     case constant.CHANGE_VITAL_SIGN_LAYOUT:
-      if (!state.get('vitalSignItems').get(action.vitalSignLayout[0].i)) return state; // add this line only because the module has some problem.
+      //if (!state.get('vitalSignItems').get(action.vitalSignLayout.length && action.vitalSignLayout[0].i)) return state; // add this line only because the module has some problem.
       changedState = state.set('vitalSignLayout', fromJS(action.vitalSignLayout));
       saveToLS('patientMonitor', changedState);
       return changedState;
@@ -73,7 +73,7 @@ function patientMonitorMobileReducer(state = initialState, action) {
         .update('vitalSignItems', vitalSignItems => vitalSignItems.merge(action.vitalSignItems));
 
     case constant.REMOVE_VITAL_SIGN_ITEM:
-      return state.set('vitalSignLayout', state.get('vitalSignLayout').filter((el) => el.get('i') != action.i))
+      return state.set('vitalSignLayout', state.get('vitalSignLayout').filter((el) => el.get('i') !== action.i))
         .set('vitalSignItems', state.get('vitalSignItems').delete(action.i));
 
 
@@ -174,8 +174,8 @@ export function initialWaveformLayoutAndItems() {
       [i2]: waveformItemTemplate("MDC_ECG_LEAD_II", "green", 3, true, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
       [i3]: waveformItemTemplate("MDC_ECG_LEAD_III", "green", 3, true, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
       [i4]: waveformItemTemplate("MDC_PRESS_BLD_ART_ABP", "red", 3, false, {scaleLineOn: true, topLevel: 150, bottomLevel: 0}),
-      [i5]: waveformItemTemplate("MDC_PULS_OXIM_PLETH", "yellow", 3, false, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
-      [i6]: waveformItemTemplate("MDC_AWAY_CO2", "blue", 3, false, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
+      [i5]: waveformItemTemplate("MDC_PULS_OXIM_PLETH", "blue", 3, false, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
+      [i6]: waveformItemTemplate("MDC_AWAY_CO2", "white", 3, false, {scaleLineOn: false, topLevel: 150, bottomLevel: 0}),
     }
   }
 }
